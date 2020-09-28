@@ -1,0 +1,17 @@
+
+P1 Scrum Ceremonies Output - Team We Them Boys
+
+● We met with the Product Owner to discuss user stories and begin the planning stage.
+● There was not enough technical progression to merit a sprint Review meeting.
+● Retrospective:
+	○ What went well:
+		■ Good communication
+		■ Relatively regular meetings
+		■ Good team synergy
+	○ What didn’t go well:
+		■ Confusion around scrum process and when to include Product Owner
+		■ Inconsistent meeting times
+	○ Plan moving forward:
+		■ Have a consistent meeting schedule
+		■ Scrum accountability
+		■ More interaction with Product Owner
