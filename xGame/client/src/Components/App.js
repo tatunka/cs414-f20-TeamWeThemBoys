@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Collapse, Button} from "reactstrap";
+import {Collapse} from "reactstrap";
 
 import Login from "./Pages/Login";
 import Profile from "./Pages/Profile";
@@ -25,7 +25,6 @@ export default class App extends Component {
         return (
             <div className="App">
                 <Header/>
-                <Button onClick={() => {this.setState({showLogin:!this.state.showLogin}); console.log(this.state.showLogin)}}>stuff</Button>
                 <div className='pages'>
                     {this.renderLogin()}
                     {this.renderProfile()}
