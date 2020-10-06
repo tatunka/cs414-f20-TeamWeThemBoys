@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import {Collapse} from "reactstrap";
+import React, { useState } from "react";
 
 import Login from "./Pages/Login";
 import Profile from "./Pages/Profile";
@@ -15,39 +14,15 @@ const App = () => {
     const [showProfile, setShowProfile] = useState(true);
     const [showMatch, setShowMatch] = useState(true);
 
-    const Login = () => {
-        return (
-            <Collapse isOpen={showLogin}>
-                <Login/>
-            </Collapse>
-        );
-    }
-
-    const Profile = () => {
-        return (
-            <Collapse isOpen={showProfile}>
-                <Profile/>
-            </Collapse>
-        );
-    }
-
-    const Match = () => {
-        return (
-            <Collapse isOpen={showMatch}>
-                <Match/>
-            </Collapse>
-        );
-    }
-
     return (
         <div className="App">
-            <Header/>
+            <Header />
             <div className="pages">
-                <Login/>
-                <Profile/>
-                <Match/>
+                <Login isOpen={showLogin} />
+                <Profile isOpen={showProfile} />
+                <Match isOpen={showMatch} />
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 }
