@@ -9,54 +9,45 @@ import Header from "./Margins/Header";
 import Footer from "./Margins/Footer";
 import './App.css';
 
-export default class App extends Component {
 
-    constructor(props) {
-        super(props);
+export default App = () => {
+    const [showLogin, setShowLogin] = useState(false);
+    const [showProfile, setShowProfile] = useState(false);
+    const [showMatch, setShowMatch] = useState(false);
 
-        this.state = {
-            showLogin: false,
-            showProfile: false,
-            showMatch: false
-        };
-    }
-
-    render() {
+    const Login = () => {
         return (
-            <div className="App">
-                <Header/>
-                <div className='pages'>
-                    {this.renderLogin()}
-                    {this.renderProfile()}
-                    {this.renderMatch()}
-                </div>
-                <Footer />
+            <Collapse isOpen={showLogin}>
+                <Login/>
+            </Collapse>
+        );
+    }
+
+    const Profile = () => {
+        return (
+            <Collapse isOpen={showProfile}>
+                <Profile/>
+            </Collapse>
+        );
+    }
+
+    const Match = () => {
+        return (
+            <Collapse isOpen={showMatch}>
+                <Match/>
+            </Collapse>
+        );
+    }
+
+    return (
+        <div className="App">
+            <Header/>
+            <div className="pages">
+                <Login/>
+                <Proile/>
+                <Match/>
             </div>
-        );
-    }
-
-    renderLogin(){
-        return(
-            <Collapse isOpen={this.state.showLogin}>
-                <Login />
-            </Collapse>
-        );
-    }
-
-    renderProfile(){
-        return(
-            <Collapse isOpen={this.state.showProfile}>
-                <Profile />
-            </Collapse>
-        );
-    }
-
-    renderMatch(){
-        return(
-            <Collapse isOpen={this.state.showMatch}>
-                <Match />
-            </Collapse>
-        );
-    }
+            <Footer/>
+        </div>
+    );
 }
-
