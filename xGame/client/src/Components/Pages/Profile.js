@@ -1,9 +1,10 @@
-import React, {Component} from "react";
+import React from "react";
 
-export default Profile = () => {
+const Profile = () => {
     return(
         <div>
             <p>add profile data</p>
         </div>
     );
 }
+export default Profile;

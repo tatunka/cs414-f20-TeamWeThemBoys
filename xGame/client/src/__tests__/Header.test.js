@@ -6,9 +6,7 @@ import Header from '../Components/Margins/Header';
 
 function testInitialState(){
     const app = shallow(<Header />);
-    let expectedState = {
-    };
-    expect(app.state()).toEqual(expectedState);
+    expect(app.html()).toMatchSnapshot();
 }
 
 test("Testing header initial state", testInitialState);

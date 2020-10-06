@@ -1,8 +1,9 @@
-import React, {Component} from "react";
+import React from "react";
 
-export default Header = () => {
+const Header = () => {
 
     return(
          <p>add header data</p>
     );
 }
+export default Header;

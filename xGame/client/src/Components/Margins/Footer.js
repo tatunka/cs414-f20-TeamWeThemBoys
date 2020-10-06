@@ -1,7 +1,8 @@
-import React, {Component} from "react";
+import React from "react";
 
-export default Footer = () => {
+const Footer = () => {
     return (
         <p>add footer data</p>
     );
 }
+export default Footer;

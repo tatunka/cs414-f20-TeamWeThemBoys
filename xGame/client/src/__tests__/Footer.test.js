@@ -6,9 +6,7 @@ import Footer from '../Components/Margins/Footer';
 
 function testInitialState(){
     const app = shallow(<Footer />);
-    let expectedState = {
-    };
-    expect(app.state()).toEqual(expectedState);
+    expect(app.html()).toMatchSnapshot();
 }
 
 test("Testing footer initial state", testInitialState);

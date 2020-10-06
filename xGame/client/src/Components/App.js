@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {useState} from "react";
 import {Collapse} from "reactstrap";
 
 import Login from "./Pages/Login";
@@ -10,10 +10,10 @@ import Footer from "./Margins/Footer";
 import './App.css';
 
 
-export default App = () => {
-    const [showLogin, setShowLogin] = useState(false);
-    const [showProfile, setShowProfile] = useState(false);
-    const [showMatch, setShowMatch] = useState(false);
+const App = () => {
+    const [showLogin, setShowLogin] = useState(true);
+    const [showProfile, setShowProfile] = useState(true);
+    const [showMatch, setShowMatch] = useState(true);
 
     const Login = () => {
         return (
@@ -44,10 +44,11 @@ export default App = () => {
             <Header/>
             <div className="pages">
                 <Login/>
-                <Proile/>
+                <Profile/>
                 <Match/>
             </div>
             <Footer/>
         </div>
     );
 }
+export default App;

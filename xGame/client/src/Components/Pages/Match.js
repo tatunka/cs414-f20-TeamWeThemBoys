@@ -1,9 +1,10 @@
-import React, {Component} from "react";
+import React from "react";
 
-export default Match = () => {
+const Match = () => {
     return(
         <div>
             <p>add match data</p>
         </div>
     );
 }
+export default Match;
