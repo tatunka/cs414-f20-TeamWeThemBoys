@@ -6,9 +6,7 @@ import Match from '../Components/Pages/Match';
 
 function testInitialState(){
     const app = shallow(<Match />);
-    let expectedState = {
-    };
-    expect(app.state()).toEqual(expectedState);
+    expect(app.html()).toMatchSnapshot();
 }
 
 test("Testing login initial state", testInitialState);

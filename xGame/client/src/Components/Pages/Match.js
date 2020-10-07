@@ -1,16 +1,25 @@
-import React, {Component} from "react";
+import React from "react";
+import { Collapse } from "reactstrap";
+import PropTypes from 'prop-types';
 
-export default class Match extends Component {
-    constructor(props){
-        super(props);
-        this.state= {};
-    }
+const Match = (props) => {
+    const { isOpen } = props;
 
-    render(){
-        return(
+    return (
+        <Collapse isOpen={isOpen}>
             <div>
                 <p>add match data</p>
             </div>
-        );
-    }
+        </Collapse>
+    );
 }
+
+Match.propTypes = {
+    isOpen: PropTypes.bool
+}
+
+Match.defaultProps = {
+    isOpen: false
+}
+
+export default Match;

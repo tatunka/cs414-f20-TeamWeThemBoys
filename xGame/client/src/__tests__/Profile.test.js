@@ -6,9 +6,7 @@ import Profile from '../Components/Pages/Profile';
 
 function testInitialState(){
     const app = shallow(<Profile />);
-    let expectedState = {
-    };
-    expect(app.state()).toEqual(expectedState);
+    expect(app.html()).toMatchSnapshot();
 }
 
 test("Testing profile initial state", testInitialState);

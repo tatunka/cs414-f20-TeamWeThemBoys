@@ -1,14 +1,8 @@
-import React, {Component} from "react";
+import React from "react";
 
-export default class Footer extends Component {
-    constructor(props){
-        super(props);
-        this.state= {};
-    }
-
-    render(){
-        return(
-            <p>add footer data</p>
-        );
-    }
+const Footer = () => {
+    return (
+        <p>add footer data</p>
+    );
 }
+export default Footer;
