@@ -5,12 +5,13 @@ import { Formik } from "formik";
 import { Button, TextField } from "@material-ui/core";
 
 const LoginForm = (props) => {
-  const { setShowLoginForm } = props;
+  const { setShowLoginForm, onLogin } = props;
 
   return (
     <Formik
       onSubmit={(values) => {
-        console.log("TODO: Hook up registration API", values);
+        console.log("TODO: Hook up log-in API", values);
+        onLogin();
       }}
       initialValues={{
         email: "",
@@ -81,11 +82,13 @@ const LoginForm = (props) => {
 };
 
 LoginForm.propTypes = {
-  setShowLoginForm: PropTypes.func
+  setShowLoginForm: PropTypes.func,
+  onLogin: PropTypes.func
 };
 
 LoginForm.defaultProps = {
-  setShowLoginForm: () => {}
+  setShowLoginForm: () => {},
+  onLogin: () => {}
 };
 
 export default LoginForm;
