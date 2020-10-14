@@ -95,7 +95,7 @@ public class ChessMatch {
 		this.whitePlayer = whitePlayer;
 	}
 	public User getBlackPlayer() {
-		return this.whitePlayer;
+		return this.blackPlayer;
 	}
 	public void setBlackPlayer(User blackPlayer) {
 		this.blackPlayer = blackPlayer;

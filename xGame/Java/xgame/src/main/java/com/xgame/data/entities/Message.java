@@ -32,7 +32,7 @@ public class Message {
 	//constructors
 	protected Message() {}
 	
-	public Message(String contents) {
+	public Message(User recipient, String contents) {
 		this.contents = contents;
 	}
 	
