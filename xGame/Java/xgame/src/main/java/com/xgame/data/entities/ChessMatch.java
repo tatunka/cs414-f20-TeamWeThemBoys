@@ -1,29 +1,38 @@
 package com.xgame.data.entities;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.xgame.common.enums.MatchStatus;
 
 @Entity
 public class ChessMatch {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	@Column( nullable=false, columnDefinition="INT DEFAULT 0")
+	@Column(nullable=false, columnDefinition="INT DEFAULT 0")
 	private Integer turnCount;
+	@Lob
 	@Column(nullable=false)
 	private String chessBoard;
-	@Column(columnDefinition="DATETIME DEFAULT NOW()", nullable=false)
-	private Date createDateTime;
-	private Date startDateTime;
-	private Date endDateTime;
+	@CreationTimestamp
+	private Timestamp creationTimestamp;
+	private Timestamp startTimestamp;
+	@UpdateTimestamp
+	private Timestamp lastTurnTimestamp;
 	
 	//navigation props
 	@ManyToOne(optional=false)
@@ -32,12 +41,17 @@ public class ChessMatch {
 	@ManyToOne(optional=false)
 	@JoinColumn(name = "blackPlayerUserId", referencedColumnName = "id")
 	private User blackPlayer;
-	@ManyToOne(optional=false)
-	@JoinColumn(name = "winningPlayerUserId", referencedColumnName = "id")
+	@ManyToOne(optional=true)
+	@JoinColumn(name = "winningPlayerUserId", referencedColumnName = "id", nullable=true)
 	private User winningPlayer;
+	@Enumerated(EnumType.STRING)
+	private MatchStatus matchStatus;
+	
+	/*
 	@OneToOne
 	@JoinColumn(name = "matchStatusId", referencedColumnName = "id", nullable=false)
 	private MatchStatus matchStatus;
+	*/
 	
 	//constructors
 	protected ChessMatch() {}
@@ -49,9 +63,6 @@ public class ChessMatch {
 	//getters and setters
 	public Integer getId() {
 		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
 	}
 	public Integer getTurnCount() {
 		return turnCount;
@@ -65,23 +76,17 @@ public class ChessMatch {
 	public void setChessBoard(String chessBoard) {
 		this.chessBoard = chessBoard;
 	}
-	public Date getCreateDateTime() {
-		return createDateTime;
+	public Timestamp getCreationTimestamp() {
+		return creationTimestamp;
 	}
-	public void setCreateDateTime(Date createDateTime) {
-		this.createDateTime = createDateTime;
+	public Timestamp getStartTimestamp() {
+		return startTimestamp;
 	}
-	public Date getStartDateTime() {
-		return startDateTime;
+	public void setStartTimestamp(Timestamp startTimestamp) {
+		this.startTimestamp = startTimestamp;
 	}
-	public void setStartDateTime(Date startDateTime) {
-		this.startDateTime = startDateTime;
-	}
-	public Date getEndDateTime() {
-		return endDateTime;
-	}
-	public void setEndDateTime(Date endDateTime) {
-		this.endDateTime = endDateTime;
+	public Timestamp getLastTurnTimestamp() {
+		return lastTurnTimestamp;
 	}
 	public User getWhitePlayer() {
 		return this.whitePlayer;
@@ -100,5 +105,11 @@ public class ChessMatch {
 	}
 	public void setWinningPlayer(User winningPlayer) {
 		this.winningPlayer = winningPlayer;
+	}
+	public MatchStatus getMatchStatus() {
+		return matchStatus;
+	}
+	public void setMatchStatus(MatchStatus matchStatus) {
+		this.matchStatus = matchStatus;
 	}
 }

@@ -1,7 +1,7 @@
 package com.xgame.data.entities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class User {
@@ -25,8 +27,8 @@ public class User {
 	private String passwordHash;
 	@Column(columnDefinition="BOOLEAN DEFAULT FALSE", nullable=false)
 	private Boolean isDeleted;
-	@Column(columnDefinition="DATETIME DEFAULT NOW()", nullable=false)
-	private Date createDateTime;
+	@CreationTimestamp
+	private Timestamp creationTimestamp;
 	
 	@OneToMany(mappedBy="user")
 	private List<Message> messages = new ArrayList<>();
@@ -47,9 +49,6 @@ public class User {
 	
 	public Integer getId() {
 		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
 	}
 	public String getNickName() {
 		return nickName;
@@ -75,11 +74,8 @@ public class User {
 	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-	public Date getCreateDateTime() {
-		return createDateTime;
-	}
-	public void setCreateDateTime(Date createDateTime) {
-		this.createDateTime = createDateTime;
+	public Timestamp getCreationTimestamp() {
+		return creationTimestamp;
 	}
 	public List<Message> getMessages() {
 		return this.messages;

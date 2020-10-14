@@ -1,6 +1,6 @@
 package com.xgame.data.entities;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 public class Message {
 
@@ -18,9 +20,9 @@ public class Message {
 	private Integer id;
 	@Column(nullable=false)
 	private String contents;
-	@Column(nullable=false, columnDefinition="DATETIME DEFAULT NOW()")
-	private Date sentDateTime;
-	private Date readDateTime;
+	@CreationTimestamp
+	private Timestamp sentTimestamp;
+	private Timestamp readTimestamp;
 	
 	//navigation properties
 	@ManyToOne(optional=false)
@@ -30,29 +32,28 @@ public class Message {
 	//constructors
 	protected Message() {}
 	
-	public Message(String contents, Date sentDateTime) {
+	public Message(String contents) {
 		this.contents = contents;
-		this.sentDateTime = sentDateTime;
 	}
 	
 	//getters and setters
+	public Integer getId() {
+		return id;
+	}
 	public String getContents() {
 		return contents;
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public Date getSentDateTime() {
-		return sentDateTime;
+	public Timestamp getSentTimestamp() {
+		return sentTimestamp;
 	}
-	public void setSentDateTime(Date sentDateTime) {
-		this.sentDateTime = sentDateTime;
+	public Timestamp getReadTimestamp() {
+		return readTimestamp;
 	}
-	public Date getReadDateTime() {
-		return readDateTime;
-	}
-	public void setReadDateTime(Date readDateTime) {
-		this.readDateTime = readDateTime;
+	public void setReadTimeStamp(Timestamp readTimeStamp) {
+		this.readTimestamp = readTimeStamp;
 	}
 	public User getUser() {
 		return user;

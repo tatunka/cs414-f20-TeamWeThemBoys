@@ -1,4 +1,4 @@
-package com.xgame.data.entities;
+/*package com.xgame.data.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,3 +38,4 @@ public class MatchStatus {
 		this.description = description;
 	}
 }
+*/
