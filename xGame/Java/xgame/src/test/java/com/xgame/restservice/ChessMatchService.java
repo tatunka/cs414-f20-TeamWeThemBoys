@@ -8,13 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.xgame.data.ChessMatchRepository;
 import com.xgame.data.UserRepository;
-import com.xgame.service.ChessMatchService;
+import com.xgame.service.interfaces.IChessMatchService;
 
 @SpringBootTest
-class ChessMatchServiceTest {
+class ChessMatchService {
 	
 	@Autowired
-	private ChessMatchService service;
+	private IChessMatchService service;
 	@Autowired
 	private ChessMatchRepository matchRepo;
 	@Autowired

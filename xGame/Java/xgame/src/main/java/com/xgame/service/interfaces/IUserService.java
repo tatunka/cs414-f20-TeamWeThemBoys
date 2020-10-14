@@ -1,10 +1,13 @@
 package com.xgame.service.interfaces;
 
+import java.util.List;
+
 import com.xgame.common.viewmodels.ProfileViewModel;
-import com.xgame.data.entities.User;
+import com.xgame.common.viewmodels.UserViewModel;
 
 public interface IUserService {
-	User createNewUser(String name, String email, String password);
+	UserViewModel createNewUser(String name, String email, String password);
+	List<UserViewModel> search(String param);
 	Boolean deactivateUser(Integer id);
 	Boolean deactivateUser(String email);
 	ProfileViewModel getProfile(Integer id);
