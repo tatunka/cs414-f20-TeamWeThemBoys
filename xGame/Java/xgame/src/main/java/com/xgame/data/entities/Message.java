@@ -33,6 +33,7 @@ public class Message {
 	protected Message() {}
 	
 	public Message(User recipient, String contents) {
+		this.user = recipient;
 		this.contents = contents;
 	}
 	

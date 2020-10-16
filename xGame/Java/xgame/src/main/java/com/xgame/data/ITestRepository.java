@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.xgame.data.entities.Test;
 
-public interface TestRepository extends JpaRepository<Test, Integer> {
+public interface ITestRepository extends JpaRepository<Test, Integer> {
 
 }
 
