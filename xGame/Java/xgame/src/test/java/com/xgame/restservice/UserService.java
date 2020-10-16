@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.xgame.data.UserRepository;
+import com.xgame.data.IUserRepository;
 import com.xgame.data.entities.User;
 import com.xgame.service.interfaces.IUserService;
 
@@ -18,7 +18,7 @@ class UserService {
 	@Autowired
 	IUserService userService;
 	@Autowired
-	UserRepository userRepo;
+	IUserRepository userRepo;
 
 	@Test
 	void search() {

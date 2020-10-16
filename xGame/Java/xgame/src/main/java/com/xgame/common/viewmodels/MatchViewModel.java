@@ -3,7 +3,7 @@ package com.xgame.common.viewmodels;
 import com.xgame.data.entities.ChessMatch;
 
 public class MatchViewModel {
-	private int matchId;
+	private int id;
 	private int whiteId;
 	private int blackId;
 	private String whiteEmail;
@@ -16,7 +16,7 @@ public class MatchViewModel {
 		var blackPlayer = match.getBlackPlayer();
 		
 		if(whitePlayer != null && blackPlayer != null) {
-			this.matchId = match.getId();
+			this.id = match.getId();
 			this.whiteId = whitePlayer.getId();
 			this.blackId = blackPlayer.getId();
 			this.whiteEmail = whitePlayer.getEmail();
@@ -27,11 +27,11 @@ public class MatchViewModel {
 	}
 	
 	//getters and setters
-	public int getMatchId() {
-		return matchId;
+	public int getId() {
+		return id;
 	}
-	public void setMatchId(int matchId) {
-		this.matchId = matchId;
+	public void setId(int matchId) {
+		this.id = matchId;
 	}
 	public int getWhiteId() {
 		return whiteId;
