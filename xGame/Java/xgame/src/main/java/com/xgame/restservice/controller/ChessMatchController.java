@@ -32,7 +32,7 @@ public class ChessMatchController {
 		return matchService.createMatch(whiteId, blackId);
 	}
 	
-	@PatchMapping("/match/invite")
+	@PatchMapping("/match/accept")
 	public Boolean acceptInvite(@RequestParam(value = "matchId") int matchId) {
 		return matchService.acceptInvite(matchId);
 	}
