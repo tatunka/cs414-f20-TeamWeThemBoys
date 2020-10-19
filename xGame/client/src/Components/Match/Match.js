@@ -2,13 +2,21 @@ import React from "react";
 import { Collapse } from "reactstrap";
 import PropTypes from "prop-types";
 
+import MatchPlayerStats from './MatchPlayerStats'
+import MatchBoard from './MatchBoard'
+
+import './MatchStyle.css'
+
+
 const Match = (props) => {
   const { isOpen } = props;
 
   return (
     <Collapse isOpen={isOpen}>
-      <div>
-        <p>add match data</p>
+      <div className={"fullSize"}>
+            <MatchPlayerStats playerColor={"White"}  />
+            <MatchBoard />
+            <MatchPlayerStats playerColor={"Black"} />
       </div>
     </Collapse>
   );
