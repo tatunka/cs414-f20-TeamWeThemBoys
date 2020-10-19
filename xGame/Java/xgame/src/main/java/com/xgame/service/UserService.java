@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.common.viewmodels.UserViewModel;
-import com.xgame.data.UserRepository;
+import com.xgame.data.IUserRepository;
 import com.xgame.service.interfaces.IUserService;
 
 @Service
 public class UserService implements IUserService {
 
 	@Autowired
-	private UserRepository userRepo;
+	private IUserRepository userRepo;
 
 	@Override
 	public UserViewModel createNewUser(String name, String email, String password) {
