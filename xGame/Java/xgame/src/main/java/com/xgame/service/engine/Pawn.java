@@ -14,7 +14,7 @@ public class Pawn extends ChessPiece{
 	}
 
 	@Override
-	public ArrayList<String> legalMoves() {
+	public ArrayList<String> legalMoves() throws IllegalPositionException {
 		ArrayList<String> moves = new ArrayList<String>();
 		int dx = color == Color.WHITE ? 1 : -1;
 
@@ -40,7 +40,7 @@ public class Pawn extends ChessPiece{
 		        moves.add(aheadOver);
 		    }
 		} catch (IllegalPositionException e) {
-			e.printStackTrace();
+			throw(e);
 		}
 		return moves;
 	}
