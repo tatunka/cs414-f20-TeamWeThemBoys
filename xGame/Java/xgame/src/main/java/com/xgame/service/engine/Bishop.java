@@ -14,7 +14,7 @@ public class Bishop extends ChessPiece{
 	}
 
 	@Override
-	public ArrayList<String> legalMoves() {
+	public ArrayList<String> legalMoves() throws IllegalPositionException {
 		ArrayList<String> moves = new ArrayList<String>();
 		ChessPiece adjPiece;
 		String move;
