@@ -72,7 +72,7 @@ public class Bishop extends ChessPiece{
 		        }
 		    }
 		} catch (IllegalPositionException e) {
-			e.printStackTrace();
+			throw(e);
 		}
 		return moves;
 	}
