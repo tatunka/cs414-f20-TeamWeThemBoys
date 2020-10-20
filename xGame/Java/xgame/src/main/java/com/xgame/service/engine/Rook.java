@@ -15,7 +15,7 @@ public class Rook extends ChessPiece{
 	}
 
 	@Override
-	public ArrayList<String> legalMoves() {
+	public ArrayList<String> legalMoves() throws IllegalPositionException {
 		ArrayList<String> moves = new ArrayList<String>();
 		ChessPiece adjPiece;
 		String move;
@@ -73,7 +73,7 @@ public class Rook extends ChessPiece{
 		        }
 		    }
 		} catch (IllegalPositionException e) {
-			System.out.println(e);
+			throw(e);
 		}
 		
 		return moves;
