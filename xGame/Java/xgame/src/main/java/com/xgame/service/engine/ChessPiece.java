@@ -54,6 +54,6 @@ abstract class ChessPiece {
 	
 	abstract public String toString();
 	
-	abstract public ArrayList<String> legalMoves();
+	abstract public ArrayList<String> legalMoves() throws IllegalPositionException;
 	
 }
