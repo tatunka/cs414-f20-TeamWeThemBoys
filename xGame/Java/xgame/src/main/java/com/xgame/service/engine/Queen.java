@@ -14,7 +14,7 @@ public class Queen extends ChessPiece{
 	}
 
 	@Override
-	public ArrayList<String> legalMoves() {
+	public ArrayList<String> legalMoves() throws IllegalPositionException {
 		ArrayList<String> moves = new ArrayList<String>();
 		ChessBoard tempBoard = this.board;
 		ChessPiece[] pieces = {
@@ -24,12 +24,11 @@ public class Queen extends ChessPiece{
 	    for (ChessPiece piece : pieces) {
 	        try {
 				piece.setPosition(toPosition(this.column, this.row));
+				moves.addAll(piece.legalMoves());
 			} catch (IllegalPositionException e) {
-				e.printStackTrace();
-			}
-	        moves.addAll(piece.legalMoves());
+				throw(e);
+			}  
 	    }
-	    return moves;
 	}
 
 }
