@@ -90,7 +90,7 @@ public class ChessBoard {
 		} 
 	}
 	
-	public void move(String fromPosition, String toPosition) throws IllegalMoveException{
+	public void move(String fromPosition, String toPosition) throws IllegalMoveException, IllegalPositionException{
 		try {
 			ChessPiece toMove = getPiece(fromPosition);
 			if (toMove == null) {
@@ -112,7 +112,7 @@ public class ChessBoard {
 				board[fromRow][fromColumn] = null;
 			}
 		} catch( IllegalPositionException e) {
-			e.printStackTrace();
+			throw(e)
 		}
 		
 	}
