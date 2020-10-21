@@ -20,8 +20,8 @@ public class Bishop extends ChessPiece{
 		String move;
 		try {
 
-			for (int i = column + 1, j = row + 1; i <= 7 && j <= 7; i++, j++) {
-				move = toPosition(i, j);
+		    for (int i = column + 1, j = row + 1; i <= 7 && j <= 7; i++, j++) {
+			move = toPosition(i, j);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
 		            moves.add(move);
@@ -33,8 +33,8 @@ public class Bishop extends ChessPiece{
 		        }
 		    }
 
-			for (int i = column - 1, j = row + 1; i >= 0 && j <= 7; i--, j++) {
-				move = toPosition(i, j);
+		    for (int i = column - 1, j = row + 1; i >= 0 && j <= 7; i--, j++) {
+			move = toPosition(i, j);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
 		            moves.add(move);
@@ -46,8 +46,8 @@ public class Bishop extends ChessPiece{
 		        }
 		    }
 
-			for (int i = column + 1, j = row - 1; i <= 7 && j >= 0; i++, j--) {
-				move = toPosition(i, j);
+		    for (int i = column + 1, j = row - 1; i <= 7 && j >= 0; i++, j--) {
+			move = toPosition(i, j);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
 		            moves.add(move);
@@ -59,8 +59,8 @@ public class Bishop extends ChessPiece{
 		        }
 		    }
 
-			for (int i = column - 1, j = row - 1; i >= 0 && j >= 0; i--, j--) {
-				move = toPosition(i, j);
+		    for (int i = column - 1, j = row - 1; i >= 0 && j >= 0; i--, j--) {
+			move = toPosition(i, j);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
 		            moves.add(move);
