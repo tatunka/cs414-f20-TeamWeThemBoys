@@ -23,6 +23,46 @@ export function findLocation(location){
     return [letter, number];
 }
 
+export function showTable(elements){
+    let table = [];
+    for(let row = 0; row < elements.length; row++){
+        table.push(
+            <Grid item key={"row "+ row} style={{flex:'1'}}>{elements[row]}</Grid>
+        );
+    }
+    return table;
+}
+
+export function getPieceList(color){
+    let pieceList = [];
+    if(color === 'black'){
+        for(let i = 0;  i < 8; i++){
+            pieceList.push(PawnPiece.blackName);
+        }
+        pieceList.push(RookPiece.blackName);
+        pieceList.push(RookPiece.blackName);
+        pieceList.push(BishopPiece.blackName);
+        pieceList.push(BishopPiece.blackName);
+        pieceList.push(KnightPiece.blackName);
+        pieceList.push(KnightPiece.blackName);
+        pieceList.push(KingPiece.blackName);
+        pieceList.push(QueenPiece.blackName);
+    }else{
+        for(let i = 0;  i < 8; i++){
+            pieceList.push(PawnPiece.whiteName);
+        }
+        pieceList.push(RookPiece.whiteName);
+        pieceList.push(RookPiece.whiteName);
+        pieceList.push(BishopPiece.whiteName);
+        pieceList.push(BishopPiece.whiteName);
+        pieceList.push(KnightPiece.whiteName);
+        pieceList.push(KnightPiece.whiteName);
+        pieceList.push(KingPiece.whiteName);
+        pieceList.push(QueenPiece.whiteName);
+    }
+    return pieceList;
+}
+
 export function createBoardPiece (pieceName, color, location, clickFunction){
     color = color.toLowerCase();
     let className = color + "BoardSquare";

@@ -46,6 +46,10 @@
     background-color: sandybrown;
 }
 
+.hiddenBoardSquare{
+    flex:1;
+    background-color: navajowhite;
+}
 .transparent{
     opacity: 0%;
 }

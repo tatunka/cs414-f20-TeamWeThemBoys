@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import Grid from '@material-ui/core/Grid';
 import PropTypes from "prop-types";
-import {findLocation, createBoardPiece} from './HelpfulMatchTools.js'
+import {findLocation, createBoardPiece, showTable} from './HelpfulMatchTools.js'
 
 import './MatchStyle.css'
 
@@ -60,12 +60,12 @@ const MatchBoard = (props) => {
     }
 
     const createBoard = () => {
-        let alpha = ['a', 'b', 'c', 'd','e', 'f', 'g', 'i'];
+        let alpha = ['a', 'b', 'c', 'd','e', 'f', 'g', 'h'];
         let board = [];
         for(let row = 0; row < 8; row++){
             board.push([]);
             for(let column = 0; column < 8; column++){
-                let tempLocation = (alpha[7-column] + (8-row).toString());
+                let tempLocation = (alpha[7-row] + (8-column).toString());
                 if(row%2 === 0){
                     if(column % 2 === 0){
                         board[row].push(
@@ -126,16 +126,7 @@ const MatchBoard = (props) => {
         return newBoard;
     }
 
-    const showTable = () => {
-        let table = [];
-        for(let row = 0; row < chessBoard.length; row++){
-            table.push(
-                <Grid item key={"row "+ row} style={{flex:'1'}}>{chessBoard[row]}</Grid>
-            );
-        }
-        return table;
-    }
-
+    //modify to react to boardState change
     if(chessBoard.length === 0){
         setChessBoard(createBoard());
         checkForAdditions();
@@ -148,7 +139,7 @@ const MatchBoard = (props) => {
 
     return (
         <div className={"mainBody"}>
-            <Grid container className={'gameBoard'} spacing={0}>{showTable()}</Grid>
+            <Grid container className={'gameBoard'} spacing={0}>{showTable(chessBoard)}</Grid>
         </div>
     );
 }
