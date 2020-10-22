@@ -13,7 +13,7 @@ const MatchSelect = (props) => {
     <Collapse isOpen={isOpen}>
       <div>
         <p>add match selection data</p>
-        <Button variant="outlined" color="primary" onClick={setShowMatchCreation(true)}>
+        <Button variant="outlined" color="primary" onClick={() => {setShowMatchCreation(true)} }>
                 Create a Match
         </Button>
 

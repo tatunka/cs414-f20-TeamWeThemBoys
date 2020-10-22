@@ -5,13 +5,14 @@ import PropTypes from "prop-types";
 import { Formik, Field } from "formik";
 
 const MatchCreateDialog = (props) => {
-
-  const [showMatchCreation, setShowMatchCreation] = React.useState(false);
-
+  const {
+    showMatchCreation,
+    setShowMatchCreation
+  } = props;
 
   return (
 
-    <Dialog open={showMatchCreation} onClose={setShowMatchCreation(false)} aria-labelledby="form-dialog-title">
+    <Dialog open={showMatchCreation} onClose={() => {setShowMatchCreation(false)}} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Match Creation</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -19,8 +20,8 @@ const MatchCreateDialog = (props) => {
               </DialogContentText>
               <Formik
                     onSubmit={(values) => {
-                      console.log("TODO: Hook up log-in API", values);
-                      setShowMatchCreation();
+                      console.log("TODO: Hook up match creation API", values);
+                      setShowMatchCreation(false);
                     }}
                     initialValues={{
                       opponent: "",
@@ -79,7 +80,7 @@ const MatchCreateDialog = (props) => {
                                   size="small"
                                   color="primary"
                                   style={{ textTransform: "none" }}
-                                  onClick={setShowMatchCreation(false)}
+                                  onClick={() => {setShowMatchCreation(false)}}
                                 >
                                   Cancel
                                 </Button>
