@@ -1,63 +1,60 @@
 .fullSize {
-    display:flex;
-    width:100%;
-    height: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebar {
-    display:flex;
-    flex-direction: column;
-    width: 25%;
-    height: 100%;
-    background-color:navajowhite;
-    min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  height: 100%;
+  background-color: navajowhite;
+  min-height: 85vh;
 }
 
 .mainBody {
-    display: flex;
-    justify-content: center;
-    width: 50%;
-    height: 100%;
-    background-color: antiquewhite;
-    min-height: 85vh;
-    margin: auto
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: antiquewhite;
+  min-height: 85vh;
+  margin: auto;
 }
 
-.gameBoard{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.gameBoard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chessPiece {
-    max-width: 90%;
-    max-height: 90%;
+  max-width: 90%;
+  max-height: 90%;
 }
 
 .white {
-    filter:invert(100%);
+  filter: invert(100%);
 }
 
 .whiteBoardSquare {
-    flex:1;
-    background-color: sandybrown;
+  flex: 1;
+  background-color: sandybrown;
 }
 
-.hiddenBoardSquare{
-    flex:1;
-    background-color: navajowhite;
+.hiddenBoardSquare {
+  flex: 1;
+  background-color: navajowhite;
 }
-.transparent{
-    opacity: 0%;
+.transparent {
+  opacity: 0%;
 }
 
 .blackBoardSquare {
-    flex:1;
-    background-color: saddlebrown;
+  flex: 1;
+  background-color: saddlebrown;
 }
-
-
-
