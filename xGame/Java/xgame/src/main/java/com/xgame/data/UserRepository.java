@@ -8,4 +8,6 @@ import com.xgame.data.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 	List<User> findByNicknameLikeAndIsDeletedFalseOrEmailAndIsDeletedFalse(String nickname, String email);
+
+	User findByEmailAndPasswordHashAndIsDeletedFalse(String email, String passwordHash);
 }
