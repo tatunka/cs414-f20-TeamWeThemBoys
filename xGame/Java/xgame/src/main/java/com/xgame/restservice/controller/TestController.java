@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xgame.common.viewmodels.TestViewModel;
 import com.xgame.service.interfaces.ITestService;
@@ -51,6 +52,11 @@ public class TestController {
 		testService.updateTest(id, content);
 		
 		return ResponseEntity.ok(HttpStatus.OK);
+	}
+	
+	@GetMapping("/test/error")
+	public void error() {
+		throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "This is a test error", new Exception("This is a test error"));
 	}
 	
 }
