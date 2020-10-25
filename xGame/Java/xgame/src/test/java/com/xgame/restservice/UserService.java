@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.xgame.data.UserRepository;
 import com.xgame.data.entities.User;
 import com.xgame.service.interfaces.IUserService;
+import com.xgame.service.models.UserCredentials;
 
 @SpringBootTest
 class UserService {
@@ -54,21 +56,97 @@ class UserService {
 	}
 
 	@Test
-	void registerNewUser_validCredentials_addsUserToDatabase() {
-//		var testNickname = "testNickname1";
-//		var testEmail = "testEmail1";
-//		var testPassword = "testPassword1";
-//
-//		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
-//		userService.registerNewUser(credentials);
-//
-//		var userInDb = userRepo.findByEmailAndPasswordHashAndIsDeletedFalse(testEmail, testPassword);
-//		var userInDbView = new UserViewModel(userInDb);
-//
-//		assertTrue(userInDbView.getNickname().equals(testNickname));
-//		assertTrue(userInDbView.getEmail().equals(testEmail));
-//
-//		userRepo.delete(userInDb);
+	void registerNewUser_validCredentials() {
+		var testNickname = "testNickname1";
+		var testEmail = "testEmail1";
+		var testPassword = "testPassword1";
+
+		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
+		var user = userService.registerNewUser(credentials);
+
+		var search = userService.search("testNickname1");
+		var searchedUserNickname = search.stream().map(f -> f.getNickname()).collect(Collectors.toList());
+
+		var loggedInUser = userService.login(credentials);
+
+		assertTrue(search.size() == 1);
+		assertTrue(searchedUserNickname.contains(testNickname));
+
+		assertTrue(loggedInUser.getNickname().equals(testNickname));
+		assertTrue(loggedInUser.getEmail().equals(testEmail));
+
+		userRepo.deleteById(user.getId());
+	}
+
+	@Test
+	void registerNewUser_duplicateNickname_throwsException() {
+		var testNickname1 = "testNickname1";
+		var testEmail1 = "testEmail1";
+		var testPassword1 = "testPassword1";
+
+		var testEmail2 = "testEmail2";
+		var testPassword2 = "testPassword2";
+
+		var credentials1 = new UserCredentials(testNickname1, testEmail1, testPassword1);
+		var credentials2 = new UserCredentials(testNickname1, testEmail2, testPassword2);
+
+		var user = userService.registerNewUser(credentials1);
+
+		Assertions.assertThrows(Exception.class, () -> userService.registerNewUser(credentials2));
+
+		userRepo.deleteById(user.getId());
+	}
+
+	@Test
+	void registerNewUser_duplicateEmail_throwsException() {
+		var testNickname1 = "testNickname1";
+		var testEmail1 = "testEmail1";
+		var testPassword1 = "testPassword1";
+
+		var testNickname2 = "testNickname2";
+		var testPassword2 = "testPassword2";
+
+		var credentials1 = new UserCredentials(testNickname1, testEmail1, testPassword1);
+		var credentials2 = new UserCredentials(testNickname2, testEmail1, testPassword2);
+
+		var user = userService.registerNewUser(credentials1);
+
+		Assertions.assertThrows(Exception.class, () -> userService.registerNewUser(credentials2));
+
+		userRepo.deleteById(user.getId());
+	}
+
+	@Test
+	void login_validCredentials() {
+		var testNickname = "testNickname1";
+		var testEmail = "testEmail1";
+		var testPassword = "testPassword1";
+
+		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
+		var user = userService.registerNewUser(credentials);
+
+		var loggedInUser = userService.login(credentials);
+
+		assertTrue(loggedInUser.getNickname().equals(testNickname));
+		assertTrue(loggedInUser.getEmail().equals(testEmail));
+
+		userRepo.deleteById(user.getId());
+	}
+
+	@Test
+	void login_invalidCredentials() {
+		var testNickname = "testNickname1";
+		var testEmail = "testEmail1";
+		var testPassword = "testPassword1";
+
+		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
+		var user = userService.registerNewUser(credentials);
+
+		var badCredentials = new UserCredentials("badNickname", "bad@email", "badPassword");
+
+		Assertions.assertThrows(Exception.class, () -> userService.login(badCredentials));
+
+		userRepo.deleteById(user.getId());
 	}
 
 }

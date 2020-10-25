@@ -33,7 +33,7 @@ public class UserController {
 			return userService.registerNewUser(credentials);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"There is already a registered user with the given username, email, or password");
+					"There is already a registered user with the given username or email");
 		}
 	}
 

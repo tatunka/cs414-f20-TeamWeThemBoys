@@ -1,5 +1,6 @@
 package com.xgame.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.google.common.hash.Hashing;
 import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.common.viewmodels.UserViewModel;
 import com.xgame.data.UserRepository;
@@ -20,10 +22,13 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private UserRepository userRepo;
+	private final String salt = "boys-them-we-team";
 
 	@Override
 	public UserViewModel registerNewUser(UserCredentials credentials) {
-		var user = new User(credentials.nickname, credentials.email, credentials.password);
+		var hashedPassword = Hashing.sha256().hashString(credentials.password + salt, StandardCharsets.UTF_8)
+				.toString();
+		var user = new User(credentials.nickname, credentials.email, hashedPassword);
 		userRepo.save(user);
 
 		return new UserViewModel(user);
@@ -38,8 +43,9 @@ public class UserService implements IUserService {
 
 	@Override
 	public UserViewModel login(UserCredentials credentials) throws ResponseStatusException {
-		var passwordHash = credentials.password;
-		var user = userRepo.findByEmailAndPasswordHashAndIsDeletedFalse(credentials.email, passwordHash);
+		var hashedPassword = Hashing.sha256().hashString(credentials.password + salt, StandardCharsets.UTF_8)
+				.toString();
+		var user = userRepo.findByEmailAndPasswordHashAndIsDeletedFalse(credentials.email, hashedPassword);
 
 		if (user == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No account found for given email and password.");
