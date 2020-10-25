@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xgame.common.viewmodels.TestViewModel;
-import com.xgame.data.TestRepository;
+import com.xgame.data.ITestRepository;
 import com.xgame.data.entities.Test;
 import com.xgame.service.interfaces.ITestService;
 
@@ -15,7 +15,7 @@ import com.xgame.service.interfaces.ITestService;
 public class TestService implements ITestService {
 
 	@Autowired
-	private TestRepository testRepo; 
+	private ITestRepository testRepo; 
 	
 	@Override
 	public TestViewModel getTest(int id) {

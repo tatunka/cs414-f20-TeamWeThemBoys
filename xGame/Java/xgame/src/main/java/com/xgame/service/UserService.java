@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.google.common.hash.Hashing;
 import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.common.viewmodels.UserViewModel;
-import com.xgame.data.UserRepository;
+import com.xgame.data.IUserRepository;
 import com.xgame.data.entities.User;
 import com.xgame.service.interfaces.IUserService;
 import com.xgame.service.models.UserCredentials;
@@ -21,7 +21,7 @@ import com.xgame.service.models.UserCredentials;
 public class UserService implements IUserService {
 
 	@Autowired
-	private UserRepository userRepo;
+	private IUserRepository userRepo;
 	private final String salt = "boys-them-we-team";
 
 	@Override
