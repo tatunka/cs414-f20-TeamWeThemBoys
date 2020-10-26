@@ -2,7 +2,7 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
-abstract class ChessPiece {
+public abstract class ChessPiece {
 	
 	public enum Color {WHITE, BLACK};
 	

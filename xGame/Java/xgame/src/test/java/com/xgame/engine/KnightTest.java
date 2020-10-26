@@ -1,4 +1,4 @@
-package engine;
+package com.xgame.engine;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -6,9 +6,10 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import engine.ChessBoard;
-import engine.Knight;
-import engine.ChessPiece.Color;
+import com.xgame.service.engine.ChessBoard;
+import com.xgame.service.engine.ChessPiece.Color;
+import com.xgame.service.engine.IllegalPositionException;
+import com.xgame.service.engine.Knight;
 
 class KnightTest {
 

@@ -1,16 +1,15 @@
-package engine;
+package com.xgame.engine;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-//import a2.ChessPiece.Color;
 
-import engine.ChessBoard;
-import engine.IllegalMoveException;
-import engine.IllegalPositionException;
-import engine.Rook;
-import engine.ChessPiece.Color;
+import com.xgame.service.engine.ChessBoard;
+import com.xgame.service.engine.ChessPiece.Color;
+import com.xgame.service.engine.IllegalMoveException;
+import com.xgame.service.engine.IllegalPositionException;
+import com.xgame.service.engine.Pawn;
+import com.xgame.service.engine.Rook;
 
 class ChessBoardTest {
     
@@ -145,13 +144,10 @@ class ChessBoardTest {
 	@Test
 	void promotePawnTest() {
 		Pawn wPawn = new Pawn(board, Color.WHITE);
-		Pawn bPawn = new Pawn(board, Color.WHITE);
 		try {
 			wPawn.setPosition("b8");
 			assertTrue(board.promotePawn(wPawn, "knight"));
 			assertEquals(board.getPiece("b8").toString(), "\u2658");
-//			wPawn.setPosition("b8");
-//			assertTrue(board.promotePawn(wPawn, "knight"));
 		} catch (IllegalPositionException e) {
 			e.printStackTrace();
 		}
