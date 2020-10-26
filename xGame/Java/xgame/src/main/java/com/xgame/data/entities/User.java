@@ -56,24 +56,12 @@ public class User {
 		return nickname;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getPasswordHash() {
 		return passwordHash;
-	}
-
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
 	}
 
 	public Boolean getIsDeleted() {
@@ -92,31 +80,15 @@ public class User {
 		return this.messages;
 	}
 
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
-
 	public List<ChessMatch> getWhiteMatches() {
 		return whiteMatches;
-	}
-
-	public void setWhiteMatches(List<ChessMatch> whiteMatches) {
-		this.whiteMatches = whiteMatches;
 	}
 
 	public List<ChessMatch> getBlackMatches() {
 		return blackMatches;
 	}
 
-	public void setblackMatches(List<ChessMatch> blackMatches) {
-		this.blackMatches = blackMatches;
-	}
-
 	public List<ChessMatch> getWinningMatches() {
 		return winningMatches;
-	}
-
-	public void setWinningMatches(List<ChessMatch> winningMatches) {
-		this.winningMatches = winningMatches;
 	}
 }

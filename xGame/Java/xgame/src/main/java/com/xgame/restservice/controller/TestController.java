@@ -61,9 +61,4 @@ public class TestController {
 				new Exception("This is a test error"));
 	}
 
-	@GetMapping("/test/error")
-	public void error() {
-		throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "This is a test error", new Exception("This is a test error"));
-	}
-	
 }

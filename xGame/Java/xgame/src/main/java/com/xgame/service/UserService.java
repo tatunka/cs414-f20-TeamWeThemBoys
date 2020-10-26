@@ -47,11 +47,11 @@ public class UserService implements IUserService {
 				.toString();
 		var user = userRepo.findByEmailAndPasswordHashAndIsDeletedFalse(credentials.email, hashedPassword);
 
-		if (user == null) {
+		if (!user.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No account found for given email and password.");
 		}
 
-		return new UserViewModel(user);
+		return new UserViewModel(user.get());
 
 	}
 
