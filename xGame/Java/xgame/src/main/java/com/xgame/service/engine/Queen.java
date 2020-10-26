@@ -1,4 +1,4 @@
-package engine;
+package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
@@ -29,6 +29,8 @@ public class Queen extends ChessPiece{
 				throw(e);
 			}  
 	    }
+	    
+	     return moves;
 	}
 
 }
