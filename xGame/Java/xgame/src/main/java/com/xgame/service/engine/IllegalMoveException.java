@@ -1,4 +1,4 @@
- package engine;
+ package com.xgame.service.engine;
 
 public class IllegalMoveException extends Exception {
 

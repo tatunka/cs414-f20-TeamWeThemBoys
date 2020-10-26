@@ -1,10 +1,10 @@
-package engine;
+package com.xgame.service.engine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import engine.ChessPiece.Color;
+import com.xgame.service.engine.ChessPiece.Color;
 
 public class ChessBoard {
 	private ChessPiece[][] board;
@@ -112,7 +112,7 @@ public class ChessBoard {
 				board[fromRow][fromColumn] = null;
 			}
 		} catch( IllegalPositionException e) {
-			throw(e)
+			throw(e);
 		}
 		
 	}
