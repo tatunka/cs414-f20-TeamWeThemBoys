@@ -9,7 +9,7 @@ import com.xgame.service.engine.ChessPiece.Color;
 public class ChessBoard {
 	private ChessPiece[][] board;
 
-	ChessBoard(){
+	public ChessBoard(){
 		this.board = new ChessPiece[8][8]; 
 	}
 
