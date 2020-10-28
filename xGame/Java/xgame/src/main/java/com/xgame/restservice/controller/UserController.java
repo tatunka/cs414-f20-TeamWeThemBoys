@@ -16,7 +16,7 @@ import com.xgame.common.viewmodels.UserViewModel;
 import com.xgame.service.interfaces.IUserService;
 import com.xgame.service.models.UserCredentials;
 
-@CrossOrigin()
+@CrossOrigin
 @RestController
 public class UserController {
 
