@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xgame.common.viewmodels.TestViewModel;
 import com.xgame.data.ITestRepository;
@@ -21,13 +23,10 @@ public class TestService implements ITestService {
 	public TestViewModel getTest(int id) {
 		
 		var test = testRepo.findById(id);
+		test.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No test with that id exists."));
 		
-		if(test.isPresent()) {
-			var t = test.get();
-			return new TestViewModel(t.getId(), t.getContent());
-		}
-		
-		return null;
+		var t = test.get();
+		return new TestViewModel(t.getId(), t.getContent());
 	}
 
 	@Override
