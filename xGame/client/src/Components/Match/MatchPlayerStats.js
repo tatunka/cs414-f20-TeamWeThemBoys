@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import "./MatchStyle.css";
@@ -69,10 +69,9 @@ const MatchPlayerStats = (props) => {
     }
   };
 
-  if (changed) {
-    determineTaken();
-    setChanged(false);
-  }
+  useEffect(() => {
+  determineTaken();
+  }, [boardState]);
 
   return (
     <div className={"sidebar"}>

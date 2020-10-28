@@ -52,17 +52,10 @@ const MatchBoard = (props) => {
   //change to alter boardState
   const addSelected = (selectedPieceName, selectedLocation) => {
     console.log("clicked");
-    let tempSelected = selected;
-    tempSelected.push({
-      pieceName: selectedPieceName,
-      location: selectedLocation,
+    setSelected({
+    pieceName: selectedPieceName,
+    location: selectedLocation,
     });
-    if (tempSelected.length === 2) {
-      console.log("switch");
-      setSelected([]);
-    } else {
-      setSelected(tempSelected);
-    }
   };
 
   const createBoard = () => {
