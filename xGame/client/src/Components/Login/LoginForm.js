@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
 import { Formik } from "formik";
 import { Button, TextField } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+
+import * as userService from "../../service/userService";
 
 const LoginForm = (props) => {
-  const { setShowLoginForm, onLogin } = props;
+  const { setShowLoginForm, setActiveUser } = props;
+
+  const [loginError, setLoginError] = useState("");
 
   return (
     <Formik
-      onSubmit={(values) => {
-        console.log("TODO: Hook up log-in API", values);
-        onLogin();
+      onSubmit={async (values) => {
+        const user = await userService.login(values);
+        if (user?.error) setLoginError(user?.message);
+        else setActiveUser({ ...user, isLoggedIn: true });
       }}
       initialValues={{
         email: "",
@@ -22,6 +28,20 @@ const LoginForm = (props) => {
         const { setFieldValue, values } = formProps;
         return (
           <Col>
+            <Row className="pb-3">
+              <Col>
+                {loginError && (
+                  <Alert
+                    onClose={() => {
+                      setLoginError("");
+                    }}
+                    severity="error"
+                  >
+                    {loginError}
+                  </Alert>
+                )}
+              </Col>
+            </Row>
             <Row>
               <Col>
                 <TextField
@@ -83,12 +103,12 @@ const LoginForm = (props) => {
 
 LoginForm.propTypes = {
   setShowLoginForm: PropTypes.func,
-  onLogin: PropTypes.func
+  setActiveUser: PropTypes.func
 };
 
 LoginForm.defaultProps = {
   setShowLoginForm: () => {},
-  onLogin: () => {}
+  setActiveUser: () => {}
 };
 
 export default LoginForm;
