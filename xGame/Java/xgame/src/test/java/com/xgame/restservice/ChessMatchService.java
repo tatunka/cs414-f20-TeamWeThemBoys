@@ -11,6 +11,7 @@ import javax.persistence.Persistence;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xgame.common.enums.MatchStatus;
 import com.xgame.data.IChessMatchRepository;
@@ -164,5 +165,13 @@ class ChessMatchService {
 			userRepo.delete(player1);
 			userRepo.delete(player2);
 		}
+	}
+	
+	@Test
+	void cannotGetMatchById() {
+		assertThrows(ResponseStatusException.class, () -> {
+			//No match with Id "7" should exist
+			service.getMatch(7); //
+		});
 	}
 }
