@@ -1,6 +1,7 @@
 import React from "react";
-import { Collapse } from "reactstrap";
+import { Collapse, Row } from "reactstrap";
 import PropTypes from "prop-types";
+import { Button } from '@material-ui/core';
 
 import MatchPlayerStats from "./MatchPlayerStats";
 import MatchBoard from "./MatchBoard";
@@ -60,22 +61,32 @@ const Match = (props) => {
 
   return (
     <Collapse isOpen={isOpen}>
-      <div className={"fullSize"}>
-        <MatchPlayerStats
-          playerName={matchEntity.whitePlayer.nickName}
-          activeColor={determineActiveColor()}
-          turnCounter={matchEntity.turnCount}
-          boardState={boardState}
-        />
-        <MatchBoard boardState={boardState} activeColor={"white"} />
-        <MatchPlayerStats
-          playerName={matchEntity.blackPlayer.nickName}
-          activeColor={determineActiveColor()}
-          turnCounter={matchEntity.turnCount}
-          boardState={boardState}
-          opponent={true}
-        />
-      </div>
+      <Row>
+        <div className={"fullSize"}>
+          <MatchPlayerStats
+              playerName={matchEntity.whitePlayer.nickName}
+              activeColor={determineActiveColor()}
+              turnCounter={matchEntity.turnCount}
+              boardState={boardState}
+          />
+          <MatchBoard boardState={boardState} activeColor={"white"} />
+          <MatchPlayerStats
+              playerName={matchEntity.blackPlayer.nickName}
+              activeColor={determineActiveColor()}
+              turnCounter={matchEntity.turnCount}
+              boardState={boardState}
+              opponent={true}
+          />
+        </div>
+      </Row>
+      <Row>
+        <div class="center">
+          <Button variant="contained" color="secondary">
+            Forfeit
+          </Button>
+        </div>
+      </Row>
+
     </Collapse>
   );
 };
