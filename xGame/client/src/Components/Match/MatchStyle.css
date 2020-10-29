@@ -58,3 +58,7 @@
   flex: 1;
   background-color: saddlebrown;
 }
+
+.center {
+  margin: auto;
+}
