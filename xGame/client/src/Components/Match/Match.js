@@ -80,7 +80,7 @@ const Match = (props) => {
         </div>
       </Row>
       <Row>
-        <div class="center">
+        <div className={"center"}>
           <Button variant="contained" color="secondary">
             Forfeit
           </Button>
