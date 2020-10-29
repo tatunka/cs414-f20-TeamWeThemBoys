@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
 import { Formik } from "formik";
 import { Button, TextField } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+
+import * as userService from "../../service/userService";
 
 const SignUpForm = (props) => {
-  const { setShowLoginForm, onSignUp } = props;
+  const { setShowLoginForm, setActiveUser } = props;
+
+  const [registerError, setRegisterError] = useState("");
 
   return (
     <Formik
-      onSubmit={(values) => {
-        console.log("TODO: Hook up registration API", values);
-        onSignUp();
+      onSubmit={async (values) => {
+        const user = await userService.register(values);
+        if (user?.error) setRegisterError(user?.message);
+        else setActiveUser({ ...user, isLoggedIn: true });
       }}
       initialValues={{
         email: "",
-        username: "",
+        nickname: "",
         password: ""
       }}
     >
@@ -23,18 +29,32 @@ const SignUpForm = (props) => {
         const { setFieldValue, values } = formProps;
         return (
           <Col>
+            <Row className="pb-3">
+              <Col>
+                {registerError && (
+                  <Alert
+                    onClose={() => {
+                      setRegisterError("");
+                    }}
+                    severity="error"
+                  >
+                    {registerError}
+                  </Alert>
+                )}
+              </Col>
+            </Row>
             <Row>
               <Col>
                 <TextField
                   color="secondary"
-                  id="username"
+                  id="nickname"
                   variant="outlined"
                   style={{ width: "80%" }}
-                  name="username"
+                  name="nickname"
                   label="Username"
-                  type="username"
-                  value={values?.["username"] || ""}
-                  onChange={(e) => setFieldValue("username", e.target.value)}
+                  type="nickname"
+                  value={values?.["nickname"] || ""}
+                  onChange={(e) => setFieldValue("nickname", e.target.value)}
                 />
               </Col>
             </Row>
@@ -101,12 +121,12 @@ const SignUpForm = (props) => {
 
 SignUpForm.propTypes = {
   setShowLoginForm: PropTypes.func,
-  onSignUp: PropTypes.func
+  setActiveUser: PropTypes.func
 };
 
 SignUpForm.defaultProps = {
   setShowLoginForm: () => {},
-  onSignUp: () => {}
+  setActiveUser: () => {}
 };
 
 export default SignUpForm;

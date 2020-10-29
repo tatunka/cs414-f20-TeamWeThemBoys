@@ -10,19 +10,19 @@ import Footer from "./Margins/Footer";
 import "./App.css";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeUser, setActiveUser] = useState({ isLoggedIn: false });
 
   return (
     <div className="App">
-      <Header />
-      {isLoggedIn ? (
+      <Header activeUser={activeUser} />
+      {activeUser.isLoggedIn ? (
         <div className="pages">
           <Profile />
           <MatchSelect />
           <Match />
         </div>
       ) : (
-        <LoginContainer setIsLoggedIn={setIsLoggedIn} />
+        <LoginContainer setActiveUser={setActiveUser} />
       )}
       <Footer />
     </div>

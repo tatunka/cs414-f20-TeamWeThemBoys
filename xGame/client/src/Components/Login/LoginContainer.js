@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 const LoginContainer = (props) => {
-  const { setIsLoggedIn } = props;
+  const { setActiveUser } = props;
   const [showLoginForm, setShowLoginForm] = useState(true);
 
   const classes = useStyles();
@@ -55,16 +55,12 @@ const LoginContainer = (props) => {
         {showLoginForm ? (
           <LoginForm
             setShowLoginForm={setShowLoginForm}
-            onLogin={() => {
-              setIsLoggedIn(true);
-            }}
+            setActiveUser={setActiveUser}
           />
         ) : (
           <SignUpForm
             setShowLoginForm={setShowLoginForm}
-            onSignUp={() => {
-              setIsLoggedIn(true);
-            }}
+            setActiveUser={setActiveUser}
           />
         )}
       </Card>
@@ -73,11 +69,11 @@ const LoginContainer = (props) => {
 };
 
 LoginContainer.propTypes = {
-  setIsLoggedIn: PropTypes.func
+  setActiveUser: PropTypes.func
 };
 
 LoginContainer.defaultProps = {
-  setIsLoggedIn: () => {}
+  setActiveUser: () => {}
 };
 
 export default LoginContainer;
