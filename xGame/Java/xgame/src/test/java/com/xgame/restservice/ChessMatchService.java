@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,40 +59,6 @@ class ChessMatchService {
 			userRepo.delete(player2);
 		}
 		
-	}
-	
-	@Test
-	void getInvites() {
-		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
-		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
-		
-		var chessMatch = new ChessMatch("This is a test board");
-		chessMatch.setWhitePlayer(player1);
-		chessMatch.setBlackPlayer(player2);
-		chessMatch.setTurnCount(0);
-		chessMatch.setMatchStatus(MatchStatus.PENDING);
-		
-		var match = matchRepo.save(chessMatch);
-		
-		try {
-				
-		//test invites
-		var invites = service.getInvites(player2.getId());
-		assertEquals(invites.size(), 1);
-		
-		var invite = invites.get(0);
-		assertEquals(invite.getWhitePlayerNickname(), "junit1");
-		assertEquals(invite.getMatchId(), match.getId());
-		}
-		catch(Exception e) {
-			fail();
-		}
-		finally {
-			//cleanup
-			matchRepo.delete(match);
-			userRepo.delete(player1);
-			userRepo.delete(player2);
-		}
 	}
 	
 	@Test

@@ -1,8 +1,6 @@
 package com.xgame.service;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xgame.common.enums.MatchStatus;
-import com.xgame.common.viewmodels.MatchInviteViewModel;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IMessageRepository;
@@ -49,16 +46,6 @@ public class ChessMatchService implements IChessMatchService {
 		}
 		
 		return null;
-	}
-	
-	@Override
-	public List<MatchInviteViewModel> getInvites(int userId) {
-		var matches = matchRepo.findByBlackPlayerIdAndMatchStatus(userId, MatchStatus.PENDING);
-		
-		return matches
-				.stream()
-				.map(m -> new MatchInviteViewModel(m.getId(), m.getWhitePlayer().getNickname(), m.getCreationTimestamp()))
-				.collect(Collectors.toList());
 	}
 	
 	@Override
