@@ -11,6 +11,7 @@ import javax.persistence.Persistence;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xgame.common.enums.MatchStatus;
 import com.xgame.data.IChessMatchRepository;
@@ -134,5 +135,43 @@ class ChessMatchService {
 			userRepo.delete(player1);
 			userRepo.delete(player2);
 		}
+	}
+	
+	@Test 
+	void getMatchById(){
+		var matchCount = matchRepo.count();
+		
+		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+		
+		var testMatch = service.createMatch(player1.getId(), player2.getId());
+		var testMatchFromRepo = service.getMatch(testMatch.getId());
+		
+		try {
+			assertNotNull(testMatchFromRepo);
+			assertEquals(matchCount + 1, matchRepo.count());
+			assertEquals(testMatchFromRepo.getWhiteId(), player1.getId());
+			assertEquals(testMatchFromRepo.getBlackId(), player2.getId());
+			assertEquals(testMatchFromRepo.getWhiteEmail(), player1.getEmail());
+			assertEquals(testMatchFromRepo.getBlackEmail(), player2.getEmail());
+			assertEquals(testMatchFromRepo.getTurnCount(), 0);
+		}
+		catch(Exception e) {
+			fail();
+		}
+		finally {
+			//cleanup
+			matchRepo.deleteById(testMatchFromRepo.getId());
+			userRepo.delete(player1);
+			userRepo.delete(player2);
+		}
+	}
+	
+	@Test
+	void cannotGetMatchById() {
+		assertThrows(ResponseStatusException.class, () -> {
+			//No match with Id "-1" should exist
+			service.getMatch(-1); //
+		});
 	}
 }
