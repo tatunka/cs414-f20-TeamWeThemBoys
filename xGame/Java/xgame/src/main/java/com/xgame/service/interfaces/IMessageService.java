@@ -5,6 +5,7 @@ import java.util.List;
 import com.xgame.common.viewmodels.MessageViewModel;
 
 public interface IMessageService {
-	Boolean sendMessage(String email, String contents);
-	List<MessageViewModel> getMessages(String email);
+	MessageViewModel sendMessage(int playerId, String contents);
+	List<MessageViewModel> getMessages(int userId);
+	public List<MessageViewModel> getInvites(int userId);
 }
