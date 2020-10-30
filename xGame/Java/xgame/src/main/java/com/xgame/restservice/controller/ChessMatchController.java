@@ -27,4 +27,10 @@ public class ChessMatchController {
 	public Boolean acceptInvite(@RequestParam(value = "matchId") int matchId) {
 		return matchService.acceptInvite(matchId);
 	}
+	
+	@GetMapping("/match")
+	public MatchViewModel getMatch(@RequestParam(value = "matchId") int matchId) {
+		return matchService.getMatch(matchId);
+	}
+	
 }

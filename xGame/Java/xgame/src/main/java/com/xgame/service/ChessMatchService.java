@@ -3,7 +3,9 @@ package com.xgame.service;
 import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xgame.common.enums.MatchStatus;
 import com.xgame.common.viewmodels.MatchViewModel;
@@ -74,8 +76,9 @@ public class ChessMatchService implements IChessMatchService {
 
 	@Override
 	public MatchViewModel getMatch(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		var matchState = matchRepo.findById(id);
+		matchState.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that id exists."));
+		return new MatchViewModel(matchState.get());
 	}
 
 	@Override
