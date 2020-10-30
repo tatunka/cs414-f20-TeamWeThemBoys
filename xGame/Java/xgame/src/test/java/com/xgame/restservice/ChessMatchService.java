@@ -170,8 +170,8 @@ class ChessMatchService {
 	@Test
 	void cannotGetMatchById() {
 		assertThrows(ResponseStatusException.class, () -> {
-			//No match with Id "7" should exist
-			service.getMatch(7); //
+			//No match with Id "-1" should exist
+			service.getMatch(-1); //
 		});
 	}
 }
