@@ -1,14 +1,68 @@
-﻿ID,Work Item Type,Title,Assigned To,State,Priority,Acceptance Criteria
-"4","User Story","As a new user I would like to register for the platform","McMullin, Lance (EID) <lancemc@colostate.edu>","Active","1","<ul><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Must have unique email</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><font face=""Calibri, Calibri_MSFontService, sans-serif""><span style=""font-size:14.6667px;"">Must have u</span></font>nique nickname</li><li><span style=""margin:0px;"">Must have password</span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li></ul><br><br><br>"
-"5","User Story","As a user, I would like to be able to log out of the platform ","Alex Guentchev <agenchev@colostate.edu>","Active","2","<div>-Provide the user a button to log out</div><div>-User is brought back to login screen</div>"
-"6","User Story","As a user, I would like to be able to log into the platform ","Alex Guentchev <agenchev@colostate.edu>","Active","1","<div>-Users must be able to log in using email &amp; password</div><div>-Email and password must match a user in the database</div><div>-User capability will be limited until logged in</div>"
-"7","User Story","As a user, I would like to be able to unregister from the platform ","Jesse Schmidt <jessejs@colostate.edu>","Active","3","<div>-Once unregistered, user can't login</div><div>-User won't show up in searches anymore</div><div>-Can't be invited to a match</div><div>-All open games will be forfeited</div><div>-Other players can't view their profile</div>"
-"8","User Story","As a player, I would like to create a new match ","Joseph Tonski <jojojr@colostate.edu>","Active","1","<div><span lang=X-NONE style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Must be able to play multiple matches async</span></span><span style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span><br></div>"
-"10","User Story","As a player, I would like to be able to accept invitations to matches ","Joseph Tonski <jojojr@colostate.edu>","Active","1","<div>-Once invitation is accepted user can is brought into the match</div><div>-Match board is initialized</div><div>-Challenger receives message indicating match invitation has been accepted</div>"
-"11","User Story","As a player, I would like to be able to reject invitations to matches ","Jesse Schmidt <jessejs@colostate.edu>","Active","3","<div><span lang=X-NONE style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Send notification of rejection</span></span><span style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span><br></div>"
-"13","User Story","As a player, I would like to be able to quit a match. ","Musser,Westin (EID) <wstnmssr@colostate.edu>","Active","3","<ul><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Abandon match</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Add abandoned match to history or note match has been abandoned</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li></ul>"
-"14","User Story","As a user, I would like to be able to view my profile ","Musser,Westin (EID) <wstnmssr@colostate.edu>","New","4","<ul><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">User must be registered.</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">View Match history</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">What else is in user profile?</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Can view others profiles?</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;Yes</span></li></ul>"
-"15","User Story","As a player, I want to play Legan chess ",,"Active","1","<ul><li>Follows Legan chess rules</li><ul><li><a href=""https://en.wikipedia.org/wiki/Legan_chess"">https://en.wikipedia.org/wiki/Legan_chess</a><br></li><li><a href=""https://brainking.com/en/GameRules?tp=70"">https://brainking.com/en/GameRules?tp=70</a></li><li><a href=""https://www.youtube.com/watch?v=7HdUkGNVURk"">https://www.youtube.com/watch?v=7HdUkGNVURk</a><br></li></ul><li>System determines who makes first move</li><li>Players can only make moves on their turn</li><li>Game doesn't start until enough players have joined</li><li>State of match is saved</li></ul>"
-"16","User Story","As a player, I want to exit a match to resume later","Joseph Tonski <jojojr@colostate.edu>","Closed","2","<div>-player can exit match</div><div>-match state is saved</div>"
-"17","User Story","As a player, I want to resume a previously started match ","Jesse Schmidt <jessejs@colostate.edu>","Active","2","<div>-Player can view current state of match</div><div>-Player can rejoin match in progress</div>"
-"18","User Story","As a player, I want to be notified about the outcome of a match ","McMullin, Lance (EID) <lancemc@colostate.edu>","Active","4","<div>-Both players messages upon match completion</div><div>-Match status updated in player history</div>"
+﻿ID,Work Item Type,Title,State,Priority,Acceptance Criteria
+"4","User Story","As a new user I would like to register for the platform","Active","1","<ul><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Must have unique email</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><font face=""Calibri, Calibri_MSFontService, sans-serif""><span style=""font-size:14.6667px;"">Must have u</span></font>nique nickname</li><li><span style=""margin:0px;"">Must have password</span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li></ul><br><br><br>"
+"5","User Story","As a user, I would like to be able to log out of the platform ","Active","2","<div>-Provide the user a button to log out</div><div>-User is brought back to login screen</div>"
+"6","User Story","As a user, I would like to be able to log into the platform ","Active","1","<div>-Users must be able to log in using email &amp; password</div><div>-Email and password must match a user in the database</div><div>-User capability will be limited until logged in</div>"
+"7","User Story","As a user, I would like to be able to unregister from the platform ","Active","3","<div>-Once unregistered, user can't login</div><div>-User won't show up in searches anymore</div><div>-Can't be invited to a match</div><div>-All open games will be forfeited</div><div>-Other players can't view their profile</div>"
+"8","User Story","As a player, I would like to create a new match ","Active","1","<div><span lang=X-NONE style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Must be able to play multiple matches async</span></span><span style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span><br></div>"
+"10","User Story","As a player, I would like to be able to accept invitations to matches ","Active","1","<div>-Once invitation is accepted user can is brought into the match</div><div>-Match board is initialized</div><div>-Challenger receives message indicating match invitation has been accepted</div>"
+"11","User Story","As a player, I would like to be able to reject invitations to matches ","Active","3","<div><span lang=X-NONE style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Send notification of rejection</span></span><span style=""margin:0px;color:windowtext;font-size:11pt;text-align:left;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span><br></div>"
+"13","User Story","As a player, I would like to be able to quit a match. ","Active","3","<ul><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Abandon match</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Add abandoned match to history or note match has been abandoned</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li></ul>"
+"14","User Story","As a user, I would like to be able to view my profile ","New","4","<ul><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">User must be registered.</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">View Match history</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">What else is in user profile?</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;</span></li><li><span lang=X-NONE style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;""><span style=""margin:0px;"">Can view others profiles?</span></span><span style=""color:windowtext;font-size:11pt;margin:0px;font-family:Calibri, Calibri_MSFontService, sans-serif;"">&nbsp;Yes</span></li></ul>"
+"15","User Story","As a player, I want to play Legan chess ","Active","1","<ul><li>Follows Legan chess rules</li><ul><li><a href=""https://en.wikipedia.org/wiki/Legan_chess"">https://en.wikipedia.org/wiki/Legan_chess</a><br></li><li><a href=""https://brainking.com/en/GameRules?tp=70"">https://brainking.com/en/GameRules?tp=70</a></li><li><a href=""https://www.youtube.com/watch?v=7HdUkGNVURk"">https://www.youtube.com/watch?v=7HdUkGNVURk</a><br></li></ul><li>System determines who makes first move</li><li>Players can only make moves on their turn</li><li>Game doesn't start until enough players have joined</li><li>State of match is saved</li></ul>"
+"16","User Story","As a player, I want to exit a match to resume later","Closed","2","<div>-player can exit match</div><div>-match state is saved</div>"
+"17","User Story","As a player, I want to resume a previously started match ","Active","2","<div>-Player can view current state of match</div><div>-Player can rejoin match in progress</div>"
+"18","User Story","As a player, I want to be notified about the outcome of a match ","Active","4","<div>-Both players messages upon match completion</div><div>-Match status updated in player history</div>"
+"20","Task","Implement basic Legan chess engine","Closed","2",
+"21","Task","Design database schema for chess engine","Closed","2",
+"22","Task","Create Database","Closed","2",
+"23","Task","Design Legan chess game engine","Closed","2",
+"25","Task","Implement match UI/visuals","Closed","2",
+"28","Task","Implement API for adding a registered user","Closed","2",
+"38","Task","Create service/repository to retrieve match state","Closed","2",
+"40","Task","Create/Update UI","Closed","2",
+"41","Task","Service/repo to save state of match ","New","2",
+"43","Task","Create/Update UI","Closed","2",
+"45","Task","Update/Create DB entity for Match","Closed","2",
+"46","Task","Create UI for match creation","Closed","2",
+"48","Task","Design DB changes for Match","Closed","2",
+"51","Task","ChessPiece Class Diagram","Closed","2",
+"52","Task","User Class Diagram","Closed","2",
+"54","Task","ChessBoard Class Diagram","Closed","2",
+"55","Task","Match Class Diagram","Closed","2",
+"56","Task","Message Class Diagram","Closed","2",
+"57","Task","ChessPiece CRC Diagram","Closed","2",
+"58","Task","User CRC Diagram","Closed","2",
+"59","Task","ChessBoard CRC Diagram","Closed","2",
+"60","Task","Match CRC Diagram","Closed","2",
+"61","Task","Message CRC Diagram","Closed","2",
+"62","Task","Create UI for viewing notifications","New","2",
+"63","Task","Create UI for accepting a match invitation","New","2",
+"66","Task","create reject button that deactivates the invitation","New","2",
+"67","Task","message creation service","New","2",
+"69","Task","implement confirmation popup","New","2",
+"70","Task","soft delete user from DB","Active","2",
+"72","Task","MatchRecord CRC Diagram","Closed","2",
+"73","Task","MatchRecord Class Diagram","Closed","2",
+"74","Task","Implement login service","Closed","2",
+"79","Task","Create forfeit button","Active","3",
+"80","Task","Report a game concession that updates player stats","New","2",
+"81","Task","Create tab or window for profile","New","2",
+"83","Task","Request player info when profile page loads","New","2",
+"85","Task","Set up React project","Closed","2",
+"86","Task","Set up Spring MVC skeleton","Closed","2",
+"87","Task","Integrate Hibernate into project","Closed","2",
+"88","Task","Create React views for Match Selection","Active","2",
+"89","Task","Create React View for Log In & Registration","Closed","2",
+"90","Task","Add search capability to match creation UI","Active","2",
+"91","Task","Create player search service","Closed","2",
+"92","Task","Create match creation service","Closed","2",
+"93","Task","Create service for accepting a match invitation","Closed","2",
+"94","Task","Logout UI","Active","2",
+"95","Task","Service to retrieve all notifications","Closed","2",
+"96","Task","Alter the King's moves to avoid being put in check","New","2",
+"97","Task","Determine if a player is in check","New","2",
+"98","Task","Determine legal moves to take a king out of check (All pieces)","New","2",
+"99","Task","Service to check for a piece's legal moves","New","2",
+"100","Task","Service to make a 'move'","New","2",
+"101","Task","Hook up front end login to backend service","Closed","2",
+"102","Task","initialize starting board","Active","2",
