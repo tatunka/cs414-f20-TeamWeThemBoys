@@ -1,5 +1,6 @@
 package com.xgame.common.viewmodels;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.xgame.data.entities.ChessMatch;
 
 public class MatchViewModel {
@@ -9,6 +10,7 @@ public class MatchViewModel {
 	private String whiteEmail;
 	private String blackEmail;
 	private int turnCount;
+	@JsonRawValue
 	private String chessBoard;
 	
 	public MatchViewModel(ChessMatch match) {

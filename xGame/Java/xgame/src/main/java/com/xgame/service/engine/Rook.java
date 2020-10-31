@@ -2,7 +2,9 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
-public class Rook extends ChessPiece{
+public class Rook extends ChessPiece {
+	
+	private ChessPieceType type = ChessPieceType.ROOK;
 
 	public Rook(ChessBoard board, Color color) {
 		super(board, color);
@@ -77,6 +79,10 @@ public class Rook extends ChessPiece{
 		}
 		
 		return moves;
+	}
+
+	public ChessPieceType getType() {
+		return type;
 	}
 
 }

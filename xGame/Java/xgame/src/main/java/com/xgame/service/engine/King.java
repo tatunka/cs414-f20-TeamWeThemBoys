@@ -3,6 +3,8 @@ package com.xgame.service.engine;
 import java.util.ArrayList;
 
 public class King extends ChessPiece{
+	
+	private ChessPieceType type = ChessPieceType.KING;
 
 	public King(ChessBoard board, Color color) {
 		super(board, color);
@@ -45,6 +47,10 @@ public class King extends ChessPiece{
 
 		return moves;
 		
+	}
+
+	public ChessPieceType getType() {
+		return type;
 	}
 
 }

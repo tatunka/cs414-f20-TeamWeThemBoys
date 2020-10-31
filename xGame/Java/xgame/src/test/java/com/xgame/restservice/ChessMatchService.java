@@ -10,13 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.xgame.common.enums.MatchStatus;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
-import com.xgame.data.entities.ChessMatch;
 import com.xgame.data.entities.Message;
 import com.xgame.data.entities.User;
+import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.interfaces.IChessMatchService;
 
 @SpringBootTest
@@ -68,25 +70,28 @@ class ChessMatchService {
 		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
 		List<Message> messages = new ArrayList<Message>();
 		
-		var chessMatch = new ChessMatch("This is a test board");
-		chessMatch.setWhitePlayer(player1);
-		chessMatch.setBlackPlayer(player2);
-		chessMatch.setTurnCount(0);
-		chessMatch.setMatchStatus(MatchStatus.PENDING);
+		var match = service.createMatch(player1.getId(), player2.getId());
 		
-		var match = matchRepo.saveAndFlush(chessMatch);
 		try {
+			
+			var chessBoard = new ChessBoard();
+			chessBoard.initialize();
+			var mapper = new ObjectMapper();
+			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(chessBoard);
+			
 			//test match acceptance
-			var success = service.acceptInvite(match.getId());
-			assertTrue(success);
+			var inprogMatch = service.acceptInvite(match.getId());
+			assertEquals(inprogMatch.getWhiteId(), player1.getId());
+			assertEquals(inprogMatch.getWhiteEmail(), player1.getEmail());
+			assertEquals(inprogMatch.getBlackId(), player2.getId());
+			assertEquals(inprogMatch.getBlackEmail(), player2.getEmail());
+			assertEquals(inprogMatch.getChessBoard(), json);
+			assertEquals(inprogMatch.getTurnCount(), 1);
 			
 			messages = messageRepo.findByUserId(player1.getId());
 			assertEquals(messages.size(), 1);
 			assertEquals(messages.get(0).getContents(), player2.getNickname() + " has accepted your invitation to a match!");
-			
-			//match = matchRepo.getOne(match.getId());
-			//assertEquals(match.getMatchStatus(), MatchStatus.INPROGRESS);
-			//assertTrue(match.getStartTimestamp() != null);
 		}
 		catch(Exception e) {
 			fail();
@@ -94,7 +99,7 @@ class ChessMatchService {
 		finally {
 			//cleanup
 			messageRepo.deleteAll(messages);
-			matchRepo.delete(match);
+			matchRepo.deleteById(match.getId());
 			userRepo.delete(player1);
 			userRepo.delete(player2);
 		}
