@@ -2,10 +2,12 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public abstract class ChessPiece {
 	
 	public enum Color {WHITE, BLACK};
-	
+	@JsonIgnore
 	protected ChessBoard board;
 
 	protected int row;

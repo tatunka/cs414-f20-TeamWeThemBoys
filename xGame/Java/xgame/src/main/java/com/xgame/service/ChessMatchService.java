@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xgame.common.enums.MatchStatus;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.data.IChessMatchRepository;
@@ -14,6 +18,7 @@ import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
 import com.xgame.data.entities.ChessMatch;
 import com.xgame.data.entities.Message;
+import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.interfaces.IChessMatchService;
 
 @Service
@@ -48,17 +53,33 @@ public class ChessMatchService implements IChessMatchService {
 		return null;
 	}
 	
+	/**
+	 * Accepts a match invitation. Match status will be set to "INPROGRESS" and board will
+	 * be initialized.
+	 * @param matchId - 
+	 */
 	@Override
-	public boolean acceptInvite(int matchId) {
+	public MatchViewModel acceptInvite(int matchId) {
 		var match = matchRepo.findById(matchId);
+		match.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that id exists."));
 		
-		if(match.isPresent()) {
-			//TODO: initialize chess board
+		if(match.get().getMatchStatus() != MatchStatus.PENDING) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Match is not pending.");
+		}
+		
+		try {
+			var mapper = new ObjectMapper();
+			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			var chessBoard = new ChessBoard();
+			chessBoard.initialize();
+			var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(chessBoard);
+			
 			
 			var m = match.get();
 			m.setTurnCount(1);
 			m.setMatchStatus(MatchStatus.INPROGRESS);
 			m.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
+			m.setChessBoard(json);
 			
 			var updatedMatch = matchRepo.saveAndFlush(m);
 			var whitePlayer = updatedMatch.getWhitePlayer();
@@ -67,10 +88,14 @@ public class ChessMatchService implements IChessMatchService {
 			
 			messageRepo.save(message);
 			
-			return true;
+			return new MatchViewModel(updatedMatch);
 		}
-		
-		return false;
+		catch(JsonProcessingException jpe) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error setting up new board.", jpe);
+		}
+		catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error accepting match invitation.", e);
+		}
 	}
 	
 

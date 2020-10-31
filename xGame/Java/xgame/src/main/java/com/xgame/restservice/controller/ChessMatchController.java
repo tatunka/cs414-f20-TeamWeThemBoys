@@ -25,8 +25,9 @@ public class ChessMatchController {
 	}
 	
 	@PatchMapping("/match/accept")
-	public Boolean acceptInvite(@RequestParam(value = "matchId") int matchId) {
-		return matchService.acceptInvite(matchId);
+	public MatchViewModel acceptInvite(@RequestParam(value = "matchId") int matchId) {
+		var match = matchService.acceptInvite(matchId);
+		return match;
 	}
 	
 	@GetMapping("/match")

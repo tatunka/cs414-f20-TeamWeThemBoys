@@ -2,7 +2,9 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
-public class Queen extends ChessPiece{
+public class Queen extends ChessPiece {
+	
+	private ChessPieceType type = ChessPieceType.QUEEN;
 
 	public Queen(ChessBoard board, Color color) {
 		super(board, color);
@@ -31,6 +33,10 @@ public class Queen extends ChessPiece{
 	    }
 	    
 	     return moves;
+	}
+
+	public ChessPieceType getType() {
+		return type;
 	}
 
 }

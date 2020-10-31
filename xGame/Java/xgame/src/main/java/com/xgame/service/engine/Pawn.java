@@ -2,7 +2,9 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
-public class Pawn extends ChessPiece{
+public class Pawn extends ChessPiece {
+	
+	private ChessPieceType type = ChessPieceType.PAWN;
 
 	public Pawn(ChessBoard board, Color color) {
 		super(board, color);
@@ -43,6 +45,10 @@ public class Pawn extends ChessPiece{
 			throw(e);
 		}
 		return moves;
+	}
+
+	public ChessPieceType getType() {
+		return type;
 	}
 
 }
