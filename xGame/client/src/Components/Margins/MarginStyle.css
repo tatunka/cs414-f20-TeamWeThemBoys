@@ -1,0 +1,17 @@
+.header {
+    height: 12%;
+    min-height: 120px;
+
+    margin-bottom: 25px;
+}
+
+/* Footer Styles */
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    height: 6%;
+    min-height: 100px;
+    margin-top: 25px;
+    margin-left: 25px;
+}
