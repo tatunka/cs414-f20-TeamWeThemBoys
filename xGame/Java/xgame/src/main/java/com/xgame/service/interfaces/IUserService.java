@@ -15,9 +15,7 @@ public interface IUserService {
 
 	UserViewModel login(UserCredentials credentials) throws ResponseStatusException;
 
-	Boolean deactivateUser(Integer id);
-
-	Boolean deactivateUser(String email);
+	void deactivateUser(Integer id);
 
 	ProfileViewModel getProfile(Integer id);
 
