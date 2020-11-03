@@ -149,4 +149,23 @@ class UserService {
 		userRepo.deleteById(user.getId());
 	}
 
+
+	@Test
+	void deactivateUser_correctFlag() {
+		var testNickname = "testNickname1";
+		var testEmail = "testEmail1";
+		var testPassword = "testPassword1";
+
+		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
+		var userView = userService.registerNewUser(credentials);
+
+		var user = userRepo.findById(userView.getId()).get();
+
+		userService.deactivateUser(user.getId());
+		user = userRepo.findById(user.getId()).get();
+
+		assertTrue(user.getIsDeleted());
+
+		userRepo.deleteById(user.getId());
+	}
 }
