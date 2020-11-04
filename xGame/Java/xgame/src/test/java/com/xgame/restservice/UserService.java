@@ -149,7 +149,6 @@ class UserService {
 		userRepo.deleteById(user.getId());
 	}
 
-
 	@Test
 	void deactivateUser_correctFlag() {
 		var testNickname = "testNickname1";
