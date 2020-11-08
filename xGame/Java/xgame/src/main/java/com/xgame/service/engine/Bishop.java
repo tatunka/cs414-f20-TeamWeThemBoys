@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 public class Bishop extends ChessPiece{
 	
-	private ChessPieceType type = ChessPieceType.BISHOP;
-	
 	public Bishop(ChessBoard board, Color color) {
 		super(board, color);
+	}
+	
+	public Bishop() {
+		super();
 	}
 
 	@Override
@@ -77,9 +79,5 @@ public class Bishop extends ChessPiece{
 			throw(e);
 		}
 		return moves;
-	}
-
-	public ChessPieceType getType() {
-		return type;
 	}
 }

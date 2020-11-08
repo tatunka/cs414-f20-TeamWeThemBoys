@@ -50,13 +50,13 @@ public class ChessMatchService implements IChessMatchService {
 			return new MatchViewModel(newMatch);
 		}
 		
-		return null;
+		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't create match. Can't find all the players!");
 	}
 	
 	/**
 	 * Accepts a match invitation. Match status will be set to "INPROGRESS" and board will
 	 * be initialized.
-	 * @param matchId - 
+	 * @param matchId - id of match to create
 	 */
 	@Override
 	public MatchViewModel acceptInvite(int matchId) {
@@ -72,7 +72,7 @@ public class ChessMatchService implements IChessMatchService {
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			var chessBoard = new ChessBoard();
 			chessBoard.initialize();
-			var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(chessBoard);
+			var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(chessBoard.getBoard());
 			
 			
 			var m = match.get();
@@ -99,6 +99,11 @@ public class ChessMatchService implements IChessMatchService {
 	}
 	
 
+	/**
+	 * Gets a match with the given id.
+	 * @param id - id of the match.
+	 * @return - updated view model of match with turn count, players, and board
+	 */
 	@Override
 	public MatchViewModel getMatch(int id) {
 		var matchState = matchRepo.findById(id);
@@ -106,16 +111,37 @@ public class ChessMatchService implements IChessMatchService {
 		return new MatchViewModel(matchState.get());
 	}
 
+	/**
+	 * Updates match.
+	 * @param matchState - view model with updated match data
+	 * @return - updated view model of match with turn count, players, and board
+	 */
 	@Override
-	public String getChessBoard(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String updateMatch(int id, String chessBoard) {
-		// TODO Auto-generated method stub
-		return null;
+	public MatchViewModel updateMatch(MatchViewModel matchState) {
+		var match = matchRepo.getOne(matchState.getId());
+		match.setTurnCount(match.getTurnCount() + 1);
+		match.setChessBoard(matchState.getChessBoard());
+		var updatedMatch = matchRepo.save(match);
+		
+		return new MatchViewModel(updatedMatch);
 	}
 	
+	/**
+	 * Ends match and updates match from view model data
+	 * @param matchSate - view model with updated match data
+	 * @param winnerId - id of winning player
+	 * @return - updated view model of match with turn count, players, and board 
+	 */
+	public MatchViewModel EndMatch(MatchViewModel matchSate, int winnerId) {
+		var match = matchRepo.getOne(matchSate.getId());
+		var winner = match.getBlackPlayer().getId() == winnerId ? match.getBlackPlayer() : match.getWhitePlayer();
+		match.setTurnCount(match.getTurnCount() + 1);
+		match.setChessBoard(matchSate.getChessBoard());
+		match.setWinningPlayer(winner);
+		match.setMatchStatus(MatchStatus.COMPLETED);
+		
+		var updatedMatch = matchRepo.save(match);
+		
+		return new MatchViewModel(updatedMatch);
+	}
 }
