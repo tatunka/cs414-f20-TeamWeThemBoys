@@ -170,6 +170,7 @@ class UserService {
 
 	@Test
 	void deactivateUser_correctFlag() {
+		
 		var testNickname = "testNickname1";
 		var testEmail = "testEmail1";
 		var testPassword = "testPassword1";
@@ -178,13 +179,19 @@ class UserService {
 		var userView = userService.registerNewUser(credentials);
 
 		var user = userRepo.findById(userView.getId()).get();
-
-		userService.deactivateUser(user.getId());
-		user = userRepo.findById(user.getId()).get();
-
-		assertTrue(user.getIsDeleted());
-
+		
+		try {
+			userService.deactivateUser(user.getId());
+			user = userRepo.findById(user.getId()).get();
+	
+			assertTrue(user.getIsDeleted());
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
 		userRepo.deleteById(user.getId());
+		}
 	}
 	
 	@Test
@@ -196,7 +203,7 @@ class UserService {
 		var userEntity1 = userRepo.save(user1);
 		var userEntity2 = userRepo.save(user2);
 		var userEntity3 = userRepo.save(user3);
-		
+		try {
 		userService.deactivateUser(userEntity2.getId());
 
 		var fuzzySearch = userService.search("JUnit");
@@ -217,11 +224,16 @@ class UserService {
 		
 		assertTrue(!fuzzySearchUserIds.contains(userEntity2.getId()));
 		assertTrue(!nicknameIds.contains(userEntity2.getId()));
-
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		// cleanup
-		userRepo.delete(userEntity1);
-		userRepo.delete(userEntity2);
-		userRepo.delete(userEntity3);
+		finally {
+			userRepo.delete(userEntity1);
+			userRepo.delete(userEntity2);
+			userRepo.delete(userEntity3);
+		}
 	}
 	
 	@Test
@@ -229,15 +241,18 @@ class UserService {
 		var testNickname = "testNickname1";
 		var testEmail = "testEmail1";
 		var testPassword = "testPassword1";
-
 		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
 		var user = userService.registerNewUser(credentials);
-		
-		userService.deactivateUser(user.getId());
-
-		Assertions.assertThrows(Exception.class, () -> userService.login(credentials));
-
-		userRepo.deleteById(user.getId());
+		try {
+			userService.deactivateUser(user.getId());
+			Assertions.assertThrows(Exception.class, () -> userService.login(credentials));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			userRepo.deleteById(user.getId());
+		}
 	}
 	
 }
