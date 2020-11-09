@@ -2,9 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./MarginStyle.css";
 import { Button } from "@material-ui/core";
+import UnregisterDialog from './UnregisterDialog';
 
 const Header = (props) => {
   const { activeUser, setActiveUser } = props;
+  const [showUnregisterConfirmation, setShowUnregisterConfirmation] = React.useState(false);
+
   return (
     <div className={"header"}>
       {activeUser.isLoggedIn ? (
@@ -20,6 +23,14 @@ const Header = (props) => {
           >
             Log Out
           </Button>
+          <Button
+            color="secondary"
+            onClick={() => {setShowUnregisterConfirmation(true)} }
+            size="small"
+          >
+            Deregister
+          </Button>
+          <UnregisterDialog showUnregisterConfirmation={showUnregisterConfirmation} setShowUnregisterConfirmation={setShowUnregisterConfirmation} />
         </div>
       ) : (
         <div>
