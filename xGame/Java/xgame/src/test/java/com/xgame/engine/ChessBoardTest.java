@@ -153,4 +153,39 @@ class ChessBoardTest {
 		}
 	}
 	
+	@Test
+	void isThreatenedTest() {
+		assertFalse(board.isThreatened("a1", Color.BLACK));
+		board.placePiece(new Rook(board, Color.BLACK), "a8");
+		assertTrue(board.isThreatened("a1", Color.BLACK));
+		assertFalse(board.isThreatened("a1", Color.WHITE));
+		board.placePiece(new Rook(board,Color.WHITE), "a1");
+		assertTrue(board.isThreatened("a1", Color.BLACK));
+		assertFalse(board.isThreatened("a1", Color.WHITE));
+		
+	}
+	
+	@Test
+	void isInCheckTest() {
+		//test initial
+		board.initialize();
+		assertFalse(board.isInCheck(Color.WHITE));
+		assertFalse(board.isInCheck(Color.BLACK));
+		
+		//test black in check
+		board.placePiece(new Rook(board, Color.WHITE), "a7");
+		assertTrue(board.isInCheck(Color.BLACK));
+		assertFalse(board.isInCheck(Color.WHITE));
+		
+		//test both in check
+		board.placePiece(new Rook(board, Color.BLACK), "g1");
+		assertTrue(board.isInCheck(Color.BLACK));
+		assertTrue(board.isInCheck(Color.WHITE));
+		
+		//test white in check
+		board.initialize();
+		board.placePiece(new Rook(board, Color.BLACK), "g1");
+		assertFalse(board.isInCheck(Color.BLACK));
+		assertTrue(board.isInCheck(Color.WHITE));
+	}
 }

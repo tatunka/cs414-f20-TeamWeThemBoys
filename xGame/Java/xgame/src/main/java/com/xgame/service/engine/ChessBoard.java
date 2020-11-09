@@ -167,6 +167,45 @@ public class ChessBoard {
 		return false;
 	}
 	
+
+	public boolean isThreatened(String position, Color threatColor) {
+		try {
+			for(char c = 'a'; c <= 'h'; c++) {
+				for(char i = '1'; i <= '8'; i++) {
+					String location = ""+c+i;
+					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
+						ArrayList<String> moves = getPiece(location).legalMoves();
+						if(moves.contains(position)) {
+							
+							return true;
+						}
+					}
+				}
+			}
+		}catch(IllegalPositionException e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+	
+	public boolean isInCheck(Color playerColor) {
+		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
+		String kingName = (playerColor == Color.BLACK) ? "\u265A" : "\u2654";
+		for(char c = 'a'; c <= 'h'; c++) {
+			for(char i = '1'; i <= '8'; i++) {
+				String location = ""+c+i;
+				try {
+					if(getPiece(location) != null && getPiece(location).toString() == kingName) {
+						return(isThreatened(location, threatColor));
+					}
+				}catch(IllegalPositionException e) {
+					System.out.println(e);
+				}
+				
+			}
+		}
+		return false;
+
 	public String toString() {
 		String chess="";    
 		String upperLeft = "\u250C";    
