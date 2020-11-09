@@ -153,10 +153,30 @@ public class ChessBoard {
 	
 	public boolean isThreatened(String position, Color threatColor) {
 		try {
-			for(int x = 0; x < 8; x++) {
-				for(int y = 0; y < 8; y++) {
-					if(board[x][y] != null && board[x][y].getColor() == threatColor) {
-						ArrayList<String> moves = board[x][y].legalMoves();
+			for(char c = 'a'; c <= 'h'; c++) {
+				for(char i = '1'; i <= '8'; i++) {
+					String location = ""+c+i;
+					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
+						ArrayList<String> moves = getPiece(location).legalMoves();
+						System.out.println(getPiece(location).toString());
+						System.out.println("Before: " + moves);
+						if(getPiece(location).toString() == "\u265F") {
+							System.out.println(c+'a');
+							moves.remove((c < 'h' && i > '1' ? ("" + (c+'a') + (i-'1')) : ("" + c + i)));
+							if(c < 'h') {
+								moves.add("" + c + ++i);
+							}
+							if(i > '1') {
+								--i;
+								moves.add("" + --c + --i);
+							}							
+						}
+//						if (getPiece(location).toString() == "\u2659"){
+//							moves.remove((c > 'a' && i < '8' ? ("" + ++c + i) : ("" + c + i)));
+	//						moves.add((c > 'a') ? ("" + --c + i) : "");
+				//		moves.add((i < '8') ? ("" + c + ++i) : "");
+//						}
+						System.out.println("After: " + moves);
 						if(moves.contains(position)) {
 							return true;
 						}
