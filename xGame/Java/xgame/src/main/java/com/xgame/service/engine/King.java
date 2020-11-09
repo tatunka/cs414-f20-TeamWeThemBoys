@@ -3,11 +3,13 @@ package com.xgame.service.engine;
 import java.util.ArrayList;
 
 public class King extends ChessPiece{
-	
-	private ChessPieceType type = ChessPieceType.KING;
 
 	public King(ChessBoard board, Color color) {
 		super(board, color);
+	}
+	
+	public King() {
+		super();
 	}
 
 	@Override
@@ -17,7 +19,7 @@ public class King extends ChessPiece{
 
 	@Override
 	public ArrayList<String> legalMoves() throws IllegalPositionException {
-		//loop through possible moves, only add is opposing ppiece cannot move there next turn
+		//loop through possible moves, only add is opposing piece cannot move there next turn
 		ArrayList<String> moves = new ArrayList<String>();
 		ChessPiece adjPiece;
 		String move;
@@ -48,9 +50,4 @@ public class King extends ChessPiece{
 		return moves;
 		
 	}
-
-	public ChessPieceType getType() {
-		return type;
-	}
-
 }

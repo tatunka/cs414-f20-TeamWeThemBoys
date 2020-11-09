@@ -6,6 +6,6 @@ public interface IChessMatchService {
 	MatchViewModel createMatch(int whiteId, int blackId);
 	MatchViewModel acceptInvite(int matchId);
 	MatchViewModel getMatch(int id);
-	String getChessBoard(int id);
-	String updateMatch(int id, String chessBoard);
+	MatchViewModel updateMatch(MatchViewModel matchState);
+	MatchViewModel EndMatch(MatchViewModel matchState, int winnerId);
 }
