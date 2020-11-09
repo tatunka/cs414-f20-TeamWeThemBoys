@@ -10,12 +10,12 @@ function testLogoutButton() {
     id: 1,
     nickname: "greg",
     email: "gmail.com",
-    isLoggedIn: true,
+    isLoggedIn: true
   };
   const app = shallow(
     <Header
       activeUser={activeUser}
-      setActiveUser={(user) => {
+      logOutUser={(user) => {
         activeUser = user;
       }}
     />
