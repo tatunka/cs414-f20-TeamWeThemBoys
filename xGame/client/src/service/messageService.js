@@ -10,8 +10,7 @@ export const getMessages = (playerId) => {
 
   return utils
     .basicAPI(url, "Get Messages", {
-      method: "GET",
-      body: {}
+      method: "GET"
     })
     .then((response) => {
       if (response) {

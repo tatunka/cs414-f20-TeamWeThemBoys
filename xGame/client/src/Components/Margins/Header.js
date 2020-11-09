@@ -9,7 +9,8 @@ import {
   Typography,
   makeStyles,
   Drawer,
-  withTheme
+  Card,
+  CardContent
 } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -53,6 +54,23 @@ const Header = (props) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
+  const Notifications = () => {
+    if (activeUser?.notifications) {
+      return (
+        <div>
+          {activeUser.notifications.map((notification) => {
+            return (
+              <Card key={notification?.id}>
+                <CardContent>{notification?.content}</CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      );
+    }
+    return <div>test</div>;
+  };
+
   const classes = useStyles();
   return (
     <div className={"header"}>
@@ -94,7 +112,7 @@ const Header = (props) => {
                 <ChevronLeftIcon />
               </IconButton>
             </div>
-            {activeUser?.notifications}
+            <Notifications />
           </Drawer>
           <Drawer
             variant="persistent"
