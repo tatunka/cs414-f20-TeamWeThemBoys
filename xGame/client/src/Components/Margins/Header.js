@@ -18,6 +18,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import Profile from "../Profile/Profile";
+import UnregisterDialog from "./UnregisterDialog";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: "flex-start"
+  },
+  notificationTitle: {
+    fontSize: 14
   }
 }));
 
@@ -53,6 +57,12 @@ const Header = (props) => {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [
+    showUnregisterConfirmation,
+    setShowUnregisterConfirmation
+  ] = React.useState(false);
+
+  const classes = useStyles();
 
   const Notifications = () => {
     if (activeUser?.notifications) {
@@ -61,7 +71,19 @@ const Header = (props) => {
           {activeUser.notifications.map((notification) => {
             return (
               <Card key={notification?.id}>
-                <CardContent>{notification?.content}</CardContent>
+                <CardContent>
+                  <Typography
+                    className={classes.notificationTitle}
+                    color="textSecondary"
+                    align="left"
+                    gutterBottom
+                  >
+                    Message
+                  </Typography>
+                  <Typography variant="h5" component="h2" align="left">
+                    {notification?.content}
+                  </Typography>
+                </CardContent>
               </Card>
             );
           })}
@@ -71,7 +93,6 @@ const Header = (props) => {
     return <div>test</div>;
   };
 
-  const classes = useStyles();
   return (
     <div className={"header"}>
       {activeUser.isLoggedIn ? (
@@ -131,8 +152,21 @@ const Header = (props) => {
             <Button variant="contained" onClick={logOutUser}>
               Log out
             </Button>
+            <Button
+              color="secondary"
+              onClick={() => {
+                setShowUnregisterConfirmation(true);
+              }}
+              size="small"
+            >
+              Deregister
+            </Button>
             <Profile />
           </Drawer>
+          <UnregisterDialog
+            showUnregisterConfirmation={showUnregisterConfirmation}
+            setShowUnregisterConfirmation={setShowUnregisterConfirmation}
+          />
         </>
       ) : (
         <h3>Please Login or Register</h3>
