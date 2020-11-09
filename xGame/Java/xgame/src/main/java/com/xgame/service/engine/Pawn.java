@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 public class Pawn extends ChessPiece {
 	
-	private ChessPieceType type = ChessPieceType.PAWN;
-
 	public Pawn(ChessBoard board, Color color) {
 		super(board, color);
+	}
+	
+	public Pawn() {
+		super();
 	}
 
 	@Override
@@ -46,9 +48,4 @@ public class Pawn extends ChessPiece {
 		}
 		return moves;
 	}
-
-	public ChessPieceType getType() {
-		return type;
-	}
-
 }

@@ -1,0 +1,10 @@
+/* Footer Styles */
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  height: 6%;
+  min-height: 100px;
+  margin-top: 25px;
+  margin-left: 25px;
+}
