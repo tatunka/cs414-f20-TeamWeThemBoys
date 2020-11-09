@@ -151,6 +151,7 @@ public class ChessBoard {
 		return false;
 	}
 	
+	//adjusts the pawn move list to only list threatening moves
 	public ArrayList<String> adjustPawnMoves(ArrayList<String> moves, Color threatColor, char c, char i){
 		char letter = c;
 		char number = i;
@@ -183,6 +184,7 @@ public class ChessBoard {
 		return moves;
 	}
 	
+	//checks if a given square is threatened by the other colors pieces
 	public boolean isThreatened(String position, Color threatColor) {
 		try {
 			for(char c = 'a'; c <= 'h'; c++) {
@@ -191,8 +193,6 @@ public class ChessBoard {
 					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
 						ArrayList<String> moves = getPiece(location).legalMoves();
 						moves = (getPiece(location).getClass() == Pawn.class) ? (adjustPawnMoves(moves, threatColor, c, i)) : moves;
-//						System.out.println(moves);
-//						System.out.println(getPiece(location).toString());
 						if(moves.contains(position)) {
 							return true;
 						}
@@ -205,6 +205,7 @@ public class ChessBoard {
 		return false;
 	}
 	
+	//checks if the king of a color's square is threatened
 	public boolean isInCheck(Color playerColor) {
 		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
 		String kingName = (playerColor == Color.BLACK) ? "\u265A" : "\u2654";

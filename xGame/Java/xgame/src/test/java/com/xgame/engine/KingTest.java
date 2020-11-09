@@ -53,11 +53,11 @@ class KingTest {
 			//can move up, cannot move back into same color
 			bKing.setPosition("e5");
 			assertTrue(bKing.legalMoves().containsAll(
-					Arrays.asList("e4", "d4", "d6", "e6", "f6", "f5", "f4")));
-//			//can only attack
-//			bKing.setPosition("g2");
-//			assertTrue(bKing.legalMoves().containsAll(
-//					Arrays.asList("g1", "h1", "h2", "h3", "g3", "f3", "f2", "f1")));
+					Arrays.asList("e4", "d6", "e6", "f6", "f5")));
+			//can only attack
+			bKing.setPosition("g2");
+			assertTrue(bKing.legalMoves().containsAll(
+					Arrays.asList("g3", "h1")));
 		} catch (IllegalPositionException e) {
 			e.printStackTrace();
 		}
