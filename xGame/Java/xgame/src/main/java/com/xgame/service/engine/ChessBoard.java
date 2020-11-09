@@ -205,7 +205,8 @@ public class ChessBoard {
 			}
 		}
 		return false;
-
+	}
+	
 	public String toString() {
 		String chess="";    
 		String upperLeft = "\u250C";    

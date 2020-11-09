@@ -8,7 +8,7 @@ import { Alert } from "@material-ui/lab";
 import * as userService from "../../service/userService";
 
 const SignUpForm = (props) => {
-  const { setShowLoginForm, setActiveUser } = props;
+  const { setShowLoginForm, logInUser } = props;
 
   const [registerError, setRegisterError] = useState("");
 
@@ -17,7 +17,7 @@ const SignUpForm = (props) => {
       onSubmit={async (values) => {
         const user = await userService.register(values);
         if (user?.error) setRegisterError(user?.message);
-        else setActiveUser({ ...user, isLoggedIn: true });
+        else logInUser({ ...user, isLoggedIn: true });
       }}
       initialValues={{
         email: "",
@@ -121,12 +121,12 @@ const SignUpForm = (props) => {
 
 SignUpForm.propTypes = {
   setShowLoginForm: PropTypes.func,
-  setActiveUser: PropTypes.func
+  logInUser: PropTypes.func
 };
 
 SignUpForm.defaultProps = {
   setShowLoginForm: () => {},
-  setActiveUser: () => {}
+  logInUser: () => {}
 };
 
 export default SignUpForm;
