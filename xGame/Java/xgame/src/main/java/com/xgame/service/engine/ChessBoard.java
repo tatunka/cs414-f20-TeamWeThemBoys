@@ -151,6 +151,38 @@ public class ChessBoard {
 		return false;
 	}
 	
+	public ArrayList<String> adjustPawnMoves(ArrayList<String> moves, Color threatColor, char c, char i){
+		char letter = c;
+		char number = i;
+		if(threatColor == Color.BLACK) {
+			moves.remove((letter < 'h' && number > '1' ? ("" + (++letter) + (--number)) : ""));
+			if(letter < 'h') {
+				number = i;
+				letter = c;
+				moves.add("" + ++letter + number);
+			}
+			if(number > '1') {
+				number = i;
+				letter = c;
+				moves.add("" + letter + --number);
+			}							
+		}
+		if(threatColor == Color.WHITE) {
+			moves.remove((letter > 'a' && number < '8' ? ("" + (--letter) + (++number)) : ""));
+			if(letter > 'a') {
+				number = i;
+				letter = c;
+				moves.add("" + --letter + number);
+			}
+			if(number < '8') {
+				number = i;
+				letter = c;
+				moves.add("" + letter + ++number);
+			}							
+		}
+		return moves;
+	}
+	
 	public boolean isThreatened(String position, Color threatColor) {
 		try {
 			for(char c = 'a'; c <= 'h'; c++) {
@@ -158,25 +190,9 @@ public class ChessBoard {
 					String location = ""+c+i;
 					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
 						ArrayList<String> moves = getPiece(location).legalMoves();
-						System.out.println(getPiece(location).toString());
-						System.out.println("Before: " + moves);
-						if(getPiece(location).toString() == "\u265F") {
-							System.out.println(c+'a');
-							moves.remove((c < 'h' && i > '1' ? ("" + (c+'a') + (i-'1')) : ("" + c + i)));
-							if(c < 'h') {
-								moves.add("" + c + ++i);
-							}
-							if(i > '1') {
-								--i;
-								moves.add("" + --c + --i);
-							}							
-						}
-//						if (getPiece(location).toString() == "\u2659"){
-//							moves.remove((c > 'a' && i < '8' ? ("" + ++c + i) : ("" + c + i)));
-	//						moves.add((c > 'a') ? ("" + --c + i) : "");
-				//		moves.add((i < '8') ? ("" + c + ++i) : "");
-//						}
-						System.out.println("After: " + moves);
+						moves = (getPiece(location).getClass() == Pawn.class) ? (adjustPawnMoves(moves, threatColor, c, i)) : moves;
+//						System.out.println(moves);
+//						System.out.println(getPiece(location).toString());
 						if(moves.contains(position)) {
 							return true;
 						}
