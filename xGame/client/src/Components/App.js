@@ -14,7 +14,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <Header activeUser={activeUser} />
+      <Header activeUser={activeUser} setActiveUser={setActiveUser}/>
       {activeUser.isLoggedIn ? (
         <div className="pages">
           <Profile />

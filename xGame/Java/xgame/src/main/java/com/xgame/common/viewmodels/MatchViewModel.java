@@ -1,6 +1,7 @@
 package com.xgame.common.viewmodels;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.xgame.common.enums.MatchStatus;
 import com.xgame.data.entities.ChessMatch;
 
 public class MatchViewModel {
@@ -10,6 +11,7 @@ public class MatchViewModel {
 	private String whiteEmail;
 	private String blackEmail;
 	private int turnCount;
+	private MatchStatus status;
 	@JsonRawValue
 	private String chessBoard;
 	
@@ -25,6 +27,7 @@ public class MatchViewModel {
 			this.blackEmail = blackPlayer.getEmail();
 			this.turnCount = match.getTurnCount();
 			this.chessBoard = match.getChessBoard();
+			this.status = match.getMatchStatus();
 		}
 	}
 	
@@ -70,5 +73,9 @@ public class MatchViewModel {
 	}
 	public void setChessBoard(String chessBoard) {
 		this.chessBoard = chessBoard;
+	}
+
+	public MatchStatus getStatus() {
+		return status;
 	}
 }
