@@ -1,16 +1,29 @@
 package com.xgame.restservice;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xgame.data.IChessMatchRepository;
+import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
+import com.xgame.data.entities.Message;
 import com.xgame.data.entities.User;
+import com.xgame.service.engine.ChessBoard;
+import com.xgame.service.interfaces.IChessMatchService;
 import com.xgame.service.interfaces.IUserService;
 import com.xgame.service.models.UserCredentials;
 
@@ -21,6 +34,12 @@ class UserService {
 	IUserService userService;
 	@Autowired
 	IUserRepository userRepo;
+	@Autowired
+	IChessMatchService matchService;
+	@Autowired
+	IChessMatchRepository matchRepo;
+	@Autowired
+	IMessageRepository messageRepo;
 
 	@Test
 	void search() {
@@ -204,4 +223,21 @@ class UserService {
 		userRepo.delete(userEntity2);
 		userRepo.delete(userEntity3);
 	}
+	
+	@Test
+	void deactivateUser_cannotLogin() {
+		var testNickname = "testNickname1";
+		var testEmail = "testEmail1";
+		var testPassword = "testPassword1";
+
+		var credentials = new UserCredentials(testNickname, testEmail, testPassword);
+		var user = userService.registerNewUser(credentials);
+		
+		userService.deactivateUser(user.getId());
+
+		Assertions.assertThrows(Exception.class, () -> userService.login(credentials));
+
+		userRepo.deleteById(user.getId());
+	}
+	
 }
