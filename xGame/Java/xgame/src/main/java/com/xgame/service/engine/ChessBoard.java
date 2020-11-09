@@ -153,11 +153,13 @@ public class ChessBoard {
 	
 	public boolean isThreatened(String position, Color threatColor) {
 		try {
-			for(int x = 0; x < 8; x++) {
-				for(int y = 0; y < 8; y++) {
-					if(board[x][y] != null && board[x][y].getColor() == threatColor) {
-						ArrayList<String> moves = board[x][y].legalMoves();
+			for(char c = 'a'; c <= 'h'; c++) {
+				for(char i = '1'; i <= '8'; i++) {
+					String location = ""+c+i;
+					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
+						ArrayList<String> moves = getPiece(location).legalMoves();
 						if(moves.contains(position)) {
+							
 							return true;
 						}
 					}
