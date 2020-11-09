@@ -3,11 +3,13 @@ package com.xgame.service.engine;
 import java.util.ArrayList;
 
 public class Queen extends ChessPiece {
-	
-	private ChessPieceType type = ChessPieceType.QUEEN;
 
 	public Queen(ChessBoard board, Color color) {
 		super(board, color);
+	}
+	
+	public Queen() {
+		super();
 	}
 
 	@Override
@@ -34,9 +36,4 @@ public class Queen extends ChessPiece {
 	    
 	     return moves;
 	}
-
-	public ChessPieceType getType() {
-		return type;
-	}
-
 }

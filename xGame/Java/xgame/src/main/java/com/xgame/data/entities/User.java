@@ -31,7 +31,7 @@ public class User {
 	@CreationTimestamp
 	private Timestamp creationTimestamp;
 
-	@OneToMany(mappedBy = "user", cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade=CascadeType.ALL)
 	private List<Message> messages = new ArrayList<>();
 	@OneToMany(mappedBy = "whitePlayer")
 	private List<ChessMatch> whiteMatches;
