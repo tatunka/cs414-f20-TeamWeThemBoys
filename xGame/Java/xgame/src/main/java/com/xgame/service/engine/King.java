@@ -17,7 +17,7 @@ public class King extends ChessPiece{
 
 	@Override
 	public ArrayList<String> legalMoves() throws IllegalPositionException {
-		//loop through possible moves, only add is opposing ppiece cannot move there next turn
+		//loop through possible moves, only add is opposing piece cannot move there next turn
 		ArrayList<String> moves = new ArrayList<String>();
 		ChessPiece adjPiece;
 		String move;
