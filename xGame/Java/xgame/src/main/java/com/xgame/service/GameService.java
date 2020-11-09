@@ -38,6 +38,10 @@ public class GameService implements IGameService {
 			throws JsonMappingException, JsonProcessingException, IllegalMoveException, IllegalPositionException {
 		
 		this.resumeMatch(matchId);
+		
+		if(this.match.getStatus() != MatchStatus.INPROGRESS) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot make a move. Match is not in progress.");
+		}
 	
 		ChessPiece fromPiece;
 		try {
@@ -86,12 +90,7 @@ public class GameService implements IGameService {
 	
 	private void resumeMatch(int matchId) throws JsonMappingException, JsonProcessingException {
 		this.match = matchService.getMatch(matchId);
-		
-		if(this.match.getStatus() != MatchStatus.INPROGRESS) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot make a move. Match is not in progress.");
-		}
-		
-		
+			
 		var mapper = new ObjectMapper();
 		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 
