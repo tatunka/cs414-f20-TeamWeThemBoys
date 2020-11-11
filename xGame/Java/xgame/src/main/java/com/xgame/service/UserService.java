@@ -56,15 +56,16 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public Boolean deactivateUser(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void deactivateUser(Integer id) {
+		var userOpt = userRepo.findById(id);
+		
+		if(!userOpt.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No account found for given id.");
+		}
 
-	@Override
-	public Boolean deactivateUser(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		var user = userOpt.get();
+		user.setIsDeleted(true);
+		userRepo.save(user);
 	}
 
 	@Override

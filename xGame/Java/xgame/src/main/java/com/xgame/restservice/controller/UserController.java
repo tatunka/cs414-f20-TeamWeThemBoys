@@ -43,4 +43,9 @@ public class UserController {
 	public UserViewModel login(@RequestBody UserCredentials credentials) {
 		return userService.login(credentials);
 	}
+	
+	@PostMapping("/user/deactivate")
+	public void deactivateUser(@RequestBody Integer id) {
+		userService.deactivateUser(id);
+	}
 }
