@@ -1,28 +1,18 @@
 package com.xgame.restservice;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
-import com.xgame.data.entities.Message;
 import com.xgame.data.entities.User;
-import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.interfaces.IChessMatchService;
 import com.xgame.service.interfaces.IUserService;
 import com.xgame.service.models.UserCredentials;
