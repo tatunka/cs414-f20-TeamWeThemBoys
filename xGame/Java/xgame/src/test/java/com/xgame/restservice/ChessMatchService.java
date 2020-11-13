@@ -10,6 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xgame.common.enums.MatchOutcome;
+import com.xgame.common.enums.MatchStatus;
+import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
@@ -32,13 +35,16 @@ class ChessMatchService {
 	@Test
 	void createMatch() {
 		var matchCount = matchRepo.count();
-
-		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
-		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
-		
-		var newMatch = service.createMatch(player1.getId(), player2.getId());
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel newMatch = null;
 		
 		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			newMatch = service.createMatch(player1.getId(), player2.getId());
+			
 			assertNotNull(newMatch);
 			assertEquals(matchCount + 1, matchRepo.count());
 			assertEquals(newMatch.getWhitePlayerId(), player1.getId());
@@ -52,22 +58,30 @@ class ChessMatchService {
 		}
 		finally {
 			//cleanup
-			matchRepo.deleteById(newMatch.getId());
-			userRepo.delete(player1);
-			userRepo.delete(player2);
+			if(newMatch != null) {
+				matchRepo.deleteById(newMatch.getId());
+			}
+			if(player1 != null) {
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				userRepo.delete(player2);
+			}
 		}
 		
 	}
 	
 	@Test
 	void acceptInvite() {
-		
-		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
-		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
-		
-		var match = service.createMatch(player1.getId(), player2.getId());
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel match = null;
 		
 		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			match = service.createMatch(player1.getId(), player2.getId());
 			
 			var chessBoard = new ChessBoard();
 			chessBoard.initialize();
@@ -93,11 +107,17 @@ class ChessMatchService {
 		}
 		finally {
 			//cleanup
-			var messages = messageRepo.findByUserId(player1.getId());
-			messageRepo.deleteAll(messages);
-			matchRepo.deleteById(match.getId());
-			userRepo.delete(player1);
-			userRepo.delete(player2);
+			if(match != null) {
+				matchRepo.deleteById(match.getId());
+			}
+			if(player1 != null) {
+				var messages = messageRepo.findByUserId(player1.getId());
+				messageRepo.deleteAll(messages);
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				userRepo.delete(player2);
+			}
 		}
 	}
 	
@@ -105,13 +125,17 @@ class ChessMatchService {
 	void getMatchById(){
 		var matchCount = matchRepo.count();
 		
-		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
-		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
-		
-		var testMatch = service.createMatch(player1.getId(), player2.getId());
-		var testMatchFromRepo = service.getMatch(testMatch.getId());
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel testMatchFromRepo = null;
 		
 		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			var testMatch = service.createMatch(player1.getId(), player2.getId());
+			testMatchFromRepo = service.getMatch(testMatch.getId());
+			
 			assertNotNull(testMatchFromRepo);
 			assertEquals(matchCount + 1, matchRepo.count());
 			assertEquals(testMatchFromRepo.getWhitePlayerId(), player1.getId());
@@ -125,9 +149,15 @@ class ChessMatchService {
 		}
 		finally {
 			//cleanup
-			matchRepo.deleteById(testMatchFromRepo.getId());
-			userRepo.delete(player1);
-			userRepo.delete(player2);
+			if(testMatchFromRepo != null) {
+				matchRepo.deleteById(testMatchFromRepo.getId());
+			}
+			if(player1 != null) {
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				userRepo.delete(player2);
+			}
 		}
 	}
 	
@@ -137,5 +167,54 @@ class ChessMatchService {
 			//No match with Id "-1" should exist
 			service.getMatch(-1); //
 		});
+	}
+	
+	@Test
+	void draw() {
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel match = null;
+		
+		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			//start match
+			match = service.createMatch(player1.getId(), player2.getId());
+			service.acceptInvite(match.getId());
+			
+			//suggest draw
+			var suggestDraw = service.suggestDraw(match.getId(), player1.getId());
+			assertNull(suggestDraw);
+			var acceptDraw = service.suggestDraw(match.getId(), player2.getId());
+			assertEquals(acceptDraw, MatchOutcome.DRAW);
+			
+			var updatedMatch = service.getMatch(match.getId());
+			assertEquals(updatedMatch.getStatus(), MatchStatus.COMPLETED);			
+		
+			var messages1 = messageRepo.findByUserId(player1.getId());
+			var messages2 = messageRepo.findByUserId(player2.getId());
+			assertEquals(messages1.size(), 2);
+			assertEquals(messages2.size(), 2);
+		}
+		catch(Exception e) {
+			fail();
+		}
+		finally {
+			//cleanup
+			if(match != null) {
+				matchRepo.deleteById(match.getId());
+			}
+			if(player1 != null) {
+				var messages = messageRepo.findByUserId(player1.getId());
+				messageRepo.deleteAll(messages);
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				var messages2 = messageRepo.findByUserId(player2.getId());
+				messageRepo.deleteAll(messages2);
+				userRepo.delete(player2);
+			}
+		}
 	}
 }

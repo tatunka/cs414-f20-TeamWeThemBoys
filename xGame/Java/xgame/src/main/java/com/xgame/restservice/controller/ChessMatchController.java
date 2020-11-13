@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xgame.common.enums.MatchOutcome;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.service.interfaces.IChessMatchService;
 
@@ -28,6 +29,11 @@ public class ChessMatchController {
 	public MatchViewModel acceptInvite(@RequestParam(value = "matchId") int matchId) {
 		var match = matchService.acceptInvite(matchId);
 		return match;
+	}
+	
+	@PatchMapping("/match/draw")
+	public MatchOutcome draw(@RequestParam(value = "matchId") int matchId, @RequestParam(value = "playerId") int playerId) {
+		return matchService.suggestDraw(matchId, playerId);
 	}
 	
 	@GetMapping("/match")
