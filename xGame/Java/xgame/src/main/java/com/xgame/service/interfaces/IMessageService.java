@@ -9,4 +9,5 @@ public interface IMessageService {
 	List<MessageViewModel> getAll(int userId);
 	public List<MessageViewModel> getInvites(int userId);
 	void read(int messageId);
+	void readAll(int userId);
 }

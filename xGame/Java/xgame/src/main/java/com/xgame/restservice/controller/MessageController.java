@@ -37,7 +37,12 @@ public class MessageController {
 	}
 	
 	@PatchMapping("/message")
-	public void sendMessage(@RequestParam(value = "messageId") int messageId) {
+	public void readMessage(@RequestParam(value = "messageId") int messageId) {
 		messageService.read(messageId);
+	}
+	
+	@PatchMapping("/messages")
+	public void readMessages(@RequestParam(value = "playerId") int playerId) {
+		messageService.readAll(playerId);
 	}
 }

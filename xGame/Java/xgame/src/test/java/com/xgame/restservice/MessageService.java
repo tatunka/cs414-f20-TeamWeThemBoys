@@ -1,6 +1,7 @@
 package com.xgame.restservice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
@@ -133,9 +134,9 @@ public class MessageService {
 			var messages1 = messageService.getAll(user.getId());
 			assertEquals(messages1.size(), 3);
 			List<Integer> messages1Ids = messages1.stream().map(m -> m.getId()).collect(Collectors.toList());
-			messages1Ids.contains(message4.getId());
-			messages1Ids.contains(message5.getId());
-			messages1Ids.contains(message6.getId());
+			assertTrue(messages1Ids.contains(message4.getId()));
+			assertTrue(messages1Ids.contains(message5.getId()));
+			assertTrue(messages1Ids.contains(message6.getId()));
 			
 			messageService.read(message4.getId());
 			messageService.read(message5.getId());
@@ -143,6 +144,45 @@ public class MessageService {
 			
 			var messages2 = messageService.getAll(user.getId());
 			assertEquals(messages2.size(), 0);
+		}
+		catch(Exception e) {
+			fail(e);
+		}
+		finally {
+			messageRepo.deleteAll(messageRepo.findByUserId(user.getId()));
+			userRepo.delete(user);
+		}
+	}
+	
+	@Test
+	void readAllMessages() {
+User user = null;
+		
+		try {
+			user = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+
+			var message1 = messageService.send(user.getId(), "Test message 1");
+			var message2 = messageService.send(user.getId(), "Test message 2");
+			var message3 = messageService.send(user.getId(), "Test message 3");
+			var message4 = messageService.send(user.getId(), "Test message 4");
+			var message5 = messageService.send(user.getId(), "Test message 5");
+			var message6 = messageService.send(user.getId(), "Test message 6");
+			
+			var messages = messageService.getAll(user.getId());
+			List<Integer> messagesIds = messages.stream().map(m -> m.getId()).collect(Collectors.toList());
+			
+			assertEquals(messages.size(), 6);
+			assertTrue(messagesIds.contains(message1.getId()));
+			assertTrue(messagesIds.contains(message2.getId()));
+			assertTrue(messagesIds.contains(message3.getId()));
+			assertTrue(messagesIds.contains(message4.getId()));
+			assertTrue(messagesIds.contains(message5.getId()));
+			assertTrue(messagesIds.contains(message6.getId()));
+			
+			messageService.readAll(user.getId());
+			
+			var messages1 = messageService.getAll(user.getId());
+			assertEquals(messages1.size(), 0);
 		}
 		catch(Exception e) {
 			fail(e);

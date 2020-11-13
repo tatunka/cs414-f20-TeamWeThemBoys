@@ -99,4 +99,16 @@ public class MessageService implements IMessageService {
 		
 		messageRepo.save(match);
 	}
+	
+	@Override
+	public void readAll(int userId) {
+		var messages = messageRepo.findByUserIdAndReadTimestampIsNull(userId);
+		var timeStamp = new Timestamp(System.currentTimeMillis());
+		
+		for(var message : messages) {
+			message.setReadTimeStamp(timeStamp);
+		}
+		
+		messageRepo.saveAll(messages);
+	}
 }
