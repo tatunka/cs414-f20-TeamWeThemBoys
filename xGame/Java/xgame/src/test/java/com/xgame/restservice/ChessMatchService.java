@@ -98,7 +98,7 @@ class ChessMatchService {
 			assertEquals(inprogMatch.getChessBoard(), json);
 			assertEquals(inprogMatch.getTurnCount(), 1);
 			
-			var messages = messageRepo.findByUserId(player1.getId());
+			var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
 			assertEquals(messages.size(), 1);
 			assertEquals(messages.get(0).getContents(), player2.getNickname() + " has accepted your invitation to a match!");
 		}
@@ -111,7 +111,7 @@ class ChessMatchService {
 				matchRepo.deleteById(match.getId());
 			}
 			if(player1 != null) {
-				var messages = messageRepo.findByUserId(player1.getId());
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
 				messageRepo.deleteAll(messages);
 				userRepo.delete(player1);
 			}
@@ -192,8 +192,8 @@ class ChessMatchService {
 			var updatedMatch = service.getMatch(match.getId());
 			assertEquals(updatedMatch.getStatus(), MatchStatus.COMPLETED);			
 		
-			var messages1 = messageRepo.findByUserId(player1.getId());
-			var messages2 = messageRepo.findByUserId(player2.getId());
+			var messages1 = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
+			var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(player2.getId());
 			assertEquals(messages1.size(), 2);
 			assertEquals(messages2.size(), 2);
 		}
@@ -206,12 +206,12 @@ class ChessMatchService {
 				matchRepo.deleteById(match.getId());
 			}
 			if(player1 != null) {
-				var messages = messageRepo.findByUserId(player1.getId());
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
 				messageRepo.deleteAll(messages);
 				userRepo.delete(player1);
 			}
 			if(player2 != null) {
-				var messages2 = messageRepo.findByUserId(player2.getId());
+				var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(player2.getId());
 				messageRepo.deleteAll(messages2);
 				userRepo.delete(player2);
 			}

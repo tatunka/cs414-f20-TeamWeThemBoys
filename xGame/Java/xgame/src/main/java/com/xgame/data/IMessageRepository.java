@@ -8,4 +8,5 @@ import com.xgame.data.entities.Message;
 
 public interface IMessageRepository extends JpaRepository<Message, Integer> {
 	List<Message> findByUserId(Integer id);
+	List<Message> findByUserIdAndReadTimestampIsNull(Integer id);
 }

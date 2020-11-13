@@ -73,7 +73,7 @@ public class GameService implements IGameService {
 		//send message to other player that it is there turn
 		var opponentPlayerId = turnColor == Color.BLACK ? match.getWhitePlayerId() : match.getBlackPlayerId();
 		var currentPlayerId = turnColor == Color.BLACK ? match.getBlackPlayerId() : match.getWhitePlayerId();
-		messageService.sendMessage(opponentPlayerId, "It's your turn to make a move in match " + match.getId() + "!");
+		messageService.send(opponentPlayerId, "It's your turn to make a move in match " + match.getId() + "!");
 		
 		this.match.setChessBoard(stringifyBoard());
 		

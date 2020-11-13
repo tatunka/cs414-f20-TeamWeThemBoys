@@ -123,8 +123,8 @@ public class GameService {
 			fail();
 		}
 		finally {
-			var messages1 = messageRepo.findByUserId(user1.getId());
-			var messages2 = messageRepo.findByUserId(user2.getId());
+			var messages1 = messageRepo.findByUserIdAndReadTimestampIsNull(user1.getId());
+			var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(user2.getId());
 			messageRepo.deleteAll(messages1);
 			messageRepo.deleteAll(messages2);
 			
