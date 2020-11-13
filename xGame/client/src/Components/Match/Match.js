@@ -56,16 +56,14 @@ const Match = (props) => {
       <Row>
         <div className={"fullSize"}>
           <MatchPlayerStats
-            // TODO: change to user player nickname
-            playerName={activeMatch?.whiteEmail}
+            playerName={activeMatch?.whitePlayerNickname}
             activeColor={determineActiveColor()}
             turnCounter={activeMatch?.turnCount}
             boardState={boardState}
           />
           <MatchBoard boardState={boardState} activeColor={"white"} />
           <MatchPlayerStats
-            // TODO: change to user player nickname
-            playerName={activeMatch?.blackEmail}
+            playerName={activeMatch?.blackPlayerNickname}
             activeColor={determineActiveColor()}
             turnCounter={activeMatch?.turnCount}
             boardState={boardState}
@@ -88,10 +86,10 @@ Match.propTypes = {
   isOpen: PropTypes.bool,
   activeMatch: PropTypes.objectOf({
     id: PropTypes.number,
-    whiteId: PropTypes.number,
-    blackId: PropTypes.number,
-    whiteEmail: PropTypes.string,
-    blackEmail: PropTypes.string,
+    whitePlayerId: PropTypes.number,
+    blackPlayerId: PropTypes.number,
+    whitePlayerNickname: PropTypes.string,
+    blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number
   })
 };
@@ -100,10 +98,10 @@ Match.defaultProps = {
   isOpen: true,
   activeMatch: {
     id: 0,
-    whiteId: 0,
-    blackId: 0,
-    whiteEmail: "",
-    blackEmail: "",
+    whitePlayerId: 0,
+    blackPlayerId: 0,
+    whitePlayerNickname: "",
+    blackPlayerNickname: "",
     turnCount: 0
   }
 };
