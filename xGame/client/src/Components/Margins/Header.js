@@ -10,8 +10,10 @@ import {
   makeStyles,
   Drawer,
   Card,
-  CardContent
+  CardContent,
+  CardActions
 } from "@material-ui/core";
+import { Row } from "reactstrap";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -19,6 +21,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import Profile from "../Profile/Profile";
 import UnregisterDialog from "./UnregisterDialog";
+import * as matchService from "../../service/matchService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = (props) => {
-  const { activeUser, logOutUser } = props;
+  const { activeUser, logOutUser, setActiveMatch, fetchNotifications } = props;
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -62,6 +65,21 @@ const Header = (props) => {
     setShowUnregisterConfirmation
   ] = React.useState(false);
 
+  const toggleNotifications = async () => {
+    if (!showNotifications) await fetchNotifications();
+    setShowNotifications(!showNotifications);
+  };
+
+  const handleAcceptMatch = async (matchId) => {
+    const matchData = await matchService.acceptInvite(matchId);
+    if (matchData) setActiveMatch(matchData);
+    toggleNotifications();
+  };
+
+  const handleRejectMatch = (matchId) => {
+    console.log("TODO: Implement match rejection");
+  };
+
   const classes = useStyles();
 
   const Notifications = () => {
@@ -69,6 +87,7 @@ const Header = (props) => {
       return (
         <div>
           {activeUser.notifications.map((notification) => {
+            const isInvitation = notification?.type === "INVITATION";
             return (
               <Card key={notification?.id}>
                 <CardContent>
@@ -78,11 +97,32 @@ const Header = (props) => {
                     align="left"
                     gutterBottom
                   >
-                    Message
+                    {isInvitation ? "Invitation" : "Message"}
                   </Typography>
-                  <Typography variant="h5" component="h2" align="left">
+                  <Typography variant="h6" component="h2" align="left">
                     {notification?.content}
+                    {isInvitation && " is inviting you to a match."}
                   </Typography>
+                  {isInvitation && (
+                    <CardActions>
+                      <Button
+                        size="small"
+                        color="primary"
+                        variant="contained"
+                        onClick={() => handleAcceptMatch(notification?.id)}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        size="small"
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => handleRejectMatch(notification?.id)}
+                      >
+                        Reject
+                      </Button>
+                    </CardActions>
+                  )}
                 </CardContent>
               </Card>
             );
@@ -99,10 +139,7 @@ const Header = (props) => {
         <>
           <AppBar position="static">
             <Toolbar>
-              <IconButton
-                color="inherit"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
+              <IconButton color="inherit" onClick={toggleNotifications}>
                 <NotificationsIcon />
               </IconButton>
               <div className={classes.grow}></div>
@@ -129,7 +166,7 @@ const Header = (props) => {
           >
             <div className={classes.notificationsDrawerHeader}>
               <Typography variant="h6">Notifications</Typography>
-              <IconButton onClick={() => setShowNotifications(false)}>
+              <IconButton onClick={toggleNotifications}>
                 <ChevronLeftIcon />
               </IconButton>
             </div>
@@ -177,12 +214,16 @@ const Header = (props) => {
 
 Header.propTypes = {
   activeUser: PropTypes.object,
-  logOutUser: PropTypes.func
+  logOutUser: PropTypes.func,
+  setActiveMatch: PropTypes.func,
+  fetchNotifications: PropTypes.func
 };
 
 Header.defaultProps = {
   activeUser: {},
-  logOutUser: () => {}
+  logOutUser: () => {},
+  setActiveMatch: () => {},
+  fetchNotifications: () => {}
 };
 
 export default Header;

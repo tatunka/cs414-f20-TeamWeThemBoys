@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xgame.common.enums.MatchOutcome;
 import com.xgame.common.enums.MatchStatus;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.data.IChessMatchRepository;
@@ -150,5 +151,65 @@ public class ChessMatchService implements IChessMatchService {
 		var updatedMatch = matchRepo.save(match);
 		
 		return new MatchViewModel(updatedMatch);
+	}
+	
+	/**
+	 * Suggests a draw for a given player. If both players have suggested a draw, match ends in a draw.
+	 * @param matchId - Id of match where a draw is being suggested
+	 * @param playerId - player suggesting the draw
+	 * @return Outcome of match, if any
+	 */
+	public MatchOutcome suggestDraw(int matchId, int playerId) {
+		var m = matchRepo.findById(matchId);
+		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that ID exists."));
+		var u = userRepo.findById(playerId);
+		u.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user with that ID exists."));
+		
+		var match = m.get();
+		var player = u.get();
+		var opponentId = playerId == match.getWhitePlayer().getId() ? 
+				match.getBlackPlayer().getId() : 
+				match.getWhitePlayer().getId();
+		var opponent = userRepo.findById(opponentId);
+		
+		//update match with draw suggestion
+		if(match.getWhitePlayer().getId() == playerId) {
+			match.setIsDrawSuggestedByWhite(true);
+		}
+		else if(match.getBlackPlayer().getId() == playerId) {
+			match.setIsDrawSuggestedByBlack(true);
+		}
+		else {
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Player with ID " + playerId + " is not participating in match " + matchId + ".");
+		}
+		
+		//end match in draw if both players have suggested it
+		var whiteDraw = match.getIsDrawSuggestedByWhite();
+		var blackDraw = match.getIsDrawSuggestedByBlack();
+		if(whiteDraw != null && whiteDraw && blackDraw != null && blackDraw) {
+			match.setMatchStatus(MatchStatus.COMPLETED);
+			match.setMatchOutcome(MatchOutcome.DRAW);
+			
+			messageRepo.save(new Message(player, "You have accepted the draw. Match " + matchId + " is over!"));
+			messageRepo.save(new Message(opponent.get(), player.getNickname() + " has agreed to the draw. Match " + matchId + " is over!"));
+			
+			var updatedMatch = matchRepo.save(match);
+			return updatedMatch.getMatchOutcome();
+		}
+		
+		//send message to opponent
+		if(match.getWhitePlayer().getId() == playerId) {		
+			var message = new Message(opponent.get(), player.getNickname() + " has suggested a draw in match " + matchId + "!");
+			messageRepo.save(message);
+		}
+		else if(match.getBlackPlayer().getId() == playerId) {
+			var message = new Message(opponent.get(), player.getNickname() + " has suggested a draw in match " + matchId + "!");
+			messageRepo.save(message);
+		}
+		
+		//update match. send back outcome, if any
+		var updatedMatch = matchRepo.save(match);
+		return updatedMatch.getMatchOutcome();
 	}
 }

@@ -1,5 +1,6 @@
 package com.xgame.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class MessageService implements IMessageService {
 	 * @return - a view model of the newly created message
 	 */
 	@Override
-	public MessageViewModel sendMessage(int userId, String contents) {
+	public MessageViewModel send(int userId, String contents) {
 		var user = userRepo.findById(userId);
 		user.orElseThrow(() ->  new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found. Can't send message"));
 		var message = messageRepo.save(new Message(user.get(), contents));
@@ -47,8 +48,8 @@ public class MessageService implements IMessageService {
 	 * @return - a list of messages
 	 */
 	@Override
-	public List<MessageViewModel> getMessages(int userId) {
-		var messages = messageRepo.findByUserId(userId);
+	public List<MessageViewModel> getAll(int userId) {
+		var messages = messageRepo.findByUserIdAndReadTimestampIsNull(userId);
 		var invites = matchRepo.findByBlackPlayerIdAndMatchStatus(userId, MatchStatus.PENDING);
 		
 		try {
@@ -82,5 +83,32 @@ public class MessageService implements IMessageService {
 				.stream()
 				.map(m -> new MessageViewModel(m, m.getWhitePlayer().getNickname()))
 				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Marks he message as read by specifying a time read.
+	 * @param messageId - id of message
+	 */
+	@Override
+	public void read(int messageId) {
+		var m = messageRepo.findById(messageId);
+		m.orElseThrow(() ->  new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't find match with that Id."));
+		
+		var match = m.get();
+		match.setReadTimeStamp(new Timestamp(System.currentTimeMillis()));
+		
+		messageRepo.save(match);
+	}
+	
+	@Override
+	public void readAll(int userId) {
+		var messages = messageRepo.findByUserIdAndReadTimestampIsNull(userId);
+		var timeStamp = new Timestamp(System.currentTimeMillis());
+		
+		for(var message : messages) {
+			message.setReadTimeStamp(timeStamp);
+		}
+		
+		messageRepo.saveAll(messages);
 	}
 }

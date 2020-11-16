@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.xgame.common.enums.MatchOutcome;
 import com.xgame.common.enums.MatchStatus;
 
 @Entity
@@ -28,6 +29,8 @@ public class ChessMatch {
 	@Lob
 	@Column(nullable=false)
 	private String chessBoard;
+	private Boolean IsDrawSuggestedByWhite;
+	private Boolean IsDrawSuggestedByBlack;
 	@CreationTimestamp
 	private Timestamp creationTimestamp;
 	private Timestamp startTimestamp;
@@ -46,12 +49,8 @@ public class ChessMatch {
 	private User winningPlayer;
 	@Enumerated(EnumType.STRING)
 	private MatchStatus matchStatus;
-	
-	/*
-	@OneToOne
-	@JoinColumn(name = "matchStatusId", referencedColumnName = "id", nullable=false)
-	private MatchStatus matchStatus;
-	*/
+	@Enumerated(EnumType.STRING)
+	private MatchOutcome matchOutcome;
 	
 	//constructors
 	protected ChessMatch() {}
@@ -75,6 +74,18 @@ public class ChessMatch {
 	}
 	public void setChessBoard(String chessBoard) {
 		this.chessBoard = chessBoard;
+	}
+	public Boolean getIsDrawSuggestedByWhite() {
+		return IsDrawSuggestedByWhite;
+	}
+	public void setIsDrawSuggestedByWhite(Boolean isDrawSuggestedByWhite) {
+		IsDrawSuggestedByWhite = isDrawSuggestedByWhite;
+	}
+	public Boolean getIsDrawSuggestedByBlack() {
+		return IsDrawSuggestedByBlack;
+	}
+	public void setIsDrawSuggestedByBlack(Boolean isDrawSuggestedByBlack) {
+		IsDrawSuggestedByBlack = isDrawSuggestedByBlack;
 	}
 	public Timestamp getCreationTimestamp() {
 		return creationTimestamp;
@@ -111,5 +122,11 @@ public class ChessMatch {
 	}
 	public void setMatchStatus(MatchStatus matchStatus) {
 		this.matchStatus = matchStatus;
+	}
+	public MatchOutcome getMatchOutcome() {
+		return matchOutcome;
+	}
+	public void setMatchOutcome(MatchOutcome matchOutcome) {
+		this.matchOutcome = matchOutcome;
 	}
 }
