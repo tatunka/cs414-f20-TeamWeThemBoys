@@ -11,6 +11,7 @@ import * as messageService from "../service/messageService";
 
 const App = () => {
   const [activeUser, setActiveUser] = useState({ isLoggedIn: false });
+  const [activeMatch, setActiveMatch] = useState(null);
 
   const logInUser = async (user) => {
     const notifications = await messageService.getMessages(user?.id);
@@ -21,13 +22,23 @@ const App = () => {
     setActiveUser({ isLoggedIn: false });
   };
 
+  const fetchNotifications = async () => {
+    const notifications = await messageService.getMessages(activeUser?.id);
+    setActiveUser({ ...activeUser, notifications: notifications });
+  };
+
   return (
     <div className="App">
-      <Header activeUser={activeUser} logOutUser={logOutUser} />
+      <Header
+        activeUser={activeUser}
+        logOutUser={logOutUser}
+        setActiveMatch={setActiveMatch}
+        fetchNotifications={fetchNotifications}
+      />
       {activeUser.isLoggedIn ? (
         <div className="pages">
           <MatchSelect />
-          <Match />
+          <Match activeMatch={activeMatch} />
         </div>
       ) : (
         <LoginContainer logInUser={logInUser} />

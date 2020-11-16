@@ -8,5 +8,6 @@ const serverURL = "tbd";
 
 const serviceURL = localhostURL;
 
+export const matchServiceURL = `${serviceURL}/match`;
 export const userServiceURL = `${serviceURL}/user`;
 export const messageServiceURL = `${serviceURL}/message`;

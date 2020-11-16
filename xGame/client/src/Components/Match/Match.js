@@ -1,7 +1,7 @@
 import React from "react";
 import { Collapse, Row } from "reactstrap";
 import PropTypes from "prop-types";
-import { Button } from '@material-ui/core';
+import { Button } from "@material-ui/core";
 
 import MatchPlayerStats from "./MatchPlayerStats";
 import MatchBoard from "./MatchBoard";
@@ -9,15 +9,7 @@ import MatchBoard from "./MatchBoard";
 import "./MatchStyle.css";
 
 const Match = (props) => {
-  const { isOpen } = props;
-
-  let matchEntity = {
-    id: 1,
-    turnCount: 0,
-    chessBoard: "",
-    whitePlayer: { nickName: "home" },
-    blackPlayer: { nickName: "opponent" },
-  };
+  const { isOpen, activeMatch } = props;
 
   //add functionality to parse chessBoard into boardState
   let boardState = [
@@ -52,11 +44,11 @@ const Match = (props) => {
     { pieceName: "\u265E", location: "a6" },
     { pieceName: "\u265E", location: "b8" },
     { pieceName: "\u265B", location: "b7" },
-    { pieceName: "\u265A", location: "a8" },
+    { pieceName: "\u265A", location: "a8" }
   ];
 
   const determineActiveColor = () => {
-    return matchEntity.turnCount % 2 === 0 ? "white" : "black";
+    return activeMatch?.turnCount % 2 === 0 ? "white" : "black";
   };
 
   return (
@@ -64,18 +56,18 @@ const Match = (props) => {
       <Row>
         <div className={"fullSize"}>
           <MatchPlayerStats
-              playerName={matchEntity.whitePlayer.nickName}
-              activeColor={determineActiveColor()}
-              turnCounter={matchEntity.turnCount}
-              boardState={boardState}
+            playerName={activeMatch?.whitePlayerNickname}
+            activeColor={determineActiveColor()}
+            turnCounter={activeMatch?.turnCount}
+            boardState={boardState}
           />
           <MatchBoard boardState={boardState} activeColor={"white"} />
           <MatchPlayerStats
-              playerName={matchEntity.blackPlayer.nickName}
-              activeColor={determineActiveColor()}
-              turnCounter={matchEntity.turnCount}
-              boardState={boardState}
-              opponent={true}
+            playerName={activeMatch?.blackPlayerNickname}
+            activeColor={determineActiveColor()}
+            turnCounter={activeMatch?.turnCount}
+            boardState={boardState}
+            opponent={true}
           />
         </div>
       </Row>
@@ -86,17 +78,32 @@ const Match = (props) => {
           </Button>
         </div>
       </Row>
-
     </Collapse>
   );
 };
 
 Match.propTypes = {
   isOpen: PropTypes.bool,
+  activeMatch: PropTypes.objectOf({
+    id: PropTypes.number,
+    whitePlayerId: PropTypes.number,
+    blackPlayerId: PropTypes.number,
+    whitePlayerNickname: PropTypes.string,
+    blackPlayerNickname: PropTypes.string,
+    turnCount: PropTypes.number
+  })
 };
 
 Match.defaultProps = {
   isOpen: true,
+  activeMatch: {
+    id: 0,
+    whitePlayerId: 0,
+    blackPlayerId: 0,
+    whitePlayerNickname: "",
+    blackPlayerNickname: "",
+    turnCount: 0
+  }
 };
 
 export default Match;

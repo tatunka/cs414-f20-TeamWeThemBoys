@@ -1,6 +1,6 @@
 /**
- * @module userService
- * @description exports functions for interacting with the backend user service
+ * @module messageService
+ * @description exports functions for interacting with the backend message service
  */
 import * as utils from "../utils/utilsCommon";
 import { messageServiceURL } from "../config/urlConfig";
