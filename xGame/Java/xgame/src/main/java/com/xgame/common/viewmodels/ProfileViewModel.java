@@ -2,23 +2,25 @@ package com.xgame.common.viewmodels;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.xgame.common.enums.MatchStatus;
+import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.entities.ChessMatch;
 import com.xgame.data.entities.User;
 
 
-
 public class ProfileViewModel {
+	@Autowired
+	private IChessMatchRepository matchRepo;
+	
 	private User user;
-	private List<MatchViewModel> matchHistory;
+	private List<MatchHistoryViewModel> matchHistory;
 	
 	public ProfileViewModel(User user) {
-		this.setUser(user);
-		for(ChessMatch match : user.getBlackMatches()) {
-			matchHistory.add(new MatchViewModel(match));
-		}
-		
-		for(ChessMatch match : user.getWhiteMatches()) {
-			matchHistory.add(new MatchViewModel(match));
+		this.user = user;
+		for(ChessMatch match: matchRepo.findByPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED)) {
+			matchHistory.add(new MatchHistoryViewModel(match, user));
 		}
 	}
 
@@ -30,7 +32,7 @@ public class ProfileViewModel {
 		this.user = user;
 	}
 	
-	public List<MatchViewModel> getMatchHistory(){
+	public List<MatchHistoryViewModel> getMatchHistory(){
 		return matchHistory;
 	}
 }
