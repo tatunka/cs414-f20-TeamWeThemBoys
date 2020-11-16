@@ -70,13 +70,11 @@ public class UserService implements IUserService {
 
 	@Override
 	public ProfileViewModel getProfile(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ProfileViewModel getProfile(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		var user = userRepo.findById(id);
+		
+		if (!user.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No account found for given email and password.");
+		}
+		return new ProfileViewModel(user.get());
 	}
 }
