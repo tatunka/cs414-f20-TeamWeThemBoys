@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.common.viewmodels.UserViewModel;
 import com.xgame.service.interfaces.IUserService;
 import com.xgame.service.models.UserCredentials;
@@ -44,8 +45,14 @@ public class UserController {
 		return userService.login(credentials);
 	}
 	
+
 	@PostMapping("/user/deactivate")
 	public void deactivateUser(@RequestBody Integer id) {
 		userService.deactivateUser(id);
+	}
+	
+	@GetMapping("/user/profile")
+	public ProfileViewModel getProfile(@RequestBody Integer id) {
+		return userService.getProfile(id);
 	}
 }
