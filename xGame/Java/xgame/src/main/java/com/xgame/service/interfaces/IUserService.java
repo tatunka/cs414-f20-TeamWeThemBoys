@@ -18,6 +18,4 @@ public interface IUserService {
 	void deactivateUser(Integer id);
 
 	ProfileViewModel getProfile(Integer id);
-
-	ProfileViewModel getProfile(String email);
 }
