@@ -75,6 +75,7 @@ public class UserService implements IUserService {
 		if (!user.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No account found for given email and password.");
 		}
+		
 		return new ProfileViewModel(user.get());
 	}
 }
