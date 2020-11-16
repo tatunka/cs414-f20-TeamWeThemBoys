@@ -9,4 +9,5 @@ import com.xgame.data.entities.ChessMatch;
 
 public interface IChessMatchRepository extends JpaRepository<ChessMatch, Integer> {
 	List<ChessMatch> findByBlackPlayerIdAndMatchStatus(Integer id, MatchStatus matchStatus);
+	List<ChessMatch> findByMatchStatus(MatchStatus matchStatus);
 }
