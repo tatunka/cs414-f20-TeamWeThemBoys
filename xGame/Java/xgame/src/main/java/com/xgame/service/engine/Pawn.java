@@ -21,7 +21,7 @@ public class Pawn extends ChessPiece {
 	
 	//adjusts the pawn move list to only list threatening moves
 		public ArrayList<String> findThreateningPawnMoves(char c, char i) throws IllegalPositionException{
-			ArrayList<String> moves = legalMoves();
+			ArrayList<String> moves = legalMoves(1);
 			char letter = c;
 			char number = i;
 			if(this.color == Color.BLACK) {
@@ -68,7 +68,37 @@ public class Pawn extends ChessPiece {
 		
 		String ahead = toPosition(column - dx, row + dx);
 		try {
-			
+		    ChessPiece adjPiece = board.getPiece(ahead);
+		    if (adjPiece == null && isSafe(ahead)) {
+		        moves.add(ahead);
+		    }
+		    String aheadUp = toPosition(column, row + dx);
+		    adjPiece = board.getPiece(aheadUp);
+		    if (aheadUp != null && adjPiece != null && adjPiece.getColor() != color && isSafe(aheadUp)) {
+		        moves.add(aheadUp);
+		    }
+		    String aheadOver = toPosition(column - dx, row);
+		    adjPiece = board.getPiece(aheadOver);
+		    if (aheadOver != null && adjPiece != null && adjPiece.getColor() != color && isSafe(aheadOver)) {
+		        moves.add(aheadOver);
+		    }
+		} catch (IllegalPositionException e) {
+			throw(e);
+		}
+		return moves;
+	}
+	
+	@Override
+	public ArrayList<String> legalMoves(int layer) throws IllegalPositionException {
+		ArrayList<String> moves = new ArrayList<String>();
+		int dx = color == Color.WHITE ? 1 : -1;
+
+		if((color == Color.WHITE && row == 7) || (color == Color.BLACK && row == 0)) {
+			return moves;
+		}
+		
+		String ahead = toPosition(column - dx, row + dx);
+		try {
 		    ChessPiece adjPiece = board.getPiece(ahead);
 		    if (adjPiece == null) {
 		        moves.add(ahead);

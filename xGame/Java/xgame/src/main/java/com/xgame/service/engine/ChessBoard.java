@@ -187,7 +187,7 @@ public class ChessBoard {
 				String location = ""+c+i;
 				if(getPiece(location) != null && getPiece(location).getColor() == threatColor 
 						&& getPiece(location).getClass() != King.class) {
-					ArrayList<String> moves = getPiece(location).legalMoves();
+					ArrayList<String> moves = getPiece(location).legalMoves(1);
 					if(getPiece(location).getClass() == Pawn.class) {
 						moves = ((Pawn)getPiece(location)).findThreateningPawnMoves(c, i);
 					}
@@ -219,7 +219,6 @@ public class ChessBoard {
 	public boolean isInCheckGivenMove(String fromLocation, String toLocation, Color pieceColor) throws IllegalPositionException{
 		ChessPiece movingPiece = getPiece(fromLocation);
 		ChessPiece destinationPiece = getPiece(toLocation);
-		
 		boolean isSafe = false;
 		
 		//move the piece
@@ -236,7 +235,6 @@ public class ChessBoard {
 			placePiece(destinationPiece, toLocation);
 		}
 		placePiece(movingPiece, fromLocation);
-
 		return isSafe;
 	}
 

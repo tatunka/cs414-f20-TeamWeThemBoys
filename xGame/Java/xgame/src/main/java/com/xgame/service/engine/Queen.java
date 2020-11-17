@@ -36,4 +36,24 @@ public class Queen extends ChessPiece {
 	    
 	     return moves;
 	}
+	
+	@Override
+	public ArrayList<String> legalMoves(int layer) throws IllegalPositionException {
+		ArrayList<String> moves = new ArrayList<String>();
+		ChessBoard tempBoard = this.board;
+		ChessPiece[] pieces = {
+		       new Rook(tempBoard, this.color),
+		       new Bishop(tempBoard, this.color),
+		    };
+	    for (ChessPiece piece : pieces) {
+	        try {
+				piece.setPosition(toPosition(this.column, this.row));
+				moves.addAll(piece.legalMoves(1));
+			} catch (IllegalPositionException e) {
+				throw(e);
+			}  
+	    }
+	    
+	     return moves;
+	}
 }
