@@ -14,7 +14,6 @@ import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalPositionException;
 import com.xgame.service.engine.King;
-import com.xgame.service.engine.Knight;
 import com.xgame.service.engine.Rook;
 
 class BishopTest {
