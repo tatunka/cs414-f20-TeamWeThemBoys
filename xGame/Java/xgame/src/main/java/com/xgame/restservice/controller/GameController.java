@@ -63,8 +63,5 @@ public class GameController {
 		catch (JsonProcessingException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing board.", e);
 		}
-		catch (IllegalPositionException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find legal moves for illegal position " + piecePosition + ".", e);
-		}
 	}
 }

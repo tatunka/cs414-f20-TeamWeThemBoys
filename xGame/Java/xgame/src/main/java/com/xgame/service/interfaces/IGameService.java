@@ -13,5 +13,5 @@ public interface IGameService {
 	String getBoard(int matchId) throws JsonMappingException, JsonProcessingException;
 
 	List<String> getLegalMoves(int matchId, String piecePosition)
-			throws IllegalPositionException, JsonMappingException, JsonProcessingException;
+			throws JsonMappingException, JsonProcessingException;
 }

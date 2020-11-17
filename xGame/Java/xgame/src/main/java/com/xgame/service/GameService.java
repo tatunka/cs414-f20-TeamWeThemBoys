@@ -91,25 +91,8 @@ public class GameService implements IGameService {
 		return board.toString();
 	}
 	
-	private void resumeMatch(int matchId) throws JsonMappingException, JsonProcessingException {
-		this.match = matchService.getMatch(matchId);
-			
-		var mapper = new ObjectMapper();
-		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-
-		var board = mapper.readValue(match.getChessBoard(), ChessPiece[][].class);
-		this.board = new ChessBoard();
-		this.board.resume(board);		
-	}
-	
-	private String stringifyBoard() throws JsonProcessingException {
-		var mapper = new ObjectMapper();
-		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.board.getBoard());
-	}
-	
 	public List<String> getLegalMoves(int matchId, String piecePosition)
-			throws IllegalPositionException, JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException {
 		ArrayList<String> legalMoves = new ArrayList<>();
 
 		this.resumeMatch(matchId);
@@ -130,5 +113,22 @@ public class GameService implements IGameService {
 					"Cannot get legal moves for " + piecePosition + ". Position is illegal.", e1);
 		}
 		return legalMoves;
+	}
+
+	private void resumeMatch(int matchId) throws JsonMappingException, JsonProcessingException {
+		this.match = matchService.getMatch(matchId);
+
+		var mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+
+		var board = mapper.readValue(match.getChessBoard(), ChessPiece[][].class);
+		this.board = new ChessBoard();
+		this.board.resume(board);
+	}
+
+	private String stringifyBoard() throws JsonProcessingException {
+		var mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.board.getBoard());
 	}
 }
