@@ -2,13 +2,17 @@ package com.xgame.engine;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalPositionException;
+import com.xgame.service.engine.King;
 import com.xgame.service.engine.Rook;
 
 class RookTest {
@@ -16,6 +20,18 @@ class RookTest {
 	private ChessBoard board = new ChessBoard();
 	private Rook wRook = new Rook(board, Color.WHITE);
 	private Rook bRook = new Rook(board, Color.BLACK);
+	
+	private Boolean listEqualRegardlessOrder(List<String> correctList, ArrayList<String> givenList) {
+		return (givenList.size() == correctList.size() && correctList.containsAll(givenList) && 
+				givenList.containsAll(correctList));
+	}
+	
+	@BeforeEach
+	void setup() {
+		board = new ChessBoard();
+		wRook = new Rook(board, Color.WHITE);
+		bRook = new Rook(board, Color.BLACK);
+	}
 	
 	@Test
 	void getColor() {
@@ -29,22 +45,6 @@ class RookTest {
 		assertEquals(bRook.toString(), "\u265C", "Black Rook is wrong charatcer");
 	}
 	
-/**
-	@Test
-	void setGoodPosition() {
-		try {
-			bRook.setPosition("a1");
-			assertEquals(bRook.column, 0);
-			assertEquals(bRook.row, 0);
-			//change position
-			bRook.setPosition("d6");
-			assertEquals(bRook.column, 3);
-			assertEquals(bRook.row, 5);
-		} catch (IllegalPositionException e) {
-			e.printStackTrace();
-		}
-	}
-*/
 	@Test
 	void setBadPosition() {
 		//position contains illegal characters
@@ -104,6 +104,28 @@ class RookTest {
 			assertTrue(bRook.legalMoves().containsAll(
 					Arrays.asList("h1", "g2", "f1")));
 		} catch (IllegalPositionException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void checkBehaviorTest() {
+		try {
+			//test that there are no valid moves while in check
+			board.placePiece(new King(board, Color.BLACK), "e3");
+			board.placePiece(bRook, "g1");
+			board.placePiece(wRook, "e7");
+			assertTrue(board.isInCheck(Color.BLACK));
+			assertTrue(bRook.legalMoves().isEmpty());
+			
+			//test that only the move to get out of check exists
+			board.placePiece(bRook, "h4");
+			assertTrue(bRook.legalMoves().equals(Arrays.asList("e4")));
+			
+			//test can't move to result in same color check
+			board.placePiece(bRook, "e4");
+			assertTrue(listEqualRegardlessOrder(Arrays.asList("e5","e6","e7"), bRook.legalMoves()));
+		}catch(IllegalPositionException e) {
 			e.printStackTrace();
 		}
 	}

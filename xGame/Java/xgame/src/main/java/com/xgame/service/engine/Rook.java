@@ -28,9 +28,13 @@ public class Rook extends ChessPiece {
 				move = toPosition(column, i);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		        } else if (adjPiece.getColor() != this.getColor()) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		            break;
 		        } else {
 		            break;
@@ -41,9 +45,13 @@ public class Rook extends ChessPiece {
 				move = toPosition(column, i);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		        } else if (adjPiece.getColor() != this.getColor()) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		            break;
 		        } else {
 		            break;
@@ -54,9 +62,13 @@ public class Rook extends ChessPiece {
 				move = toPosition(i, row);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		        } else if (adjPiece.getColor() != this.getColor()) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		            break;
 		        } else {
 		            break;
@@ -67,9 +79,13 @@ public class Rook extends ChessPiece {
 				move = toPosition(i, row);
 		        adjPiece = board.getPiece(move);
 		        if (adjPiece == null) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		        } else if (adjPiece.getColor() != this.getColor()) {
-		            moves.add(move);
+		        	if(isSafe(move)) {
+		        		moves.add(move);
+		        	}
 		            break;
 		        } else {
 		            break;
