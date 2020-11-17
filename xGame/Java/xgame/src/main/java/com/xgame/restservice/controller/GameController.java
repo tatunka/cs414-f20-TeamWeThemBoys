@@ -1,7 +1,10 @@
 package com.xgame.restservice.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +17,7 @@ import com.xgame.service.engine.IllegalMoveException;
 import com.xgame.service.engine.IllegalPositionException;
 import com.xgame.service.interfaces.IGameService;
 
+@CrossOrigin
 @RestController
 public class GameController {
 
@@ -47,6 +51,20 @@ public class GameController {
 			return gameService.getBoard(matchId);
 		} catch (JsonProcessingException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing board.", e);
+		}
+	}
+	
+	@GetMapping("/game/legalMoves")
+	public List<String> getLegalMoves(@RequestParam(value = "matchId") int matchId,
+			@RequestParam(value = "piecePosition") String piecePosition) {
+		try {
+			return gameService.getLegalMoves(matchId, piecePosition);
+		} 
+		catch (JsonProcessingException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing board.", e);
+		}
+		catch (IllegalPositionException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find legal moves for illegal position " + piecePosition + ".", e);
 		}
 	}
 }

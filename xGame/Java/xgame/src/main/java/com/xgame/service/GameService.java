@@ -1,13 +1,16 @@
 package com.xgame.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xgame.common.enums.MatchStatus;
@@ -103,5 +106,29 @@ public class GameService implements IGameService {
 		var mapper = new ObjectMapper();
 		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.board.getBoard());
+	}
+	
+	public List<String> getLegalMoves(int matchId, String piecePosition)
+			throws IllegalPositionException, JsonMappingException, JsonProcessingException {
+		ArrayList<String> legalMoves = new ArrayList<>();
+
+		this.resumeMatch(matchId);
+
+		ChessPiece piece;
+		try {
+			piece = board.getPiece(piecePosition);
+
+			if (piece == null) {
+				return legalMoves;
+			}
+
+			System.out.println(piece);
+			legalMoves = piece.legalMoves();
+
+		} catch (IllegalPositionException e1) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot get legal moves for " + piecePosition + ". Position is illegal.", e1);
+		}
+		return legalMoves;
 	}
 }
