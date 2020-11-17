@@ -22,11 +22,6 @@ class KnightTest {
 	private Knight wKnight = new Knight(board, Color.WHITE);
 	private Knight bKnight = new Knight(board, Color.BLACK);
 	
-	private Boolean listEqualRegardlessOrder(List<String> correctList, ArrayList<String> givenList) {
-		return (givenList.size() == correctList.size() && correctList.containsAll(givenList) && 
-				givenList.containsAll(correctList));
-	}
-	
 	@BeforeEach
 	void setup() {
 		board = new ChessBoard();
