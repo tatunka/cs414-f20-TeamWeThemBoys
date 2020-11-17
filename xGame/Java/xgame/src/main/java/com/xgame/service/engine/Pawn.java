@@ -2,6 +2,8 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
+import com.xgame.service.engine.ChessPiece.Color;
+
 public class Pawn extends ChessPiece {
 	
 	public Pawn(ChessBoard board, Color color) {
@@ -16,6 +18,44 @@ public class Pawn extends ChessPiece {
 	public String toString() {
 		return this.color == Color.BLACK ? "\u265F" : "\u2659";
 	}
+	
+	//adjusts the pawn move list to only list threatening moves
+		public ArrayList<String> findThreateningPawnMoves(char c, char i) throws IllegalPositionException{
+			ArrayList<String> moves = legalMoves();
+			char letter = c;
+			char number = i;
+			if(this.color == Color.BLACK) {
+				if(letter < 'h' && number > '1') {
+					moves.remove(("" + (++letter) + (--number)));
+				}
+				if(letter < 'h') {
+					number = i;
+					letter = c;
+					moves.add("" + ++letter + number);
+				}
+				if(number > '1') {
+					number = i;
+					letter = c;
+					moves.add("" + letter + --number);
+				}
+			}
+			if(this.color == Color.WHITE) {
+				if(letter > 'a' && number < '8') {
+					moves.remove(("" + (--letter) + (++number)));
+				}
+				if(letter > 'a') {
+					number = i;
+					letter = c;
+					moves.add("" + --letter + number);
+				}
+				if(number < '8') {
+					number = i;
+					letter = c;
+					moves.add("" + letter + ++number);
+				}
+			}
+			return moves;
+		}
 
 	@Override
 	public ArrayList<String> legalMoves() throws IllegalPositionException {

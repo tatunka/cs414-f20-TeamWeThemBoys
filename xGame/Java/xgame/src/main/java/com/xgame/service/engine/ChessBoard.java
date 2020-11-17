@@ -106,6 +106,19 @@ public class ChessBoard {
 		} 
 	}
 	
+	public boolean placeNull(String position) {
+		if(position.length() != 2) {
+			return false;
+		}
+		try {
+			ChessPiece oldPiece = getPiece(position);
+			board[Integer.parseInt(position.substring(1)) - 1][(int)position.charAt(0) - 97] = null;
+			return true;
+		} catch(IllegalPositionException e) {
+			return false;
+		}
+	}
+	
 	public void move(String fromPosition, String toPosition) throws IllegalMoveException, IllegalPositionException{
 		try {
 			ChessPiece toMove = getPiece(fromPosition);
@@ -167,78 +180,64 @@ public class ChessBoard {
 		return false;
 	}
 
-	//adjusts the pawn move list to only list threatening moves
-	public ArrayList<String> adjustPawnMoves(ArrayList<String> moves, Color threatColor, char c, char i){
-		char letter = c;
-		char number = i;
-		if(threatColor == Color.BLACK) {
-			moves.remove((letter < 'h' && number > '1' ? ("" + (++letter) + (--number)) : ""));
-			if(letter < 'h') {
-				number = i;
-				letter = c;
-				moves.add("" + ++letter + number);
-			}
-			if(number > '1') {
-				number = i;
-				letter = c;
-				moves.add("" + letter + --number);
-			}
-		}
-		if(threatColor == Color.WHITE) {
-			moves.remove((letter > 'a' && number < '8' ? ("" + (--letter) + (++number)) : ""));
-			if(letter > 'a') {
-				number = i;
-				letter = c;
-				moves.add("" + --letter + number);
-			}
-			if(number < '8') {
-				number = i;
-				letter = c;
-				moves.add("" + letter + ++number);
-			}
-		}
-		return moves;
-	}
-
 	//checks if a given square is threatened by the other colors pieces
-	public boolean isThreatened(String position, Color threatColor) {
-		try {
-			for(char c = 'a'; c <= 'h'; c++) {
-				for(char i = '1'; i <= '8'; i++) {
-					String location = ""+c+i;
-					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
-						ArrayList<String> moves = getPiece(location).legalMoves();
-						moves = (getPiece(location).getClass() == Pawn.class) ? (adjustPawnMoves(moves, threatColor, c, i)) : moves;
-						if(moves.contains(position)) {
-							return true;
-						}
+	public boolean isThreatened(String position, Color threatColor) throws IllegalPositionException{
+		for(char c = 'a'; c <= 'h'; c++) {
+			for(char i = '1'; i <= '8'; i++) {
+				String location = ""+c+i;
+				if(getPiece(location) != null && getPiece(location).getColor() == threatColor 
+						&& getPiece(location).getClass() != King.class) {
+					ArrayList<String> moves = getPiece(location).legalMoves();
+					if(getPiece(location).getClass() == Pawn.class) {
+						moves = ((Pawn)getPiece(location)).findThreateningPawnMoves(c, i);
+					}
+					if(moves.contains(position)) {
+						return true;
 					}
 				}
 			}
-		}catch(IllegalPositionException e) {
-			System.out.println(e);
 		}
 		return false;
 	}
 	
 	//checks if the king of a color's square is threatened
-	public boolean isInCheck(Color playerColor) {
+	public boolean isInCheck(Color playerColor) throws IllegalPositionException{
 		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
-		String kingName = (playerColor == Color.BLACK) ? "\u265A" : "\u2654";
+		String kingName = (playerColor == Color.WHITE) ? "\u2654" : "\u265A";
 		for(char c = 'a'; c <= 'h'; c++) {
 			for(char i = '1'; i <= '8'; i++) {
 				String location = ""+c+i;
-				try {
-					if(getPiece(location) != null && getPiece(location).toString() == kingName) {
-						return(isThreatened(location, threatColor));
-					}
-				}catch(IllegalPositionException e) {
-					System.out.println(e);
-				}
-				
+				if(getPiece(location) != null && getPiece(location).toString() == kingName) {
+					return(isThreatened(location, threatColor));
+				}				
 			}
 		}
 		return false;
+	}
+	
+	//checks if a certain move will lead to that color being in check
+	public boolean isInCheckGivenMove(String fromLocation, String toLocation, Color pieceColor) throws IllegalPositionException{
+		ChessPiece movingPiece = getPiece(fromLocation);
+		ChessPiece destinationPiece = getPiece(toLocation);
+		
+		boolean isSafe = false;
+		
+		//move the piece
+		placeNull(fromLocation);
+		placePiece(movingPiece, toLocation);
+
+		//check if the piece color is in check
+		isSafe = isInCheck(pieceColor);
+		
+		//revert the move
+		if(destinationPiece == null) {
+			placeNull(toLocation);
+		}else {
+			placePiece(destinationPiece, toLocation);
+		}
+		placePiece(movingPiece, fromLocation);
+
+		return isSafe;
 	}
 
 	public String toString() {
