@@ -37,7 +37,7 @@ public class Knight extends ChessPiece {
 				if(column + o[0] >= 0 && column + o[0] <= 7 && row + o[1] >= 0 && row + o[1] <= 7) {
 			        move = toPosition(column + o[0], row + o[1]);
 					adjPiece = board.getPiece(move);
-					if((adjPiece == null || (adjPiece != null && adjPiece.getColor() != this.color))) {
+					if((adjPiece == null || (adjPiece != null && adjPiece.getColor() != this.color)) && isSafe(move)) {
 						moves.add(move);
 					}
 				}
