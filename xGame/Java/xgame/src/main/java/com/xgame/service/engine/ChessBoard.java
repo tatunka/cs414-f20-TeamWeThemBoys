@@ -12,7 +12,7 @@ public class ChessBoard {
 	public ChessBoard(){
 		this.board = new ChessPiece[8][8]; 
 	}
-	
+
 	public ChessPiece[][] getBoard() {
 		return this.board;
 	}
@@ -61,7 +61,7 @@ public class ChessBoard {
 	
 	public void resume(ChessPiece[][] pieces) {
 		this.board = pieces;
-		
+
 		for(var p1 : pieces) {
 			for(var piece : p1) {
 				if(piece != null) {
@@ -70,7 +70,7 @@ public class ChessBoard {
 			}
 		}
 	}
-	
+
 	public ChessPiece getPiece(String position) throws IllegalPositionException{
 		if(position.length() != 2) {
 			throw new IllegalPositionException(position);
@@ -104,6 +104,19 @@ public class ChessBoard {
 		} catch(IllegalPositionException e) {
 			return false;
 		} 
+	}
+	
+	public boolean placeNull(String position) {
+		if(position.length() != 2) {
+			return false;
+		}
+		try {
+			ChessPiece oldPiece = getPiece(position);
+			board[Integer.parseInt(position.substring(1)) - 1][(int)position.charAt(0) - 97] = null;
+			return true;
+		} catch(IllegalPositionException e) {
+			return false;
+		}
 	}
 	
 	public void move(String fromPosition, String toPosition) throws IllegalMoveException, IllegalPositionException{
@@ -166,103 +179,123 @@ public class ChessBoard {
 		} 
 		return false;
 	}
-	
 
-	public boolean isThreatened(String position, Color threatColor) {
-		try {
-			for(char c = 'a'; c <= 'h'; c++) {
-				for(char i = '1'; i <= '8'; i++) {
-					String location = ""+c+i;
-					if(getPiece(location) != null && getPiece(location).getColor() == threatColor) {
-						ArrayList<String> moves = getPiece(location).legalMoves();
-						if(moves.contains(position)) {
-							
-							return true;
-						}
-					}
-				}
-			}
-		}catch(IllegalPositionException e) {
-			System.out.println(e);
-		}
-		return false;
-	}
-	
-	public boolean isInCheck(Color playerColor) {
-		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
-		String kingName = (playerColor == Color.BLACK) ? "\u265A" : "\u2654";
+	//checks if a given square is threatened by the other colors pieces
+	public boolean isThreatened(String position, Color threatColor) throws IllegalPositionException{
 		for(char c = 'a'; c <= 'h'; c++) {
 			for(char i = '1'; i <= '8'; i++) {
 				String location = ""+c+i;
-				try {
-					if(getPiece(location) != null && getPiece(location).toString() == kingName) {
-						return(isThreatened(location, threatColor));
+				if(getPiece(location) != null && getPiece(location).getColor() == threatColor 
+						&& getPiece(location).getClass() != King.class) {
+					ArrayList<String> moves = getPiece(location).legalMoves();
+					if(getPiece(location).getClass() == Pawn.class) {
+						moves = ((Pawn)getPiece(location)).findThreateningPawnMoves(c, i);
 					}
-				}catch(IllegalPositionException e) {
-					System.out.println(e);
+					if(moves.contains(position)) {
+						return true;
+					}
 				}
-				
 			}
 		}
 		return false;
 	}
 	
+	//checks if the king of a color's square is threatened
+	public boolean isInCheck(Color playerColor) throws IllegalPositionException{
+		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
+		String kingName = (playerColor == Color.WHITE) ? "\u2654" : "\u265A";
+		for(char c = 'a'; c <= 'h'; c++) {
+			for(char i = '1'; i <= '8'; i++) {
+				String location = ""+c+i;
+				if(getPiece(location) != null && getPiece(location).toString() == kingName) {
+					return(isThreatened(location, threatColor));
+				}				
+			}
+		}
+		return false;
+	}
+	
+	//checks if a certain move will lead to that color being in check
+	public boolean isInCheckGivenMove(String fromLocation, String toLocation, Color pieceColor) throws IllegalPositionException{
+		ChessPiece movingPiece = getPiece(fromLocation);
+		ChessPiece destinationPiece = getPiece(toLocation);
+		
+		boolean isSafe = false;
+		
+		//move the piece
+		placeNull(fromLocation);
+		placePiece(movingPiece, toLocation);
+
+		//check if the piece color is in check
+		isSafe = isInCheck(pieceColor);
+		
+		//revert the move
+		if(destinationPiece == null) {
+			placeNull(toLocation);
+		}else {
+			placePiece(destinationPiece, toLocation);
+		}
+		placePiece(movingPiece, fromLocation);
+
+		return isSafe;
+	}
+
 	public String toString() {
-		String chess="";    
-		String upperLeft = "\u250C";    
-		String upperRight = "\u2510";    
-		String horizontalLine = "\u2500";    
-		String horizontal3 = horizontalLine + "\u3000" + horizontalLine;    
-		String verticalLine = "\u2502";    
-		String upperT = "\u252C";    
-		String bottomLeft = "\u2514";    
-		String bottomRight = "\u2518";    
-		String bottomT = "\u2534";    
-		String plus = "\u253C";    
-		String leftT = "\u251C";    
-		String rightT = "\u2524";    
-		String topLine = upperLeft;    
-		
-		for (int i = 0; i<7; i++) {        
-			topLine += horizontal3 + upperT;    
-		}    
-		
-		topLine += horizontal3 + upperRight;    
+		String chess="";
+		String upperLeft = "\u250C";
+		String upperRight = "\u2510";
+		String horizontalLine = "\u2500";
+		String horizontal3 = horizontalLine + "\u3000" + horizontalLine;
+		String verticalLine = "\u2502";
+		String upperT = "\u252C";
+		String bottomLeft = "\u2514";
+		String bottomRight = "\u2518";
+		String bottomT = "\u2534";
+		String plus = "\u253C";
+		String leftT = "\u251C";
+		String rightT = "\u2524";
+		String topLine = upperLeft;
+
+		for (int i = 0; i<7; i++) {
+			topLine += horizontal3 + upperT;
+		}
+
+		topLine += horizontal3 + upperRight;
 		String bottomLine = bottomLeft;
-		
-		for (int i = 0; i<7; i++) {        
-			bottomLine += horizontal3 + bottomT;    
-		}    
-		
-		bottomLine += horizontal3 + bottomRight;    
-		chess+=topLine + "\n";    
-		
-		for (int row = 7; row >=0; row--) {        
-			String midLine = "";        
-			
-			for (int col = 0; col < 8; col++) {            
-				if(board[row][col]==null) {                
-					midLine += verticalLine + " \u3000 ";            
-					
-				} 
+
+		for (int i = 0; i<7; i++) {
+			bottomLine += horizontal3 + bottomT;
+		}
+
+		bottomLine += horizontal3 + bottomRight;
+		chess+=topLine + "\n";
+
+		for (int row = 7; row >=0; row--) {
+			String midLine = "";
+
+			for (int col = 0; col < 8; col++) {
+				if(board[row][col]==null) {
+					midLine += verticalLine + " \u3000 ";
+
+				}
 				else {
 					midLine += verticalLine + " "+board[row][col]+" ";
-				}        
-			}        
-			
-			midLine += verticalLine;        
-			String midLine2 = leftT;        
-			
-			for (int i = 0; i<7; i++) {            
-				midLine2 += horizontal3 + plus;        	
-			}        
-			
-			midLine2 += horizontal3 + rightT;        
-			chess+=midLine+ "\n";        
-			
-			if(row>=1) chess += midLine2 + "\n";    
-		}    
-		chess+=bottomLine;    
-		return chess;	
+				}
+			}
+
+			midLine += verticalLine;
+			String midLine2 = leftT;
+
+			for (int i = 0; i<7; i++) {
+				midLine2 += horizontal3 + plus;
+			}
+
+			midLine2 += horizontal3 + rightT;
+			chess+=midLine+ "\n";
+
+			if(row>=1) chess += midLine2 + "\n";
+		}
+		chess+=bottomLine;
+		return chess;
 	}
 }

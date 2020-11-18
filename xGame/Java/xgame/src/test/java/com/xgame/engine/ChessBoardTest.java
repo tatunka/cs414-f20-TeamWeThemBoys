@@ -2,6 +2,7 @@ package com.xgame.engine;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.xgame.service.engine.ChessBoard;
@@ -14,6 +15,12 @@ import com.xgame.service.engine.Rook;
 class ChessBoardTest {
     
 	ChessBoard board = new ChessBoard();
+	
+	@BeforeEach
+	public void setUp() {
+		board = new ChessBoard();
+	}
+	
     
 	@Test
 	void constructorTest() {
@@ -155,37 +162,83 @@ class ChessBoardTest {
 	
 	@Test
 	void isThreatenedTest() {
-		assertFalse(board.isThreatened("a1", Color.BLACK));
-		board.placePiece(new Rook(board, Color.BLACK), "a8");
-		assertTrue(board.isThreatened("a1", Color.BLACK));
-		assertFalse(board.isThreatened("a1", Color.WHITE));
-		board.placePiece(new Rook(board,Color.WHITE), "a1");
-		assertTrue(board.isThreatened("a1", Color.BLACK));
-		assertFalse(board.isThreatened("a1", Color.WHITE));
+		try {
+			//test empty board
+			assertFalse(board.isThreatened("a1", Color.BLACK));
+			
+			//test threat on an empty square
+			board.placePiece(new Rook(board, Color.BLACK), "a8");
+			assertTrue(board.isThreatened("a1", Color.BLACK));
+			assertFalse(board.isThreatened("a1", Color.WHITE));
+			
+			//test threat on a filled square
+			board.placePiece(new Rook(board,Color.WHITE), "a1");
+			assertTrue(board.isThreatened("a1", Color.BLACK));
+			assertFalse(board.isThreatened("a1", Color.WHITE));
+			
+			//test black pawn adjustment
+			board.placePiece(new Pawn(board, Color.BLACK), "d3");
+			assertFalse(board.isThreatened("e2", Color.BLACK));
+			assertTrue(board.isThreatened("d2", Color.BLACK));
+			assertTrue(board.isThreatened("e3", Color.BLACK));
+			
+			//test white pawn adjustment
+			board.placePiece(new Pawn(board, Color.WHITE), "d3");
+			assertFalse(board.isThreatened("c4", Color.WHITE));
+			assertTrue(board.isThreatened("d4", Color.WHITE));
+			assertTrue(board.isThreatened("c3", Color.WHITE));
+		}catch (IllegalPositionException e) {
+			System.out.println(e);
+		}
 		
 	}
 	
 	@Test
 	void isInCheckTest() {
-		//test initial
-		board.initialize();
-		assertFalse(board.isInCheck(Color.WHITE));
-		assertFalse(board.isInCheck(Color.BLACK));
-		
-		//test black in check
-		board.placePiece(new Rook(board, Color.WHITE), "a7");
-		assertTrue(board.isInCheck(Color.BLACK));
-		assertFalse(board.isInCheck(Color.WHITE));
-		
-		//test both in check
-		board.placePiece(new Rook(board, Color.BLACK), "g1");
-		assertTrue(board.isInCheck(Color.BLACK));
-		assertTrue(board.isInCheck(Color.WHITE));
-		
-		//test white in check
-		board.initialize();
-		board.placePiece(new Rook(board, Color.BLACK), "g1");
-		assertFalse(board.isInCheck(Color.BLACK));
-		assertTrue(board.isInCheck(Color.WHITE));
+		try {
+			//test initial
+			board.initialize();
+			assertFalse(board.isInCheck(Color.WHITE));
+			assertFalse(board.isInCheck(Color.BLACK));
+			
+			//test black in check
+			board.placePiece(new Rook(board, Color.WHITE), "a7");
+			assertTrue(board.isInCheck(Color.BLACK));
+			assertFalse(board.isInCheck(Color.WHITE));
+			
+			//test both in check
+			board.placePiece(new Rook(board, Color.BLACK), "h2");
+			assertTrue(board.isInCheck(Color.BLACK));
+			assertTrue(board.isInCheck(Color.WHITE));
+			
+			//test white in check
+			board.initialize();
+			board.placePiece(new Rook(board, Color.BLACK), "h2");
+			assertFalse(board.isInCheck(Color.BLACK));
+			assertTrue(board.isInCheck(Color.WHITE));
+		}catch (IllegalPositionException e) {
+			System.out.println(e);
+		}
+	}
+	
+	@Test
+	void isInCheckGivenMoveTest() {
+//		board.initialize();
+//		try {
+//			//test that board state is preserved
+//			boolean value = board.isInCheckGivenMove("d5", "d4", Color.BLACK);
+//			ChessBoard compareBoard = new ChessBoard();
+//			compareBoard.initialize();
+//			assertTrue(board.toString().equals(compareBoard.toString()));
+//			assertFalse(value);
+//			
+//			//test move that leads to check
+//			board.placePiece(new Rook(board, Color.WHITE), "c8");
+//			value = board.isInCheckGivenMove("b8", "c6", Color.BLACK);
+//			assertTrue(value);
+//			
+//		}catch (IllegalPositionException e) {
+//			System.out.println(e);
+//		}
 	}
 }
