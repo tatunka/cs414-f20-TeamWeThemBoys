@@ -23,3 +23,24 @@ export const acceptInvite = (matchId) => {
       return false;
     });
 };
+
+
+export const createMatch = (creationObject) => {
+  const { whiteID, blackID } = creationObject;
+  const url = `${matchServiceURL}/create?whiteId=${whiteID}&blackId=${blackID}`;
+
+  return utils
+    .basicAPI(url, "Create Match", {
+      method: "POST"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
