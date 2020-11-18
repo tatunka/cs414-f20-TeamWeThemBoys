@@ -19,11 +19,13 @@ public class ProfileViewModel {
 	
 	public ProfileViewModel(User user) {
 		this.user = user;
-		for(ChessMatch match: matchRepo.findByWhitePlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED)) {
-			matchHistory.add(new MatchHistoryViewModel(match, user));
+		for(ChessMatch match: user.getBlackMatches()) {
+			if (match.getMatchStatus() == MatchStatus.COMPLETED) 
+				matchHistory.add(new MatchHistoryViewModel(match, user));
 		}
-		for(ChessMatch match: matchRepo.findByBlackPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED)) {
-			matchHistory.add(new MatchHistoryViewModel(match, user));
+		for(ChessMatch match: user.getWhiteMatches()) {
+			if (match.getMatchStatus() == MatchStatus.COMPLETED) 
+				matchHistory.add(new MatchHistoryViewModel(match, user));
 		}
 	}
 
