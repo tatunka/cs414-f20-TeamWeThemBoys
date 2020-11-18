@@ -19,7 +19,10 @@ public class ProfileViewModel {
 	
 	public ProfileViewModel(User user) {
 		this.user = user;
-		for(ChessMatch match: matchRepo.findByPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED)) {
+		for(ChessMatch match: matchRepo.findByWhitePlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED)) {
+			matchHistory.add(new MatchHistoryViewModel(match, user));
+		}
+		for(ChessMatch match: matchRepo.findByBlackPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED)) {
 			matchHistory.add(new MatchHistoryViewModel(match, user));
 		}
 	}
