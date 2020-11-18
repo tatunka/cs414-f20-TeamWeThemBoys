@@ -1,6 +1,9 @@
 package com.xgame.restservice;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.stream.Collectors;
 
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.xgame.common.viewmodels.MatchViewModel;
+import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
@@ -245,4 +250,31 @@ class UserService {
 		}
 	}
 	
+	@Test
+	void getProfileViewModel() {
+		User player1 = null;
+		User player2 = null;
+		ProfileViewModel player1Profile = null;
+		
+		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			player1Profile = userService.getProfile(player1.getId());
+			
+			assertNotNull(player1Profile);
+			assertEquals(player1Profile.getUser().getId(), player1.getId());
+		}
+		catch(Exception e) {
+			fail();
+		}
+		finally {
+			//cleanup
+			if(player1 != null) {
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				userRepo.delete(player2);
+			}
+		}
+	}
 }
