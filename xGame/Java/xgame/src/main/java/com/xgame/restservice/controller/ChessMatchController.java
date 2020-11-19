@@ -19,7 +19,7 @@ public class ChessMatchController {
 	@Autowired
 	IChessMatchService matchService;
 	
-	@PostMapping("/match/create")
+	@PostMapping("/match")
 	public MatchViewModel createMatch(
 			@RequestParam(value = "whiteId") int whiteId,
 			@RequestParam(value = "blackId") int blackId) {
