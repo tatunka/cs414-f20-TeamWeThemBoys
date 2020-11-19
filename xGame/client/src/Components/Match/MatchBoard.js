@@ -91,7 +91,6 @@ const MatchBoard = (props) => {
     return newBoard;
   };
 
-  //modify to react to boardState change
   useEffect(() => {
     if (boardState.length === 0) {
       setChessBoard(createEmptyBoard());
