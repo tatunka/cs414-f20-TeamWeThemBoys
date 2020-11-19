@@ -18,7 +18,7 @@ const MatchCreateDialog = (props) => {
     } = props;
 
     const [selectedOpponent, setSelectedOpponent] = useState("");
-    const [searchError, setSearchError] = useState("");
+    const [apiError, setApiError] = useState("");
     var [userSearchResults, setUserSearchResults] = useState([]);
 
     const handleSelectChange = (event) => {
@@ -38,28 +38,28 @@ const MatchCreateDialog = (props) => {
                 </DialogContentText>
                 <Row className="pb-3">
                   <Col>
-                    {searchError && (
+                    {apiError && (
                       <Alert
                         onClose={() => {
-                          setSearchError("");
+                          setApiError("");
                         }}
                         severity="error"
                       >
-                        {searchError}
+                        {apiError}
                       </Alert>
                     )}
                   </Col>
                 </Row>
                 <Formik
                     onSubmit={async (values) => {
-                        if(values?.opponentValue) {
-                            const user = await userService.search(values?.opponentValue)
-                            if (user?.error) setSearchError(user?.message);
+                        if(values?.userResults) {
+                            const user = await userService.search(values?.userResults)
+                            if (user?.error) setApiError(user?.message);
                             else setUserSearchResults({user});
                         }
                     }}
                     initialValues={{
-                        opponentValue: "",
+                        userResults: "",
                     }}
                 >
                     {(formProps) => {
@@ -69,13 +69,12 @@ const MatchCreateDialog = (props) => {
                                 <Row className="pt-2">
                                     <Col xs="auto" className="d-flex justify-content-center">
                                         <TextField
-                                            id="opponentValue"
+                                            id="userResults"
                                             variant="outlined"
-                                            //style={{ width: "80%" }}
-                                            name="opponentValue"
+                                            name="userResults"
                                             label="Search for a user"
-                                            value={values?.["opponentValue"] || ""}
-                                            onChange={(e) => setFieldValue("opponentValue", e.target.value)}
+                                            value={values?.["userResults"] || ""}
+                                            onChange={(e) => setFieldValue("userResults", e.target.value)}
                                         />
                                     </Col>
                                     <Col xs="3" className="d-flex justify-content-center">
@@ -97,7 +96,7 @@ const MatchCreateDialog = (props) => {
                 <Formik
                     onSubmit={async (values) => {
                         const match = await matchService.createMatch(values);
-                        if (match?.error) setSearchError(match?.message);
+                        if (match?.error) setApiError(match?.message);
                         setShowMatchCreation(false);
                     }}
                     initialValues={{
@@ -120,7 +119,6 @@ const MatchCreateDialog = (props) => {
                                             value={values?.["blackID"] || ""}
                                             onChange={(e) => setFieldValue("blackID", e.target.value)}
                                         >
-                                            {/*console.log("userSearchResults", userSearchResults)*/}
                                             {userSearchResults?.user?.map(MakeItem)}
                                         </Select>
                                     </Col>
