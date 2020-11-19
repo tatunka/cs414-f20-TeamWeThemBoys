@@ -53,3 +53,22 @@ export const login = (loginObject) => {
       return false;
     });
 };
+
+export const search = (param) => {
+  const url = `${userServiceURL}/search?param=${param}`;
+
+  return utils
+    .basicAPI(url, "Find User", {
+      method: "GET"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};

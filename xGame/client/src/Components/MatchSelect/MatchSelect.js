@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import MatchCreateDialog from './MatchCreateDialog';
 
 const MatchSelect = (props) => {
-  const { isOpen } = props;
+  const { isOpen, activeUser } = props;
   const [showMatchCreation, setShowMatchCreation] = React.useState(false);
 
 
@@ -17,7 +17,7 @@ const MatchSelect = (props) => {
                 Create a Match
         </Button>
 
-        <MatchCreateDialog showMatchCreation={showMatchCreation} setShowMatchCreation={setShowMatchCreation} />
+        <MatchCreateDialog showMatchCreation={showMatchCreation} setShowMatchCreation={setShowMatchCreation} activeUser={activeUser} />
 
       </div>
     </Collapse>
@@ -25,10 +25,12 @@ const MatchSelect = (props) => {
 };
 
 MatchSelect.propTypes = {
+  activeUser: PropTypes.object,
   isOpen: PropTypes.bool
 };
 
 MatchSelect.defaultProps = {
+  activeUser: {},
   isOpen: true
 };
 
