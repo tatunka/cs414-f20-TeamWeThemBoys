@@ -23,7 +23,6 @@ const Match = (props) => {
       activeMatch.chessBoard !== "This is a chessboard"
     ) {
       const newBoard = parseBoard();
-      console.log("SETTING BOARD STATE", newBoard);
       setBoardState(newBoard);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
