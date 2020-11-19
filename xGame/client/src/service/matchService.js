@@ -27,7 +27,7 @@ export const acceptInvite = (matchId) => {
 
 export const createMatch = (creationObject) => {
   const { whiteID, blackID } = creationObject;
-  const url = `${matchServiceURL}/create?whiteId=${whiteID}&blackId=${blackID}`;
+  const url = `${matchServiceURL}?whiteId=${whiteID}&blackId=${blackID}`;
 
   return utils
     .basicAPI(url, "Create Match", {
