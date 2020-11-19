@@ -50,7 +50,7 @@ public class King extends ChessPiece{
 	}
 	
 	@Override
-	public ArrayList<String> legalMoves(int layer) throws IllegalPositionException {
+	public ArrayList<String> legalMoves(boolean checkTest) throws IllegalPositionException {
 		return legalMoves();
 	}
 }

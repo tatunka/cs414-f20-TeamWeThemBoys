@@ -187,7 +187,7 @@ public class ChessBoard {
 				String location = ""+c+i;
 				if(getPiece(location) != null && getPiece(location).getColor() == threatColor 
 						&& getPiece(location).getClass() != King.class) {
-					ArrayList<String> moves = getPiece(location).legalMoves(1);
+					ArrayList<String> moves = getPiece(location).legalMoves(false);
 					if(getPiece(location).getClass() == Pawn.class) {
 						moves = ((Pawn)getPiece(location)).findThreateningPawnMoves(c, i);
 					}

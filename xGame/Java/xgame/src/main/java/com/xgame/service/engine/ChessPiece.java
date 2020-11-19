@@ -87,5 +87,5 @@ public abstract class ChessPiece {
 	
 	abstract public ArrayList<String> legalMoves() throws IllegalPositionException;
 	
-	abstract public ArrayList<String> legalMoves(int layer) throws IllegalPositionException;
+	abstract public ArrayList<String> legalMoves(boolean checkTest) throws IllegalPositionException;
 }
