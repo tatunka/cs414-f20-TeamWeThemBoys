@@ -29,7 +29,9 @@ public class ChessMatch {
 	@Lob
 	@Column(nullable=false)
 	private String chessBoard;
+	@Column(nullable=false, columnDefinition="BIT DEFAULT 0")
 	private Boolean IsDrawSuggestedByWhite;
+	@Column(nullable=false, columnDefinition="BIT DEFAULT 0")
 	private Boolean IsDrawSuggestedByBlack;
 	@CreationTimestamp
 	private Timestamp creationTimestamp;
