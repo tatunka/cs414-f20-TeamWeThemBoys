@@ -246,10 +246,10 @@ public class ChessMatchService implements IChessMatchService {
 		var blackDraw = match.getIsDrawSuggestedByBlack();
 		
 		//if player did not suggest draw, flip bit of other player
-		if(match.getWhitePlayer().getId() == playerId && !whiteDraw) {
+		if(match.getWhitePlayer().getId() == playerId && !whiteDraw && blackDraw) {
 			match.setIsDrawSuggestedByBlack(false);
 		}
-		else if(match.getBlackPlayer().getId() == playerId && !blackDraw) {
+		else if(match.getBlackPlayer().getId() == playerId && !blackDraw && whiteDraw) {
 			match.setIsDrawSuggestedByWhite(false);
 		}
 		else {
