@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import {
   findLocation,
   createBoardPiece,
-  showTable,
+  showTable
 } from "./HelpfulMatchTools.js";
 
 import "./MatchStyle.css";
@@ -13,52 +13,18 @@ const MatchBoard = (props) => {
   const boardState = props.boardState;
   const activeColor = props.activeColor;
   const [chessBoard, setChessBoard] = useState([]);
-  const [piecesOnBoard, setPiecesOnBoard] = useState([]);
-  const [piecesToUpdate, setPiecesToUpdate] = useState({ add: [], remove: [] });
   const [selected, setSelected] = useState([]);
 
-  const checkForAdditions = () => {
-    let newUpdateList = piecesToUpdate;
-    for (let x = 0; x < boardState.length; x++) {
-      let matchFound = false;
-      for (let y = 0; y < piecesOnBoard.length; y++) {
-        if (boardState[x] === piecesOnBoard[y]) {
-          matchFound = true;
-        }
-      }
-      if (!matchFound) {
-        newUpdateList.add.push(boardState[x]);
-      }
-    }
-    setPiecesToUpdate(newUpdateList);
-  };
-
-  const checkForRemoval = () => {
-    let newUpdateList = piecesToUpdate;
-    for (let x = 0; x < piecesOnBoard.length; x++) {
-      let matchFound = false;
-      for (let y = 0; y < boardState.length; y++) {
-        if (boardState[x] === piecesOnBoard[y]) {
-          matchFound = true;
-        }
-      }
-      if (!matchFound) {
-        newUpdateList.remove.push(boardState[x]);
-      }
-    }
-    setPiecesToUpdate(newUpdateList);
-  };
-
   //change to alter boardState
-  const addSelected = (selectedPieceName, selectedLocation) => {
+  const selectPiece = (selectedPieceName, selectedLocation) => {
     console.log("clicked");
     setSelected({
-    pieceName: selectedPieceName,
-    location: selectedLocation,
+      pieceName: selectedPieceName,
+      location: selectedLocation
     });
   };
 
-  const createBoard = () => {
+  const createEmptyBoard = () => {
     let alpha = ["a", "b", "c", "d", "e", "f", "g", "h"];
     let board = [];
     for (let row = 0; row < 8; row++) {
@@ -69,13 +35,13 @@ const MatchBoard = (props) => {
           if (column % 2 === 0) {
             board[row].push(
               createBoardPiece(null, "white", tempLocation, () => {
-                addSelected(null, tempLocation);
+                selectPiece(null, tempLocation);
               })
             );
           } else {
             board[row].push(
               createBoardPiece(null, "black", tempLocation, () => {
-                addSelected(null, tempLocation);
+                selectPiece(null, tempLocation);
               })
             );
           }
@@ -83,13 +49,13 @@ const MatchBoard = (props) => {
           if (column % 2 === 0) {
             board[row].push(
               createBoardPiece(null, "black", tempLocation, () => {
-                addSelected(null, tempLocation);
+                selectPiece(null, tempLocation);
               })
             );
           } else {
             board[row].push(
               createBoardPiece(null, "white", tempLocation, () => {
-                addSelected(null, tempLocation);
+                selectPiece(null, tempLocation);
               })
             );
           }
@@ -100,69 +66,40 @@ const MatchBoard = (props) => {
   };
 
   const populateBoard = () => {
-    let newBoard = chessBoard;
-    for (let piece = 0; piece < piecesToUpdate.add.length; piece++) {
-      let index = findLocation(piecesToUpdate.add[piece].location);
+    let newBoard = createEmptyBoard();
+    boardState.forEach((piece) => {
+      let location = findLocation(piece.location);
       let boardColor = "";
       if (
-        (index[0] % 2 === 0 && index[1] % 2 === 0) ||
-        (index[0] % 2 !== 0 && index[1] % 2 !== 0)
+        (location[0] % 2 === 0 && location[1] % 2 === 0) ||
+        (location[0] % 2 !== 0 && location[1] % 2 !== 0)
       ) {
         boardColor = "white";
       } else {
         boardColor = "black";
       }
-      let tempPieceName = piecesToUpdate.add[piece].pieceName;
-      let tempLocation = piecesToUpdate.add[piece].location;
       let newBoardSquare = createBoardPiece(
-        tempPieceName,
+        piece.pieceName,
         boardColor,
-        tempLocation,
+        piece.location,
         () => {
-          addSelected(tempPieceName, tempLocation);
+          selectPiece(piece.pieceName, piece.location);
         }
       );
-      newBoard[index[1]][index[0]] = newBoardSquare;
-    }
-    for (let piece = 0; piece < piecesToUpdate.remove.length; piece++) {
-      let index = findLocation(piecesToUpdate.remove[piece].location);
-      let boardColor = "";
-      if (
-        (index[0] % 2 === 0 && index[1] % 2 === 0) ||
-        (index[0] % 2 !== 0 && index[1] % 2 !== 0)
-      ) {
-        boardColor = "white";
-      } else {
-        boardColor = "black";
-      }
-      let tempLocation = piecesToUpdate.remove[piece].location;
-      let newBoardSquare = createBoardPiece(
-        null,
-        boardColor,
-        tempLocation,
-        () => {
-          addSelected(null, tempLocation);
-        }
-      );
-      newBoard[index[1]][index[0]] = newBoardSquare;
-    }
-    setPiecesToUpdate({ add: [], remove: [] });
+      newBoard[location[1]][location[0]] = newBoardSquare;
+    });
     return newBoard;
   };
 
-  //modify to react to boardState change
-  if (chessBoard.length === 0) {
-    setChessBoard(createBoard());
-    checkForAdditions();
-    checkForRemoval();
-  }
-  if (
-    (piecesToUpdate.add.length > 0 || piecesToUpdate.remove.length > 0) &&
-    chessBoard.length > 0
-  ) {
-    setChessBoard(populateBoard());
-    setPiecesOnBoard(boardState);
-  }
+  useEffect(() => {
+    if (boardState.length === 0) {
+      setChessBoard(createEmptyBoard());
+    }
+    if (boardState.length > 0) {
+      setChessBoard(populateBoard());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardState]);
 
   return (
     <div className={"mainBody"}>
@@ -175,6 +112,6 @@ const MatchBoard = (props) => {
 
 MatchBoard.propTypes = {
   boardState: PropTypes.array,
-  activeColor: PropTypes.string,
+  activeColor: PropTypes.string
 };
 export default MatchBoard;
