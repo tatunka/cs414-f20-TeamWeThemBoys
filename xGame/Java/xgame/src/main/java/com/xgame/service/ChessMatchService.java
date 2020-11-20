@@ -47,6 +47,8 @@ public class ChessMatchService implements IChessMatchService {
 			match.setWhitePlayer(whitePlayer.get());
 			match.setBlackPlayer(blackPlayer.get());
 			match.setMatchStatus(MatchStatus.PENDING);
+			match.setIsDrawSuggestedByWhite(false);
+			match.setIsDrawSuggestedByBlack(false);
 			match.setTurnCount(0);
 			
 			var newMatch = matchRepo.save(match);
