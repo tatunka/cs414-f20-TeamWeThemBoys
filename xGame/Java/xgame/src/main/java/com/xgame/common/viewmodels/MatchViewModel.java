@@ -59,4 +59,7 @@ public class MatchViewModel {
 	public MatchStatus getStatus() {
 		return status;
 	}
+	public void setStatus(MatchStatus status) {
+		this.status = status;
+	}
 }
