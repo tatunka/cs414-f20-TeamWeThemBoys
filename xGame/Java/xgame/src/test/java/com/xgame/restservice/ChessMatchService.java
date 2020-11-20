@@ -249,7 +249,7 @@ class ChessMatchService {
 			assertEquals(messages2.size(), 2);
 		}
 		catch(Exception e) {
-			fail();
+			fail(e);
 		}
 		finally {
 			//cleanup
