@@ -2,42 +2,29 @@ package com.xgame.common.viewmodels;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.xgame.common.enums.MatchStatus;
-import com.xgame.data.IChessMatchRepository;
-import com.xgame.data.entities.ChessMatch;
-import com.xgame.data.entities.User;
-
-
 public class ProfileViewModel {
-	@Autowired
-	private IChessMatchRepository matchRepo;
 	
-	private User user;
+	private String userNickname;
 	private List<MatchHistoryViewModel> matchHistory;
 	
-	public ProfileViewModel(User user) {
-		this.user = user;
-		for(ChessMatch match: user.getBlackMatches()) {
-			if (match.getMatchStatus() == MatchStatus.COMPLETED) 
-				matchHistory.add(new MatchHistoryViewModel(match, user));
-		}
-		for(ChessMatch match: user.getWhiteMatches()) {
-			if (match.getMatchStatus() == MatchStatus.COMPLETED) 
-				matchHistory.add(new MatchHistoryViewModel(match, user));
-		}
+	public ProfileViewModel(String userNickname, List<MatchHistoryViewModel> matchHistory) {
+		this.userNickname = userNickname;
+		this.matchHistory = matchHistory;
 	}
-
-	public User getUser() {
-		return user;
+	
+	public String getUser() {
+		return this.userNickname;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
+	
+	public void setUser(String userNickname) {
+		this.userNickname = userNickname;
 	}
 	
 	public List<MatchHistoryViewModel> getMatchHistory(){
 		return matchHistory;
+	}
+	
+	public void setMatchHistory(List<MatchHistoryViewModel> matchHistory) {
+		this.matchHistory = matchHistory;
 	}
 }
