@@ -1,7 +1,7 @@
 package com.xgame.restservice;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.xgame.common.enums.MatchStatus;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.data.IChessMatchRepository;
@@ -255,24 +256,39 @@ class UserService {
 		User player1 = null;
 		User player2 = null;
 		ProfileViewModel player1Profile = null;
+		MatchViewModel match = null;
 		
 		try {
 			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
 			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			
+			match = matchService.createMatch(player1.getId(), player2.getId());
+			matchService.acceptInvite(match.getId());
+			matchService.suggestDraw(match.getId(), player1.getId());
+			matchService.suggestDraw(match.getId(), player2.getId());
 			player1Profile = userService.getProfile(player1.getId());
 			
 			assertNotNull(player1Profile);
-			assertEquals(player1Profile.getUser().getId(), player1.getId());
+			assertTrue(player1.getNickname().equals(player1Profile.getUser()));
+			assertTrue(player1Profile.getMatchHistory().size() == 1);
 		}
 		catch(Exception e) {
-			fail();
+			fail(e);
 		}
 		finally {
 			//cleanup
+			if(match != null) {
+				matchRepo.deleteById(match.getId());
+			}
 			if(player1 != null) {
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
+				messageRepo.deleteAll(messages);
 				userRepo.delete(player1);
 			}
 			if(player2 != null) {
+				var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(player2.getId());
+				messageRepo.deleteAll(messages2);
 				userRepo.delete(player2);
 			}
 		}
