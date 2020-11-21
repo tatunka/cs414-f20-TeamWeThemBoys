@@ -15,7 +15,7 @@ public class MatchHistoryViewModel {
 	private Color color;
 	private MatchOutcome outcome;
 	private Integer moveCount;
-	private User winningPlayer = null;
+	private String winningPlayer = null;
 	
 	public MatchHistoryViewModel(ChessMatch match, User user) {
 		MatchViewModel matchView = new MatchViewModel(match);
@@ -24,8 +24,7 @@ public class MatchHistoryViewModel {
 		this.color = matchView.getBlackPlayerId() == user.getId() ? Color.BLACK : Color.WHITE;
 		this.opponentNickname = this.color == Color.BLACK ? matchView.getWhitePlayerNickname() : matchView.getBlackPlayerNickname();
 		this.outcome = match.getMatchOutcome();
-		if(this.outcome != MatchOutcome.DRAW) this.setWinningPlayer(match.getWinningPlayer());
-		this.setWinningPlayer(match.getWinningPlayer());
+		if(this.outcome != MatchOutcome.DRAW) this.setWinningPlayer(match.getWinningPlayer().getNickname());
 		this.moveCount = match.getTurnCount();
 	}
 
@@ -77,11 +76,11 @@ public class MatchHistoryViewModel {
 		this.moveCount = moveCount;
 	}
 
-	public User getWinningPlayer() {
+	public String getWinningPlayer() {
 		return winningPlayer;
 	}
 
-	public void setWinningPlayer(User winningPlayer) {
+	public void setWinningPlayer(String winningPlayer) {
 		this.winningPlayer = winningPlayer;
 	}
 }
