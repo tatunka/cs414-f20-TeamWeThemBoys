@@ -2,20 +2,32 @@ package com.xgame.engine;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.xgame.service.engine.Bishop;
 import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalPositionException;
+import com.xgame.service.engine.King;
+import com.xgame.service.engine.Rook;
 
 class BishopTest {
 	
 	private ChessBoard board = new ChessBoard();
 	private Bishop wBishop = new Bishop(board, Color.WHITE);
 	private Bishop bBishop = new Bishop(board, Color.BLACK);
+	
+	@BeforeEach
+	void setup() {
+		board = new ChessBoard();
+		wBishop = new Bishop(board, Color.WHITE);
+		bBishop = new Bishop(board, Color.BLACK);
+	}
 	
 	@Test
 	void getColorTest() {
@@ -63,6 +75,28 @@ class BishopTest {
 			bBishop.setPosition("g1");
 			assertTrue(bBishop.legalMoves().containsAll(
 					Arrays.asList("f2", "h2")));
+		} catch (IllegalPositionException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void checkBehaviorTest() {
+		try {
+			//test that there are no valid moves while in check
+			board.placePiece(new King(board, Color.BLACK), "e3");
+			board.placePiece(bBishop, "g1");
+			board.placePiece(new Rook(board, Color.WHITE), "e7");
+			assertTrue(board.isInCheck(Color.BLACK));
+			assertTrue(bBishop.legalMoves().isEmpty());
+			
+			//test that only the move to get out of check exists
+			board.placePiece(bBishop, "h1");
+			assertTrue(bBishop.legalMoves().equals(Arrays.asList("e4")));
+			
+			//test can't move to result in same color check
+			board.placePiece(bBishop, "e4");
+			assertTrue(bBishop.legalMoves().isEmpty());
 		} catch (IllegalPositionException e) {
 			e.printStackTrace();
 		}

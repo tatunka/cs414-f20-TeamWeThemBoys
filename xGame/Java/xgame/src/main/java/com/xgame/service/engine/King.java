@@ -47,6 +47,10 @@ public class King extends ChessPiece{
 			throw(e);
 		}
 		return moves;
-		
+	}
+	
+	@Override
+	public ArrayList<String> legalMoves(boolean checkTest) throws IllegalPositionException {
+		return legalMoves();
 	}
 }

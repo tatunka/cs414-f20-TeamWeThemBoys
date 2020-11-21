@@ -223,22 +223,22 @@ class ChessBoardTest {
 	
 	@Test
 	void isInCheckGivenMoveTest() {
-//		board.initialize();
-//		try {
-//			//test that board state is preserved
-//			boolean value = board.isInCheckGivenMove("d5", "d4", Color.BLACK);
-//			ChessBoard compareBoard = new ChessBoard();
-//			compareBoard.initialize();
-//			assertTrue(board.toString().equals(compareBoard.toString()));
-//			assertFalse(value);
-//			
-//			//test move that leads to check
-//			board.placePiece(new Rook(board, Color.WHITE), "c8");
-//			value = board.isInCheckGivenMove("b8", "c6", Color.BLACK);
-//			assertTrue(value);
-//			
-//		}catch (IllegalPositionException e) {
-//			System.out.println(e);
-//		}
+		board.initialize();
+		try {
+			//test that board state is preserved
+			boolean value = board.isInCheckGivenMove("d5", "d4", Color.BLACK);
+			ChessBoard compareBoard = new ChessBoard();
+			compareBoard.initialize();
+			assertTrue(board.toString().equals(compareBoard.toString()));
+			assertFalse(value);
+			
+			//test move that leads to check
+			board.placePiece(new Rook(board, Color.WHITE), "c8");
+			value = board.isInCheckGivenMove("b8", "c6", Color.BLACK);
+			assertTrue(value);
+			
+		}catch (IllegalPositionException e) {
+			System.out.println(e);
+		}
 	}
 }

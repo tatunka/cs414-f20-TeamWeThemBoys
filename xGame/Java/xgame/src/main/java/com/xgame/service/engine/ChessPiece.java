@@ -77,8 +77,15 @@ public abstract class ChessPiece {
 		return "" + String.valueOf((char)(col + 97)) + (row + 1);
 	}
 	
+	//test that a move doesn't leave your king in check
+	protected Boolean isSafe(String toPosition) throws IllegalPositionException {
+		return !board.isInCheckGivenMove(getPosition(), toPosition, getColor());
+	}
+	
 	//abstract methods
 	abstract public String toString();
 	
 	abstract public ArrayList<String> legalMoves() throws IllegalPositionException;
+	
+	abstract public ArrayList<String> legalMoves(boolean checkTest) throws IllegalPositionException;
 }
