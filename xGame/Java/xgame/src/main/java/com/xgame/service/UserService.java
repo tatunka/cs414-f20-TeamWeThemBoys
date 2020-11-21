@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.google.common.hash.Hashing;
+import com.xgame.common.enums.MatchStatus;
+import com.xgame.common.viewmodels.MatchHistoryViewModel;
 import com.xgame.common.viewmodels.ProfileViewModel;
 import com.xgame.common.viewmodels.UserViewModel;
+import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IUserRepository;
 import com.xgame.data.entities.User;
 import com.xgame.service.interfaces.IUserService;
@@ -22,6 +25,9 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private IUserRepository userRepo;
+	@Autowired
+	private IChessMatchRepository matchRepo;
+	
 	private final String salt = "boys-them-we-team";
 
 	@Override
@@ -70,12 +76,24 @@ public class UserService implements IUserService {
 
 	@Override
 	public ProfileViewModel getProfile(Integer id) {
-		var user = userRepo.findById(id);
+		var u = userRepo.findById(id);
 		
-		if (!user.isPresent()) {
+		if (!u.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No account found for given email and password.");
 		}
 		
-		return new ProfileViewModel(user.get());
+		var user = u.get();
+		
+		var matches = matchRepo.findByBlackPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED);
+		matches.addAll(matchRepo.findByWhitePlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED));
+		
+		List<MatchHistoryViewModel> viewModels = matches
+				.stream()
+				.map(i -> new MatchHistoryViewModel(i, user))
+				.collect(Collectors.toList());
+		
+		System.out.println("views: " + viewModels);
+		
+		return new ProfileViewModel(new UserViewModel(user).getNickname(), viewModels);
 	}
 }
