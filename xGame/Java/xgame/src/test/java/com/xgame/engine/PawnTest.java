@@ -45,9 +45,35 @@ class PawnTest {
 			wPawn.setPosition("e4");
 			assertTrue(wPawn.legalMoves().containsAll(
 				Arrays.asList("d5")));
-			//cannot mvoe further
+			//cannot move further
 			wPawn.setPosition("a8");
 			assertTrue(wPawn.legalMoves().isEmpty());
+		} catch (IllegalPositionException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void threateningMovesTest() {
+		try {
+			bPawn.setPosition("e4");
+			
+			assertTrue(bPawn.findThreateningPawnMoves('e','4').equals(
+				Arrays.asList("f4", "e3")));
+			
+			wPawn.setPosition("e4");
+			
+			assertTrue(wPawn.findThreateningPawnMoves('e','4').equals(
+				Arrays.asList("d4", "e5")));
+			
+			bPawn.setPosition("h1");
+			
+			assertTrue(bPawn.findThreateningPawnMoves('h','1').isEmpty());
+			
+			wPawn.setPosition("a8");
+			
+			assertTrue(wPawn.findThreateningPawnMoves('a','8').isEmpty());
+			
 		} catch (IllegalPositionException e) {
 			e.printStackTrace();
 		}

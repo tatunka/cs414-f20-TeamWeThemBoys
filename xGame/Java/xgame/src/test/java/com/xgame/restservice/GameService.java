@@ -2,15 +2,19 @@ package com.xgame.restservice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,11 +23,11 @@ import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
 import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.engine.ChessPiece;
+import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalMoveException;
 import com.xgame.service.engine.IllegalPositionException;
 import com.xgame.service.engine.Knight;
 import com.xgame.service.engine.Pawn;
-import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.interfaces.IChessMatchService;
 import com.xgame.service.interfaces.IGameService;
 import com.xgame.service.interfaces.IUserService;
@@ -134,4 +138,42 @@ public class GameService {
 			userRepo.deleteById(user2.getId());
 		}
 	}	
+
+	@Test
+	void getLegalMovesTest() throws JsonMappingException, JsonProcessingException, IllegalPositionException {
+		var credentials1 = new UserCredentials("user1", "user1@email.com", "user1Password");
+		var credentials2 = new UserCredentials("user2", "user2@email.com", "user2Password");
+		var user1 = userService.registerNewUser(credentials1);
+		var user2 = userService.registerNewUser(credentials2);
+
+		var pendingMatch = matchService.createMatch(user1.getId(), user2.getId());
+		var match = matchService.acceptInvite(pendingMatch.getId());
+
+		try {
+			// white pawn
+			assertTrue(
+					gameService.getLegalMoves(match.getId(), "d1").equals(new ArrayList<String>(Arrays.asList("c2"))));
+			// white knight
+			assertTrue(gameService.getLegalMoves(match.getId(), "h3")
+					.equals(new ArrayList<String>(Arrays.asList("f4", "g5"))));
+			// black castle
+			assertTrue(gameService.getLegalMoves(match.getId(), "a5").equals(new ArrayList<String>()));
+
+			// illegal position
+			Assertions.assertThrows(Exception.class, () -> gameService.getLegalMoves(match.getId(), "x"));
+
+		} catch (Exception e) {
+			fail();
+		} finally {
+			var messages1 = messageRepo.findByUserIdAndReadTimestampIsNull(user1.getId());
+			var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(user2.getId());
+			messageRepo.deleteAll(messages1);
+			messageRepo.deleteAll(messages2);
+
+			matchRepo.deleteById(match.getId());
+
+			userRepo.deleteById(user1.getId());
+			userRepo.deleteById(user2.getId());
+		}
+	}
 }

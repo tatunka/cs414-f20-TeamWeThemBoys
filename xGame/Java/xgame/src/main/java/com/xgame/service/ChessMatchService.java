@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xgame.common.enums.MatchOutcome;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.xgame.common.enums.MatchStatus;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.data.IChessMatchRepository;
@@ -22,6 +23,7 @@ import com.xgame.data.entities.Message;
 import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.interfaces.IChessMatchService;
 
+@CrossOrigin
 @Service
 public class ChessMatchService implements IChessMatchService {
 
@@ -45,6 +47,8 @@ public class ChessMatchService implements IChessMatchService {
 			match.setWhitePlayer(whitePlayer.get());
 			match.setBlackPlayer(blackPlayer.get());
 			match.setMatchStatus(MatchStatus.PENDING);
+			match.setIsDrawSuggestedByWhite(false);
+			match.setIsDrawSuggestedByBlack(false);
 			match.setTurnCount(0);
 			
 			var newMatch = matchRepo.save(match);
