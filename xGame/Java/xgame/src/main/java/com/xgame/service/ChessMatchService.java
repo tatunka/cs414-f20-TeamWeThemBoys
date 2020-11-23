@@ -224,23 +224,23 @@ public class ChessMatchService implements IChessMatchService {
 	 * @return Status of match
 	 */
 	@Override
-	public MatchStatus denyDraw(int matchId, int playerId) {
+	public void denyDraw(int matchId, int playerId) {
 		var m = matchRepo.findById(matchId);
 		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that ID exists."));
+		var match = m.get();
+		if(match.getMatchStatus() != MatchStatus.INPROGRESS) {
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Cannot propose draw for match " + matchId + " because it is not in progress.");
+		}
+		
 		var u = userRepo.findById(playerId);
 		u.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user with that ID exists."));
 		
-		var match = m.get();
 		var player = u.get();
 		var opponentId = playerId == match.getWhitePlayer().getId() ? 
 				match.getBlackPlayer().getId() : 
 				match.getWhitePlayer().getId();
 		var opponent = userRepo.findById(opponentId);
-		
-		if(match.getMatchStatus() != MatchStatus.INPROGRESS) {
-			throw new ResponseStatusException(
-					HttpStatus.BAD_REQUEST, "Cannot propose draw for match " + matchId + " because it is not in progress.");
-		}
 		
 		var whiteDraw = match.getIsDrawSuggestedByWhite();
 		var blackDraw = match.getIsDrawSuggestedByBlack();
@@ -258,8 +258,6 @@ public class ChessMatchService implements IChessMatchService {
 		}
 			
 		messageRepo.save(new Message(player, "You have denied the draw. Match " + matchId + " is still going!"));
-		messageRepo.save(new Message(opponent.get(), player.getNickname() + " has denied to the draw. Match " + matchId + " is still going!"));
-
-		return match.getMatchStatus();
+		messageRepo.save(new Message(opponent.get(), player.getNickname() + " has denied the draw. Match " + matchId + " is still going!"));
 	}
 }
