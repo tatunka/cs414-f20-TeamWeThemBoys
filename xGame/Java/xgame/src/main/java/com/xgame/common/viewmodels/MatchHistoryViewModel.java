@@ -24,7 +24,7 @@ public class MatchHistoryViewModel {
 		this.color = matchView.getBlackPlayerId() == user.getId() ? Color.BLACK : Color.WHITE;
 		this.opponentNickname = this.color == Color.BLACK ? matchView.getWhitePlayerNickname() : matchView.getBlackPlayerNickname();
 		this.outcome = match.getMatchOutcome();
-		if(this.outcome != MatchOutcome.DRAW) this.setWinningPlayer(match.getWinningPlayer().getNickname());
+		this.winningPlayer = match.getWinningPlayer().getNickname();
 		this.moveCount = match.getTurnCount();
 	}
 
@@ -32,55 +32,27 @@ public class MatchHistoryViewModel {
 		return startTime;
 	}
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
-	}
-
 	public Timestamp getEndTime() {
 		return endTime;
-	}
-
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
 	}
 
 	public String getOpponentNickname() {
 		return opponentNickname;
 	}
 
-	public void setOpponentNickname(String opponentNickname) {
-		this.opponentNickname = opponentNickname;
-	}
-
 	public Color getColor() {
 		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
 	}
 
 	public MatchOutcome getOutcome() {
 		return outcome;
 	}
 
-	public void setOutcome(MatchOutcome outcome) {
-		this.outcome = outcome;
-	}
-
 	public Integer getMoveCount() {
 		return moveCount;
 	}
 
-	public void setMoveCount(Integer moveCount) {
-		this.moveCount = moveCount;
-	}
-
 	public String getWinningPlayer() {
 		return winningPlayer;
-	}
-
-	public void setWinningPlayer(String winningPlayer) {
-		this.winningPlayer = winningPlayer;
 	}
 }
