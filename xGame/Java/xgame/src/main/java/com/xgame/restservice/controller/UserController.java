@@ -52,7 +52,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/profile")
-	public ProfileViewModel getProfile(@RequestBody Integer id) {
+	public ProfileViewModel getProfile(@RequestParam(value = "id") Integer id) {
 		return userService.getProfile(id);
 	}
 }
