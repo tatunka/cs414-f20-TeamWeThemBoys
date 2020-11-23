@@ -216,4 +216,48 @@ public class ChessMatchService implements IChessMatchService {
 		var updatedMatch = matchRepo.save(match);
 		return updatedMatch.getMatchOutcome();
 	}
+	
+	/**
+	 * Denies a draw proposed by a given player's opponent. Undo opponent suggestion, match remains ongoing.
+	 * @param matchId - Id of match where a draw is being denied
+	 * @param playerId - player denying the draw
+	 * @return Status of match
+	 */
+	@Override
+	public void denyDraw(int matchId, int playerId) {
+		var m = matchRepo.findById(matchId);
+		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that ID exists."));
+		var match = m.get();
+		if(match.getMatchStatus() != MatchStatus.INPROGRESS) {
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Cannot propose draw for match " + matchId + " because it is not in progress.");
+		}
+		
+		var u = userRepo.findById(playerId);
+		u.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user with that ID exists."));
+		
+		var player = u.get();
+		var opponentId = playerId == match.getWhitePlayer().getId() ? 
+				match.getBlackPlayer().getId() : 
+				match.getWhitePlayer().getId();
+		var opponent = userRepo.findById(opponentId);
+		
+		var whiteDraw = match.getIsDrawSuggestedByWhite();
+		var blackDraw = match.getIsDrawSuggestedByBlack();
+		
+		//if player did not suggest draw, flip bit of other player
+		if(match.getWhitePlayer().getId() == playerId && !whiteDraw && blackDraw) {
+			match.setIsDrawSuggestedByBlack(false);
+		}
+		else if(match.getBlackPlayer().getId() == playerId && !blackDraw && whiteDraw) {
+			match.setIsDrawSuggestedByWhite(false);
+		}
+		else {
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Cannot propose draw again for match " + matchId + ".");
+		}
+			
+		messageRepo.save(new Message(player, "You have denied the draw. Match " + matchId + " is still going!"));
+		messageRepo.save(new Message(opponent.get(), player.getNickname() + " has denied the draw. Match " + matchId + " is still going!"));
+	}
 }

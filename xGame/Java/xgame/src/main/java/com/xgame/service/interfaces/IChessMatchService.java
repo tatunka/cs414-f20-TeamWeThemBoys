@@ -10,4 +10,5 @@ public interface IChessMatchService {
 	MatchViewModel updateMatch(MatchViewModel matchState);
 	MatchViewModel EndMatch(MatchViewModel matchState, int winnerId);
 	MatchOutcome suggestDraw(int matchId, int playerId);
+	void denyDraw(int matchId, int playerId);
 }
