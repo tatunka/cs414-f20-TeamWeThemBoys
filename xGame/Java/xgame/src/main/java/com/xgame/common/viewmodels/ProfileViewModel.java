@@ -16,15 +16,7 @@ public class ProfileViewModel {
 		return this.userNickname;
 	}
 	
-	public void setUser(String userNickname) {
-		this.userNickname = userNickname;
-	}
-	
 	public List<MatchHistoryViewModel> getMatchHistory(){
 		return matchHistory;
-	}
-	
-	public void setMatchHistory(List<MatchHistoryViewModel> matchHistory) {
-		this.matchHistory = matchHistory;
 	}
 }
