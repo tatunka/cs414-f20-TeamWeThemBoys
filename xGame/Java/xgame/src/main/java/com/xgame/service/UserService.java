@@ -84,8 +84,7 @@ public class UserService implements IUserService {
 		
 		var user = u.get();
 		
-		var matches = matchRepo.findByBlackPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED);
-		matches.addAll(matchRepo.findByWhitePlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED));
+		var matches = matchRepo.findByWhitePlayerIdOrBlackPlayerIdAndMatchStatus(user.getId(), MatchStatus.COMPLETED);
 		
 		List<MatchHistoryViewModel> viewModels = matches
 				.stream()
