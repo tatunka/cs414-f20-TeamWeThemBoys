@@ -2,8 +2,6 @@ package com.xgame.service.engine;
 
 import java.util.ArrayList;
 
-import com.xgame.service.engine.ChessPiece.Color;
-
 public class Pawn extends ChessPiece {
 	
 	public Pawn(ChessBoard board, Color color) {

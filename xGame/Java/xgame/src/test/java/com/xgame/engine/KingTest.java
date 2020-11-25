@@ -19,7 +19,7 @@ class KingTest {
 	private King wKing = new King(board, Color.WHITE);
 	private King bKing= new King(board, Color.BLACK);
 	
-	private Boolean listEqualRegardlessOrder(List correctList, ArrayList<String> givenList) {
+	private Boolean listEqualRegardlessOrder(List<String> correctList, ArrayList<String> givenList) {
 		return (givenList.size() == correctList.size() && correctList.containsAll(givenList) && 
 				givenList.containsAll(correctList));
 	}
