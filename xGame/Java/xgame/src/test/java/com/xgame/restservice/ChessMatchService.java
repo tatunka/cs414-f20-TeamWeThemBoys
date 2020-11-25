@@ -237,8 +237,7 @@ class ChessMatchService {
 			assertNull(suggestDraw);
 			
 			//deny draw
-			var denyDraw = service.denyDraw(match.getId(), player2.getId());
-			assertEquals(denyDraw, MatchStatus.INPROGRESS);
+			service.denyDraw(match.getId(), player2.getId());
 			
 			var updatedMatch = service.getMatch(match.getId());
 			assertEquals(updatedMatch.getStatus(), MatchStatus.INPROGRESS);			

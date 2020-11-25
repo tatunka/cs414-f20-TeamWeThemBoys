@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xgame.common.enums.MatchOutcome;
-import com.xgame.common.enums.MatchStatus;
 import com.xgame.common.viewmodels.MatchViewModel;
 import com.xgame.service.interfaces.IChessMatchService;
 
@@ -40,8 +39,8 @@ public class ChessMatchController {
 	}
 	
 	@PatchMapping("/match/draw/deny")
-	public MatchStatus denyDraw(@RequestParam(value = "matchId") int matchId, @RequestParam(value = "playerId") int playerId) {
-		return matchService.denyDraw(matchId, playerId);
+	public void denyDraw(@RequestParam(value = "matchId") int matchId, @RequestParam(value = "playerId") int playerId) {
+		matchService.denyDraw(matchId, playerId);
 	}
 	
 	@GetMapping("/match")
