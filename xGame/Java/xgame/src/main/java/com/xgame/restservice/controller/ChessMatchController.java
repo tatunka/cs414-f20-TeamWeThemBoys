@@ -33,6 +33,11 @@ public class ChessMatchController {
 		return match;
 	}
 	
+	@PatchMapping("/match/reject")
+	public void rejectInvite(@RequestParam(value = "matchId") int matchId, @RequestParam(value = "playerId") int playerId) {
+		matchService.rejectInvite(matchId, playerId);
+	}
+	
 	@PatchMapping("/match/draw")
 	public MatchOutcome draw(@RequestParam(value = "matchId") int matchId, @RequestParam(value = "playerId") int playerId) {
 		return matchService.suggestDraw(matchId, playerId);
