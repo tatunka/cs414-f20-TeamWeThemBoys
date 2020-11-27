@@ -3,11 +3,14 @@ package com.xgame.service.engine;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.xgame.common.enums.MatchOutcome;
 
 import com.xgame.service.engine.ChessPiece.Color;
 
 public class ChessBoard {
 	private ChessPiece[][] board;
+	private MatchOutcome status = null;
+	private Color winningColor = null;
 
 	public ChessBoard(){
 		this.board = new ChessPiece[8][8]; 
@@ -15,6 +18,14 @@ public class ChessBoard {
 
 	public ChessPiece[][] getBoard() {
 		return this.board;
+	}
+	
+	public MatchOutcome getOutcome() {
+		return status;
+	}
+	
+	public Color getWinningColor() {
+		return winningColor;
 	}
 
 	public void initialize() {
@@ -236,6 +247,35 @@ public class ChessBoard {
 		}
 		placePiece(movingPiece, fromLocation);
 		return isSafe;
+	}
+	
+	public boolean isInCheckMate(Color playerColor) throws IllegalPositionException{
+		if(isInCheck(playerColor)) {
+			for(char c = 'a'; c <= 'h'; c++) {
+				for(char i = '1'; i <= '8'; i++) {
+					String location = ""+c+i;
+					if(getPiece(location) != null && getPiece(location).getColor() == playerColor) {
+						if(getPiece(location).legalMoves().size() > 0) {
+							//if any piece has legal moves, then there is no checkmate
+							return false;
+						}
+					}				
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public void setGameStatus() throws IllegalPositionException{
+		if(isInCheckMate(Color.BLACK)) {
+			winningColor = Color.BLACK;
+			status = MatchOutcome.VICTORY;
+		}
+		if(isInCheckMate(Color.WHITE)) {
+			winningColor = Color.WHITE;
+			status = MatchOutcome.VICTORY;
+		}
 	}
 
 	public String toString() {

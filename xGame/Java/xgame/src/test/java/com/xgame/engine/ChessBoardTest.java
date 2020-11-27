@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.xgame.service.engine.Bishop;
 import com.xgame.service.engine.ChessBoard;
 import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalMoveException;
 import com.xgame.service.engine.IllegalPositionException;
+import com.xgame.service.engine.King;
 import com.xgame.service.engine.Pawn;
+import com.xgame.service.engine.Queen;
 import com.xgame.service.engine.Rook;
 
 class ChessBoardTest {
@@ -237,6 +240,33 @@ class ChessBoardTest {
 			value = board.isInCheckGivenMove("b8", "c6", Color.BLACK);
 			assertTrue(value);
 			
+		}catch (IllegalPositionException e) {
+			System.out.println(e);
+		}
+	}
+	
+	@Test
+	void isInCheckMateTest() {
+		try {
+			//test minimum pieces
+			board.placePiece(new King(board, Color.BLACK), "a8");
+			board.placePiece(new Queen(board, Color.WHITE), "b7");
+			assertTrue(board.isInCheck(Color.BLACK));
+			assertFalse(board.isInCheckMate(Color.BLACK));
+			board.placePiece(new Bishop(board, Color.WHITE), "c6");
+			assertTrue(board.isInCheckMate(Color.BLACK));
+			
+			//test full board
+			board.initialize();
+			board.placePiece(new Queen(board, Color.WHITE), "b7");
+			board.placePiece(new Bishop(board, Color.WHITE), "c6");
+			assertTrue(board.isInCheck(Color.BLACK));
+			assertFalse(board.isInCheckMate(Color.BLACK));
+			board.placeNull("c7");
+			board.placeNull("b6");
+			board.placeNull("c8");
+			board.placeNull("b8");
+			assertTrue(board.isInCheckMate(Color.BLACK));
 		}catch (IllegalPositionException e) {
 			System.out.println(e);
 		}
