@@ -31,12 +31,8 @@ public class Queen extends ChessPiece {
 		       new Bishop(tempBoard, this.color),
 		    };
 	    for (ChessPiece piece : pieces) {
-	        try {
-				piece.setPosition(toPosition(this.column, this.row));
-				moves.addAll(piece.legalMoves(((checkTest) ? true : false)));
-			} catch (IllegalPositionException e) {
-				throw(e);
-			}  
+			piece.setPosition(toPositionString(this.column, this.row));
+			moves.addAll(piece.legalMoves(((checkTest) ? true : false)));
 	    }
 	    
 	     return moves;

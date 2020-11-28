@@ -38,7 +38,7 @@ class KingTest {
 	
 	//make sure good moves on empty board
 	@Test
-	void legalMovesTest() {
+	void legalMovesTest() throws IllegalPositionException {
 		board.initialize();
 		board.placeNull("a8");
 

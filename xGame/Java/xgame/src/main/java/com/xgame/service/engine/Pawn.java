@@ -69,25 +69,21 @@ public class Pawn extends ChessPiece {
 			return moves;
 		}
 		
-		String ahead = toPosition(column - dx, row + dx);
-		try {
-		    ChessPiece adjPiece = board.getPiece(ahead);
-		    if (adjPiece == null && ((checkTest) ? isSafe(ahead) : true)) {
-		        moves.add(ahead);
-		    }
-		    String aheadUp = toPosition(column, row + dx);
-		    adjPiece = board.getPiece(aheadUp);
-		    if (aheadUp != null && adjPiece != null && adjPiece.getColor() != color && ((checkTest) ? isSafe(aheadUp) : true)) {
-		        moves.add(aheadUp);
-		    }
-		    String aheadOver = toPosition(column - dx, row);
-		    adjPiece = board.getPiece(aheadOver);
-		    if (aheadOver != null && adjPiece != null && adjPiece.getColor() != color && ((checkTest) ? isSafe(aheadOver) : true)) {
-		        moves.add(aheadOver);
-		    }
-		} catch (IllegalPositionException e) {
-			throw(e);
-		}
+		String ahead = toPositionString(column - dx, row + dx);
+	    ChessPiece adjPiece = board.getPiece(ahead);
+	    if (adjPiece == null && ((checkTest) ? isSafe(ahead) : true)) {
+	        moves.add(ahead);
+	    }
+	    String aheadUp = toPositionString(column, row + dx);
+	    adjPiece = board.getPiece(aheadUp);
+	    if (aheadUp != null && adjPiece != null && adjPiece.getColor() != color && ((checkTest) ? isSafe(aheadUp) : true)) {
+	        moves.add(aheadUp);
+	    }
+	    String aheadOver = toPositionString(column - dx, row);
+	    adjPiece = board.getPiece(aheadOver);
+	    if (aheadOver != null && adjPiece != null && adjPiece.getColor() != color && ((checkTest) ? isSafe(aheadOver) : true)) {
+	        moves.add(aheadOver);
+	    }
 		return moves;
 	}
 }

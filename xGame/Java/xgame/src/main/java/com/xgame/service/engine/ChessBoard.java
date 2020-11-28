@@ -28,6 +28,10 @@ public class ChessBoard {
 		return winningColor;
 	}
 
+	/**
+	 * Starts a match by placing all the pieces in their designated starting
+	 * positions.
+	 */
 	public void initialize() {
 		//Instantiate game pieces, put on board
 		placePiece(new King(this, Color.WHITE), "h1");
@@ -70,6 +74,11 @@ public class ChessBoard {
 		
 	}
 	
+	/**
+	 * Resumes a match by taking an existing list of pieces and 
+	 * assigning it to the ChessBoard.
+	 * @param pieces
+	 */
 	public void resume(ChessPiece[][] pieces) {
 		this.board = pieces;
 
@@ -80,34 +89,38 @@ public class ChessBoard {
 				}
 			}
 		}
+		
+		setGameStatus();
 	}
 
+	//public methods
+	
+	/**
+	 * Get a piece at the given position of the board.
+	 * @param position - String position
+	 * @return - ChessPiece at position
+	 * @throws IllegalPositionException
+	 */
 	public ChessPiece getPiece(String position) throws IllegalPositionException{
-		if(position.length() != 2) {
-			throw new IllegalPositionException(position);
+		var p = position.toCharArray();
+		if(p.length == 2 && p[0] >= 97 && p[0] <= 104 && p[1] >= 49 && p[1] <= 56) {
+			return board[p[1] - 49][p[0] - 97];
 		}
-		int inputColumn = ((int)position.charAt(0)) - 97;
-		int inputRow;
-		try {
-			inputRow = Integer.parseInt(position.substring(1)) - 1;
-		} catch (NumberFormatException e) {
-			throw new IllegalPositionException("Cannot Parse " + position);
-		}
-		if ((inputColumn < 0 || inputColumn > 7) || 
-			(inputRow < 0 || inputRow > 7)){
-			throw new IllegalPositionException(position);
-		} else {
-			return board[inputRow][inputColumn];
-		}
+		
+		throw new IllegalPositionException(position);
 	}
 	
+	/**
+	 * Places a piece at a new position on the board
+	 * @param piece - Piece to move
+	 * @param position - new position
+	 * @return - whether the placement succeeded or not
+	 */
 	public boolean placePiece(ChessPiece piece, String position) {
-		if(position.length() != 2 || piece == null) {
-			return false;
-		}
+		if(piece == null) { return false; }
 		try {
-			ChessPiece old_piece = getPiece(position);
-			if(old_piece == null || (old_piece != null && old_piece.getColor() != piece.getColor()) ) {
+			var pieceAtPosition = getPiece(position);
+			if(pieceAtPosition == null || pieceAtPosition.getColor() != piece.getColor()) {
 				board[Integer.parseInt(position.substring(1)) - 1][(int)position.charAt(0) - 97] = piece;
 				piece.setPosition(position);
 			}
@@ -117,122 +130,46 @@ public class ChessBoard {
 		} 
 	}
 	
-	public boolean placeNull(String position) {
-		if(position.length() != 2) {
-			return false;
-		}
-		try {
-			ChessPiece oldPiece = getPiece(position);
-			board[Integer.parseInt(position.substring(1)) - 1][(int)position.charAt(0) - 97] = null;
-			return true;
-		} catch(IllegalPositionException e) {
-			return false;
-		}
-	}
-	
+	/**
+	 * Moves a ChessPiece from on position to another, if the move is valid.
+	 * @param fromPosition - starting position of ChessPiece
+	 * @param toPosition - ending position of ChessPiece
+	 * @throws IllegalMoveException
+	 * @throws IllegalPositionException
+	 */
 	public void move(String fromPosition, String toPosition) throws IllegalMoveException, IllegalPositionException{
-		try {
-			ChessPiece toMove = getPiece(fromPosition);
-			if (toMove == null) {
-				throw new IllegalMoveException("There is no piece there");
-			}
-			ArrayList<String> legalMoves = toMove.legalMoves();
-			if (legalMoves.isEmpty() || !legalMoves.contains(toPosition)){
-				throw new IllegalMoveException("This piece cannot move there");
-			} else {
-				if(getPiece(toPosition) != null) {
-					int toRow = Integer.parseInt(toPosition.substring(1)) - 1;
-					int toColumn = (int)toPosition.charAt(0) - 97;
-					board[toRow][toColumn] = null;
-				}
-				
-				int fromRow = Integer.parseInt(fromPosition.substring(1)) - 1;
-				int fromColumn = (int)fromPosition.charAt(0) - 97;
-				placePiece(toMove, toPosition);
-				board[fromRow][fromColumn] = null;
-			}
-		} catch( IllegalPositionException e) {
-			throw(e);
-		}
-		
-	}
-	
-	public boolean promotePawn(Pawn pawnToPromote, String promoteTo) {
-		String[] wRank8 = {"a5", "a6", "a7", "a8", "b8", "c8", "d8"};
-		String[] bRank8 = {"h4", "h3", "h2", "h1", "g1", "f1", "e1"};
-		
-		List<String> wRank8List = Arrays.asList(wRank8);
-		List<String> bRank8List = Arrays.asList(bRank8);
-		
-		String position = pawnToPromote.getPosition();
-		if((pawnToPromote.getColor() == Color.WHITE && wRank8List.contains(position)) ||
-		   (pawnToPromote.getColor() == Color.BLACK && bRank8List.contains(position))) {
-			int row = Integer.parseInt(position.substring(1)) - 1;
-			int col = (int)position.charAt(0) - 97;
+		var piece = getPiece(fromPosition);
+		if(piece == null) { throw new IllegalMoveException("No piece at that position"); };
+		var legalMoves = piece.legalMoves();
+		if(legalMoves.contains(toPosition)) {
+			var success = placePiece(piece, toPosition);
 			
-			board[row][col] = null;
-			switch(promoteTo) {
-				case "bishop":
-					board[row][col] = new Bishop(this, pawnToPromote.getColor());
-					return true;
-				case "rook":
-					board[row][col] = new Rook(this, pawnToPromote.getColor());
-					return true;
-				case "knight":
-					board[row][col] = new Knight(this, pawnToPromote.getColor());
-					return true;
-				case "queen":
-					board[row][col] = new Queen(this, pawnToPromote.getColor());
-					return true;
-				default: 
-					return false;
-			}
-		} 
-		return false;
-	}
-
-	//checks if a given square is threatened by the other colors pieces
-	public boolean isThreatened(String position, Color threatColor) throws IllegalPositionException{
-		for(char c = 'a'; c <= 'h'; c++) {
-			for(char i = '1'; i <= '8'; i++) {
-				String location = ""+c+i;
-				if(getPiece(location) != null && getPiece(location).getColor() == threatColor 
-						&& getPiece(location).getClass() != King.class) {
-					ArrayList<String> moves = getPiece(location).legalMoves(false);
-					if(getPiece(location).getClass() == Pawn.class) {
-						moves = ((Pawn)getPiece(location)).findThreateningPawnMoves(c, i);
-					}
-					if(moves.contains(position)) {
-						return true;
-					}
-				}
+			if(success) {
+				var oldPosition = fromPosition.toCharArray();
+				board[oldPosition[1] - 49][oldPosition[0] - 97] = null;
+				setGameStatus();
 			}
 		}
-		return false;
-	}
-	
-	//checks if the king of a color's square is threatened
-	public boolean isInCheck(Color playerColor) throws IllegalPositionException{
-		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
-		String kingName = (playerColor == Color.WHITE) ? "\u2654" : "\u265A";
-		for(char c = 'a'; c <= 'h'; c++) {
-			for(char i = '1'; i <= '8'; i++) {
-				String location = ""+c+i;
-				if(getPiece(location) != null && getPiece(location).toString() == kingName) {
-					return(isThreatened(location, threatColor));
-				}				
-			}
+		else {
+			throw new IllegalMoveException("Illegal Move");
 		}
-		return false;
 	}
 	
-	//checks if a certain move will lead to that color being in check
-	public boolean isInCheckGivenMove(String fromLocation, String toLocation, Color pieceColor) throws IllegalPositionException{
+	/**
+	 * Checks if a certain move will lead to that color being in check
+	 * @param fromLocation
+	 * @param toLocation
+	 * @param pieceColor
+	 * @return
+	 * @throws IllegalPositionException
+	 */
+	public boolean isInCheckGivenMove(String fromLocation, String toLocation, Color pieceColor) throws IllegalPositionException {
 		ChessPiece movingPiece = getPiece(fromLocation);
 		ChessPiece destinationPiece = getPiece(toLocation);
 		boolean isSafe = false;
 		
 		//move the piece
+		board[Integer.parseInt(fromLocation.substring(1)) - 1][(int)fromLocation.charAt(0) - 97] = null;
 		placeNull(fromLocation);
 		placePiece(movingPiece, toLocation);
 
@@ -249,35 +186,44 @@ public class ChessBoard {
 		return isSafe;
 	}
 	
-	public boolean isInCheckMate(Color playerColor) throws IllegalPositionException{
-		if(isInCheck(playerColor)) {
-			for(char c = 'a'; c <= 'h'; c++) {
-				for(char i = '1'; i <= '8'; i++) {
-					String location = ""+c+i;
-					if(getPiece(location) != null && getPiece(location).getColor() == playerColor) {
-						if(getPiece(location).legalMoves().size() > 0) {
-							//if any piece has legal moves, then there is no checkmate
-							return false;
-						}
-					}				
+	/**
+	 * Promotes a Pawn that has reached the end of the board
+	 * @param pawn - the Pawn to promote
+	 * @param promotionPiece - class of the new 
+	 * @return
+	 */
+	public boolean promotePawn(Pawn pawn, Class<?> promotionPiece) {
+		String[] wRank8 = {"a5", "a6", "a7", "a8", "b8", "c8", "d8"};
+		String[] bRank8 = {"h4", "h3", "h2", "h1", "g1", "f1", "e1"};
+		List<String> wRank8List = Arrays.asList(wRank8);
+		List<String> bRank8List = Arrays.asList(bRank8);
+		var color = pawn.getColor();
+		
+		String position = pawn.getPosition();
+		if(color == Color.WHITE && wRank8List.contains(position) ||
+		   color == Color.BLACK && bRank8List.contains(position)) {
+			int row = Integer.parseInt(position.substring(1)) - 1;
+			int col = (int)position.charAt(0) - 97;
+			
+			if(ChessPiece.class.isAssignableFrom(promotionPiece) && 
+					promotionPiece != King.class && promotionPiece != Pawn.class) {
+				try {
+					board[row][col] = (ChessPiece) promotionPiece
+							.getDeclaredConstructor(ChessBoard.class, Color.class)
+							.newInstance(this, pawn.getColor());
+					return true;
+				}
+				catch (Exception e) {
+					return false;
 				}
 			}
-			return true;
-		}
+		} 
 		return false;
-	}
-	
-	public void setGameStatus() throws IllegalPositionException{
-		if(isInCheckMate(Color.BLACK)) {
-			winningColor = Color.BLACK;
-			status = MatchOutcome.VICTORY;
-		}
-		if(isInCheckMate(Color.WHITE)) {
-			winningColor = Color.WHITE;
-			status = MatchOutcome.VICTORY;
-		}
-	}
+	}	
 
+	/**
+	 * Prints current board as a string.
+	 */
 	public String toString() {
 		String chess="";
 		String upperLeft = "\u250C";
@@ -336,4 +282,107 @@ public class ChessBoard {
 		chess+=bottomLine;
 		return chess;
 	}
+	
+	//private methods
+	/**
+	 * Removes the ChessPiece at the indicated position
+	 * @param position - Position of ChessPiece to remove
+	 * @throws IllegalPositionException
+	 */
+	public void placeNull(String position) throws IllegalPositionException {
+		if(position.length() != 2 && position.charAt(0) >= 'a' && position.charAt(0) <= 'h' && position.charAt(1) >= '1' && position.charAt(1) <= '8') {
+			throw new IllegalPositionException("");
+		}
+		
+		board[Integer.parseInt(position.substring(1)) - 1][(int)position.charAt(0) - 97] = null;
+	}
+
+	/**
+	 * Checks if a given square is threatened by the other colors pieces 
+	 * @param position - Position to check
+	 * @param threatColor - Color to check for threats
+	 * @return
+	 * @throws IllegalPositionException
+	 */
+	public boolean isThreatened(String position, Color threatColor) throws IllegalPositionException{
+		for(char c = 'a'; c <= 'h'; c++) {
+			for(char i = '1'; i <= '8'; i++) {
+				String location = ""+c+i;
+				if(getPiece(location) != null && getPiece(location).getColor() == threatColor 
+						&& getPiece(location).getClass() != King.class) {
+					ArrayList<String> moves = getPiece(location).legalMoves(false);
+					if(getPiece(location).getClass() == Pawn.class) {
+						moves = ((Pawn)getPiece(location)).findThreateningPawnMoves(c, i);
+					}
+					if(moves.contains(position)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the King of a color's square is threatened
+	 * @param playerColor - Color to consider for check
+	 * @return
+	 * @throws IllegalPositionException
+	 */
+	public boolean isInCheck(Color playerColor) throws IllegalPositionException{
+		Color threatColor = (playerColor == Color.WHITE) ? Color.BLACK : Color.WHITE;
+		String kingName = (playerColor == Color.WHITE) ? "\u2654" : "\u265A";
+		for(char c = 'a'; c <= 'h'; c++) {
+			for(char i = '1'; i <= '8'; i++) {
+				String location = ""+c+i;
+				if(getPiece(location) != null && getPiece(location).toString() == kingName) {
+					return(isThreatened(location, threatColor));
+				}				
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the color is in checkmate
+	 * @param playerColor - Color to check for checkmate
+	 * @return
+	 */
+	public boolean isInCheckMate(Color playerColor) {
+		try {
+			if(isInCheck(playerColor)) {
+				for(char c = 'a'; c <= 'h'; c++) {
+					for(char i = '1'; i <= '8'; i++) {
+						String location = ""+c+i;
+						if(getPiece(location) != null && getPiece(location).getColor() == playerColor) {
+							if(getPiece(location).legalMoves().size() > 0) {
+								//if any piece has legal moves, then there is no checkmate
+								return false;
+							}
+						}				
+					}
+				}
+				return true;
+			}
+		}
+		catch (IllegalPositionException e) {
+			return false;
+		}
+		return false;
+	}
+	
+	/**
+	 * Sets the game status based on the state of the board.
+	 */
+	public void setGameStatus() {
+		if(isInCheckMate(Color.BLACK)) {
+			winningColor = Color.BLACK;
+			status = MatchOutcome.VICTORY;
+		}
+		if(isInCheckMate(Color.WHITE)) {
+			winningColor = Color.WHITE;
+			status = MatchOutcome.VICTORY;
+		}
+	}
+
 }

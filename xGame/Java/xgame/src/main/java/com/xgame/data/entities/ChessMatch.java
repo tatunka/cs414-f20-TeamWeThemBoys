@@ -30,9 +30,9 @@ public class ChessMatch {
 	@Column(nullable=false)
 	private String chessBoard;
 	@Column(nullable=false, columnDefinition="BIT DEFAULT 0")
-	private Boolean IsDrawSuggestedByWhite;
+	private Boolean IsDrawSuggestedByWhite = false;
 	@Column(nullable=false, columnDefinition="BIT DEFAULT 0")
-	private Boolean IsDrawSuggestedByBlack;
+	private Boolean IsDrawSuggestedByBlack = false;
 	@CreationTimestamp
 	private Timestamp creationTimestamp;
 	private Timestamp startTimestamp;

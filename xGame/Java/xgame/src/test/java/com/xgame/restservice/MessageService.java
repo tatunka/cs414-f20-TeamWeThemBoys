@@ -34,18 +34,21 @@ public class MessageService {
 
 	@Test
 	void getInvites() {
-		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
-		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
 		
-		var chessMatch = new ChessMatch("This is a test board");
-		chessMatch.setWhitePlayer(player1);
-		chessMatch.setBlackPlayer(player2);
-		chessMatch.setTurnCount(0);
-		chessMatch.setMatchStatus(MatchStatus.PENDING);
-		
-		var match = matchRepo.save(chessMatch);
-		
+		ChessMatch match = null;
+		User player1 = null;
+		User player2 = null;
 		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			var chessMatch = new ChessMatch("This is a test board");
+			chessMatch.setWhitePlayer(player1);
+			chessMatch.setBlackPlayer(player2);
+			chessMatch.setTurnCount(0);
+			chessMatch.setMatchStatus(MatchStatus.PENDING);
+			
+			match = matchRepo.save(chessMatch);
 				
 			//test invites
 			var invites = messageService.getInvites(player2.getId());
@@ -68,20 +71,25 @@ public class MessageService {
 	
 	@Test
 	void getMessages() {
-		var player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
-		var player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
 		
-		var chessMatch = new ChessMatch("This is a test board");
-		chessMatch.setWhitePlayer(player1);
-		chessMatch.setBlackPlayer(player2);
-		chessMatch.setTurnCount(0);
-		chessMatch.setMatchStatus(MatchStatus.PENDING);
-		
-		var match = matchRepo.save(chessMatch);
-		var message1 = messageService.send(player1.getId(), "This is a message!");
-		var message2 = messageService.send(player2.getId(), "this is another message!");
+		User player1 = null;
+		User player2 = null;
+		ChessMatch match = null;
 		
 		try {
+			
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			var chessMatch = new ChessMatch("This is a test board");
+			chessMatch.setWhitePlayer(player1);
+			chessMatch.setBlackPlayer(player2);
+			chessMatch.setTurnCount(0);
+			chessMatch.setMatchStatus(MatchStatus.PENDING);
+			
+			match = matchRepo.save(chessMatch);
+			var message1 = messageService.send(player1.getId(), "This is a message!");
+			var message2 = messageService.send(player2.getId(), "this is another message!");
 			var messages1 = messageService.getAll(player1.getId());
 			assertEquals(messages1.size(), 1);
 			assertEquals(messages1.get(0).getContent(), message1.getContent());

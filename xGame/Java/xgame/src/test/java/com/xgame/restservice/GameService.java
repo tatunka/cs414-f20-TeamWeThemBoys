@@ -62,15 +62,15 @@ public class GameService {
 		
 		try {
 			//move white pawn
-			gameService.move(match.getId(), "d1", "c2");
+			var move1 = gameService.move(match.getId(), "d1", "c2");
 			//move black knight
-			gameService.move(match.getId(), "a6", "b4");
+			var move2 = gameService.move(match.getId(), "a6", "b4");
 			//move white knight
-			gameService.move(match.getId(), "h3", "g5");
+			var move3 = gameService.move(match.getId(), "h3", "g5");
 			//move black knight
-			gameService.move(match.getId(), "b4", "c2");
+			var move4 = gameService.move(match.getId(), "b4", "c2");
 			//move white knight
-			gameService.move(match.getId(), "g5", "e6");
+			var move5 = gameService.move(match.getId(), "g5", "e6");
 			
 			//check for errors
 			//wrong turn
@@ -83,34 +83,26 @@ public class GameService {
 			Assertions.assertThrows(Exception.class, () -> gameService.move(match.getId(), "a1", "a2"));
 			
 			//move black bishop
-			gameService.move(match.getId(), "a4", "b3");
+			var move6 = gameService.move(match.getId(), "a4", "b3");
 			//move white knight
-			gameService.move(match.getId(), "e6", "c7");
-			//move white knight
-			gameService.move(match.getId(), "c2", "a1");
-			//move white knight
-			var finalState = gameService.move(match.getId(), "c7", "a8");
+			var move7 = gameService.move(match.getId(), "e6", "c7");
+			//move black knight
+			Assertions.assertThrows(IllegalMoveException.class, () -> gameService.move(match.getId(), "c2", "a1"));
 			
 			var mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			var board = mapper.readValue(finalState.getChessBoard(), ChessPiece[][].class);
+			var board = mapper.readValue(move7.getChessBoard(), ChessPiece[][].class);
 			var chessBoard = new ChessBoard();
 			chessBoard.resume(board);
-			
-			var blackKnight = chessBoard.getPiece("a1");
-			assertEquals(blackKnight.getColor(), Color.BLACK);
-			assertEquals(blackKnight.getClass(), Knight.class);
 			
 			var blackPawn = chessBoard.getPiece("b3");
 			assertEquals(blackPawn.getColor(), Color.BLACK);
 			assertEquals(blackPawn.getClass(), Pawn.class);
 			
-			var whiteKnight = chessBoard.getPiece("a8");
+			var whiteKnight = chessBoard.getPiece("c7");
 			assertEquals(whiteKnight.getColor(), Color.WHITE);
 			assertEquals(whiteKnight.getClass(), Knight.class);
 			
-			var emptyBlackPawn = chessBoard.getPiece("c7");
-			assertNull(emptyBlackPawn);
 			var emptyBlackKnight = chessBoard.getPiece("a6");
 			assertNull(emptyBlackKnight);
 			var emptyBlackPawn2 = chessBoard.getPiece("a4");
@@ -124,7 +116,7 @@ public class GameService {
 			Assertions.assertThrows(Exception.class, () -> gameService.move(match.getId(), "e1", "d1"));
 		}
 		catch (Exception e) {
-			fail();
+			fail(e);
 		}
 		finally {
 			var messages1 = messageRepo.findByUserIdAndReadTimestampIsNull(user1.getId());
