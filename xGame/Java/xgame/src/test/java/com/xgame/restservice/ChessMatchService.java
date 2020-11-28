@@ -121,6 +121,48 @@ class ChessMatchService {
 		}
 	}
 	
+	@Test
+	void rejectInvite() {
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel match = null;
+		
+		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			match = service.createMatch(player1.getId(), player2.getId());
+			
+			//test match acceptance
+			service.rejectInvite(match.getId(), player2.getId());
+			var rejectedMatch = service.getMatch(match.getId());
+			assertEquals(rejectedMatch.getWhitePlayerId(), player1.getId());
+			assertEquals(rejectedMatch.getWhitePlayerNickname(), player1.getNickname());
+			assertEquals(rejectedMatch.getBlackPlayerId(), player2.getId());
+			assertEquals(rejectedMatch.getBlackPlayerNickname(), player2.getNickname());
+			assertEquals(rejectedMatch.getStatus(), MatchStatus.REJECTED);
+		}
+		catch(Exception e) {
+			fail();
+		}
+		finally {
+			//cleanup
+			if(match != null) {
+				matchRepo.deleteById(match.getId());
+			}
+			if(player1 != null) {
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
+				messageRepo.deleteAll(messages);
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player2.getId());
+				messageRepo.deleteAll(messages);
+				userRepo.delete(player2);
+			}
+		}
+	}
+	
 	@Test 
 	void getMatchById(){
 		var matchCount = matchRepo.count();

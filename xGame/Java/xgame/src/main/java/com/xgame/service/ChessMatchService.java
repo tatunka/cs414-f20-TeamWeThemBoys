@@ -103,6 +103,25 @@ public class ChessMatchService implements IChessMatchService {
 		}
 	}
 	
+	@Override
+	public void rejectInvite(int matchId, int playerId) {
+		var match = matchRepo.findById(matchId);
+		match.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that id exists."));
+		var m = match.get();
+		var blackPlayer = m.getBlackPlayer(); 
+		var whitePlayer = m.getWhitePlayer();
+		
+		if(blackPlayer.getId() == playerId) {
+			m.setMatchStatus(MatchStatus.REJECTED);
+			matchRepo.save(m);
+			messageRepo.save(new Message(whitePlayer, blackPlayer.getNickname() + " has rejected your invitation to play."));
+			messageRepo.save(new Message(blackPlayer, "You have rejected " + whitePlayer.getNickname() + "'s invitation to play."));
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Only opposing player can reject a match invitation.");
+		}
+	}
+	
 
 	/**
 	 * Gets a match with the given id.
