@@ -11,7 +11,6 @@ import com.xgame.service.engine.IllegalPositionException;
 public interface IGameService {
 	MatchViewModel move(int matchId, String fromPosition, String toPosition) throws JsonMappingException, JsonProcessingException, IllegalMoveException, IllegalPositionException;
 	String getBoard(int matchId) throws JsonMappingException, JsonProcessingException;
-
-	List<String> getLegalMoves(int matchId, String piecePosition)
-			throws JsonMappingException, JsonProcessingException;
+	List<String> getLegalMoves(int matchId, String piecePosition)throws JsonMappingException, JsonProcessingException;
+	MatchViewModel promotePawn(int matchId, String position, String pieceName);
 }
