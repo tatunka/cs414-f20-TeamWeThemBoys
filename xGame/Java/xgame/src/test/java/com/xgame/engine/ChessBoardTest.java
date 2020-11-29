@@ -11,6 +11,7 @@ import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalMoveException;
 import com.xgame.service.engine.IllegalPositionException;
 import com.xgame.service.engine.King;
+import com.xgame.service.engine.Knight;
 import com.xgame.service.engine.Pawn;
 import com.xgame.service.engine.Queen;
 import com.xgame.service.engine.Rook;
@@ -156,7 +157,9 @@ class ChessBoardTest {
 		Pawn wPawn = new Pawn(board, Color.WHITE);
 		try {
 			wPawn.setPosition("b8");
-			assertTrue(board.promotePawn(wPawn, "knight"));
+			assertFalse(board.promotePawn(wPawn, King.class));
+			assertFalse(board.promotePawn(wPawn, Pawn.class));
+			assertTrue(board.promotePawn(wPawn, Knight.class));
 			assertEquals(board.getPiece("b8").toString(), "\u2658");
 		} catch (IllegalPositionException e) {
 			e.printStackTrace();
