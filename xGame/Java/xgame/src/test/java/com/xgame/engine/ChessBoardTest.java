@@ -156,10 +156,10 @@ class ChessBoardTest {
 	void promotePawnTest() {
 		Pawn wPawn = new Pawn(board, Color.WHITE);
 		try {
-			wPawn.setPosition("b8");
-			assertFalse(board.promotePawn(wPawn, King.class));
-			assertFalse(board.promotePawn(wPawn, Pawn.class));
-			assertTrue(board.promotePawn(wPawn, Knight.class));
+			board.placePiece(wPawn, "b8");
+			assertFalse(board.promotePawn("b8", King.class));
+			assertFalse(board.promotePawn("b8", Pawn.class));
+			assertTrue(board.promotePawn("b8", Knight.class));
 			assertEquals(board.getPiece("b8").toString(), "\u2658");
 		} catch (IllegalPositionException e) {
 			e.printStackTrace();

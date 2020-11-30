@@ -91,6 +91,7 @@ public class GameService implements IGameService {
 		return board.toString();
 	}
 	
+	@Override
 	public List<String> getLegalMoves(int matchId, String piecePosition)
 			throws JsonMappingException, JsonProcessingException {
 		ArrayList<String> legalMoves = new ArrayList<>();
@@ -113,6 +114,26 @@ public class GameService implements IGameService {
 					"Cannot get legal moves for " + piecePosition + ". Position is illegal.", e1);
 		}
 		return legalMoves;
+	}
+	
+	@Override
+	public MatchViewModel promotePawn(int matchId, String position, String pieceName) {
+		try {
+			this.resumeMatch(matchId);
+			board.promotePawn(position, Class.forName("com.xgame.service.engine." + pieceName));
+			this.match.setChessBoard(stringifyBoard());
+			return matchService.updateMatch(this.match);
+		} 
+		catch (JsonProcessingException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to retrieve game board", e);
+		}
+		catch(ClassNotFoundException e) {
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Cannot promote. Can only promote to Queen, Knight, Rook, or Bishop", e);
+		}
+		catch (IllegalPositionException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Position is not valid.", e);
+		}
 	}
 
 	private void resumeMatch(int matchId) throws JsonMappingException, JsonProcessingException {
