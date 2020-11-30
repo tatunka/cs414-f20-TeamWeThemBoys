@@ -1,6 +1,7 @@
 package com.xgame.service;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -159,21 +160,23 @@ public class ChessMatchService implements IChessMatchService {
 	 * @param winnerId - id of winning player
 	 * @return - updated view model of match with turn count, players, and board 
 	 */
-	public MatchViewModel EndMatch(MatchViewModel matchState, int winnerId) {
+	public MatchViewModel EndMatch(MatchViewModel matchState, Optional<Integer> winnerId) {
 		
 		var m = matchRepo.findById(matchState.getId());
 		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that id exists."));
 		var match = m.get();
 		
-		var winner = match.getBlackPlayer().getId() == winnerId ? match.getBlackPlayer() : match.getWhitePlayer();
+		//update match
 		match.setTurnCount(match.getTurnCount() + 1);
 		match.setChessBoard(matchState.getChessBoard());
-		match.setWinningPlayer(winner);
 		match.setMatchStatus(MatchStatus.COMPLETED);
-		
-		var updatedMatch = matchRepo.save(match);
-		
-		return new MatchViewModel(updatedMatch);
+		//set winner if match ended in a victory
+		if(winnerId.isPresent()) {
+			var winner = match.getBlackPlayer().getId() == winnerId.get() ? match.getBlackPlayer() : match.getWhitePlayer();
+			match.setWinningPlayer(winner);
+		}
+	
+		return new MatchViewModel(matchRepo.save(match));
 	}
 	
 	/**
