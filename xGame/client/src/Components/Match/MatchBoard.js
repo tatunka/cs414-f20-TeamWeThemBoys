@@ -16,7 +16,6 @@ const MatchBoard = (props) => {
   const matchId = props.matchId;
   const [chessBoard, setChessBoard] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [populated, setPopulated] = useState(false);
   const whitePieces = [
     "\u2659",
     "\u2656",
@@ -35,9 +34,6 @@ const MatchBoard = (props) => {
   ];
 
   const selectPiece = async (selectedPieceData) => {
-    if (!populated) {
-      return 0;
-    }
     if (
       (activeColor === "white" ? whitePieces : blackPieces).includes(
         selectedPieceData.pieceName
@@ -52,6 +48,8 @@ const MatchBoard = (props) => {
         if (moves.length > 0) {
           console.log("before highlight", chessBoard);
           highlightSquares(moves);
+        } else {
+          setChessBoard(populateBoard());
         }
       }
     } else {
@@ -68,7 +66,7 @@ const MatchBoard = (props) => {
 
   const highlightSquares = (moveList) => {
     console.log("chessBoard", chessBoard);
-    let tempBoard = [...chessBoard];
+    let tempBoard = populateBoard(); //[...chessBoard];
     console.log("tempboard", tempBoard);
     for (let i = 0; i < moveList.length; i++) {
       let location = findLocation(moveList[i]);
@@ -194,7 +192,6 @@ const MatchBoard = (props) => {
       );
       newBoard[location[1]][location[0]] = newBoardSquare;
     });
-    setPopulated(true);
     return newBoard;
   };
 

@@ -47,7 +47,6 @@ export function findLocation(location) {
 }
 
 export function showTable(elements) {
-  console.log(elements);
   let table = [];
   for (let row = 0; row < elements.length; row++) {
     table.push(
