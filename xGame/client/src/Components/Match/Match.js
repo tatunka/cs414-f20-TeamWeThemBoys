@@ -11,7 +11,7 @@ import MatchBoard from "./MatchBoard";
 import "./MatchStyle.css";
 
 const Match = (props) => {
-  const { isOpen, activeMatch } = props;
+  const { isOpen, activeMatch, setActiveMatch } = props;
 
   let boardStateDefault = [];
 
@@ -83,6 +83,7 @@ const Match = (props) => {
               boardState={boardState}
               matchId={activeMatch?.id}
               activeColor={determineActiveColor()}
+              setActiveMatch={setActiveMatch}
             />
             <MatchPlayerStats
               playerName={activeMatch?.blackPlayerNickname}
@@ -112,6 +113,7 @@ const Match = (props) => {
 
 Match.propTypes = {
   isOpen: PropTypes.bool,
+  setActiveMatch: PropTypes.func,
   activeMatch: PropTypes.shape({
     id: PropTypes.number,
     whitePlayerId: PropTypes.number,

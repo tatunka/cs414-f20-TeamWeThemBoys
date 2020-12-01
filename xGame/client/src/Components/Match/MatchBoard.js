@@ -208,9 +208,10 @@ const MatchBoard = (props) => {
     let tempSelected = selected;
     tempSelected.push({});
     setSelected(tempSelected);
-  }
-  if (selected.length === 3) {
+  } else if (selected.length === 3) {
     makeMove();
+    setSelected([]);
+  } else if (selected.length > 3) {
     setSelected([]);
   }
 
