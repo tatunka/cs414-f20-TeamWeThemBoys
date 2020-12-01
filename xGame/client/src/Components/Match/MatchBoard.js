@@ -4,24 +4,110 @@ import PropTypes from "prop-types";
 import {
   findLocation,
   createBoardPiece,
-  showTable
+  showTable,
 } from "./HelpfulMatchTools.js";
 
 import "./MatchStyle.css";
+import * as gameService from "../../service/gameService";
 
 const MatchBoard = (props) => {
   const boardState = props.boardState;
   const activeColor = props.activeColor;
+  const matchId = props.matchId;
   const [chessBoard, setChessBoard] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [populated, setPopulated] = useState(false);
+  const whitePieces = [
+    "\u2659",
+    "\u2656",
+    "\u2657",
+    "\u2658",
+    "\u2654",
+    "\u2655",
+  ];
+  const blackPieces = [
+    "\u265F",
+    "\u265C",
+    "\u265D",
+    "\u265E",
+    "\u265A",
+    "\u265B",
+  ];
 
-  //change to alter boardState
-  const selectPiece = (selectedPieceName, selectedLocation) => {
-    console.log("clicked");
-    setSelected({
-      pieceName: selectedPieceName,
-      location: selectedLocation
-    });
+  const selectPiece = async (selectedPieceData) => {
+    if (!populated) {
+      return 0;
+    }
+    if (
+      (activeColor === "white" ? whitePieces : blackPieces).includes(
+        selectedPieceData.pieceName
+      )
+    ) {
+      if (selected === null) {
+        setSelected(selectedPieceData);
+        const moves = await gameService.legalMoves(
+          matchId,
+          selectedPieceData.location
+        );
+        if (moves.length > 0) {
+          console.log("before highlight", chessBoard);
+          highlightSquares(moves);
+        }
+      }
+    } else {
+      if (selected !== null) {
+        console.log("else here");
+        // const move = await gameService.move(
+        //   matchId,
+        //   selected.location,
+        //   selectedPieceData.location
+        // );
+      }
+    }
+  };
+
+  const highlightSquares = (moveList) => {
+    console.log("chessBoard", chessBoard);
+    let tempBoard = [...chessBoard];
+    console.log("tempboard", tempBoard);
+    for (let i = 0; i < moveList.length; i++) {
+      let location = findLocation(moveList[i]);
+      let matchFound = false;
+      boardState.forEach((piece) => {
+        if (piece.location === moveList[i]) {
+          matchFound = true;
+          let newBoardSquare = createBoardPiece(
+            piece.pieceName,
+            "blue",
+            piece.location,
+            () => {
+              selectPiece({
+                pieceName: piece.pieceName,
+                location: piece.location,
+                squareColor: "blue",
+              });
+            }
+          );
+          tempBoard[location[1]][location[0]] = newBoardSquare;
+        }
+      });
+      if (!matchFound) {
+        tempBoard[location[1]][location[0]] = createBoardPiece(
+          null,
+          "blue",
+          moveList[i],
+          () => {
+            selectPiece({
+              pieceName: null,
+              location: moveList[i],
+              squareColor: "blue",
+            });
+          }
+        );
+      }
+    }
+    console.log("changed tempBoard", tempBoard);
+    setChessBoard(tempBoard);
   };
 
   const createEmptyBoard = () => {
@@ -30,18 +116,26 @@ const MatchBoard = (props) => {
     for (let row = 0; row < 8; row++) {
       board.push([]);
       for (let column = 0; column < 8; column++) {
-        let tempLocation = alpha[7 - row] + (8 - column).toString();
+        let tempLocation = alpha[row] + (8 - column).toString();
         if (row % 2 === 0) {
           if (column % 2 === 0) {
             board[row].push(
               createBoardPiece(null, "white", tempLocation, () => {
-                selectPiece(null, tempLocation);
+                selectPiece({
+                  pieceName: null,
+                  location: tempLocation,
+                  squareColor: "white",
+                });
               })
             );
           } else {
             board[row].push(
               createBoardPiece(null, "black", tempLocation, () => {
-                selectPiece(null, tempLocation);
+                selectPiece({
+                  pieceName: null,
+                  location: tempLocation,
+                  squareColor: "black",
+                });
               })
             );
           }
@@ -49,13 +143,21 @@ const MatchBoard = (props) => {
           if (column % 2 === 0) {
             board[row].push(
               createBoardPiece(null, "black", tempLocation, () => {
-                selectPiece(null, tempLocation);
+                selectPiece({
+                  pieceName: null,
+                  location: tempLocation,
+                  squareColor: "black",
+                });
               })
             );
           } else {
             board[row].push(
               createBoardPiece(null, "white", tempLocation, () => {
-                selectPiece(null, tempLocation);
+                selectPiece({
+                  pieceName: null,
+                  location: tempLocation,
+                  squareColor: "white",
+                });
               })
             );
           }
@@ -83,16 +185,22 @@ const MatchBoard = (props) => {
         boardColor,
         piece.location,
         () => {
-          selectPiece(piece.pieceName, piece.location);
+          selectPiece({
+            pieceName: piece.pieceName,
+            location: piece.location,
+            squareColor: boardColor,
+          });
         }
       );
       newBoard[location[1]][location[0]] = newBoardSquare;
     });
+    setPopulated(true);
     return newBoard;
   };
 
   useEffect(() => {
     if (boardState.length === 0) {
+      console.log("boardstate empty");
       setChessBoard(createEmptyBoard());
     }
     if (boardState.length > 0) {
@@ -112,6 +220,7 @@ const MatchBoard = (props) => {
 
 MatchBoard.propTypes = {
   boardState: PropTypes.array,
-  activeColor: PropTypes.string
+  activeColor: PropTypes.string,
+  matchId: PropTypes.number,
 };
 export default MatchBoard;

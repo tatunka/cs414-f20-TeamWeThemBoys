@@ -70,12 +70,12 @@ const MatchPlayerStats = (props) => {
   };
 
   useEffect(() => {
-  determineTaken();
+    determineTaken();
   }, [boardState]);
 
   return (
     <div className={"sidebar"}>
-      <p>{playerName} player name and pieces captured</p>
+      <p>{playerName} pieces captured</p>
       {displayTurnCounter()}
       <Grid container className={"gameBoard"} spacing={0}>
         {showTable(generateDisplay())}
