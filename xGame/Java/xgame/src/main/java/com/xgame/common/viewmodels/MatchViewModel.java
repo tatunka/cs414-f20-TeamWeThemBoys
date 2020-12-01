@@ -10,6 +10,8 @@ public class MatchViewModel {
 	private int blackPlayerId;
 	private String whitePlayerNickname;
 	private String blackPlayerNickname;
+	private int winningPlayerId;
+	private String winningPlayerNickname;
 	private int turnCount;
 	private MatchStatus status;
 	@JsonRawValue
@@ -18,6 +20,7 @@ public class MatchViewModel {
 	public MatchViewModel(ChessMatch match) {
 		var whitePlayer = match.getWhitePlayer();
 		var blackPlayer = match.getBlackPlayer();
+		var winningPlayer = match.getWinningPlayer();
 		
 		if(whitePlayer != null && blackPlayer != null) {
 			this.id = match.getId();
@@ -28,6 +31,11 @@ public class MatchViewModel {
 			this.turnCount = match.getTurnCount();
 			this.chessBoard = match.getChessBoard();
 			this.status = match.getMatchStatus();
+		}
+		
+		if(winningPlayer != null) {
+			this.winningPlayerId = winningPlayer.getId();
+			this.winningPlayerNickname = winningPlayer.getNickname();
 		}
 	}
 	
@@ -61,5 +69,21 @@ public class MatchViewModel {
 	}
 	public void setStatus(MatchStatus status) {
 		this.status = status;
+	}
+
+	public int getWinningPlayerId() {
+		return winningPlayerId;
+	}
+
+	public void setWinningPlayerId(int winningPlayerId) {
+		this.winningPlayerId = winningPlayerId;
+	}
+
+	public String getWinningPlayerNickname() {
+		return winningPlayerNickname;
+	}
+
+	public void setWinningPlayerNickname(String winningPlayerNickname) {
+		this.winningPlayerNickname = winningPlayerNickname;
 	}
 }

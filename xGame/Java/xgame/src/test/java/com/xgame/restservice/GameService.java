@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xgame.common.enums.MatchStatus;
 import com.xgame.data.IChessMatchRepository;
 import com.xgame.data.IMessageRepository;
 import com.xgame.data.IUserRepository;
@@ -26,8 +27,10 @@ import com.xgame.service.engine.ChessPiece;
 import com.xgame.service.engine.ChessPiece.Color;
 import com.xgame.service.engine.IllegalMoveException;
 import com.xgame.service.engine.IllegalPositionException;
+import com.xgame.service.engine.King;
 import com.xgame.service.engine.Knight;
 import com.xgame.service.engine.Pawn;
+import com.xgame.service.engine.Rook;
 import com.xgame.service.interfaces.IChessMatchService;
 import com.xgame.service.interfaces.IGameService;
 import com.xgame.service.interfaces.IUserService;
@@ -198,6 +201,50 @@ public class GameService {
 			var knight = board[7][1];
 			assertEquals(knight.getClass(), Class.forName("com.xgame.service.engine.Knight"));
 			assertEquals(knight.getColor(), Color.WHITE);
+		}
+		catch(Exception e) {
+			fail(e);
+		}
+		finally {
+			var messages1 = messageRepo.findByUserIdAndReadTimestampIsNull(user1.getId());
+			var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(user2.getId());
+			messageRepo.deleteAll(messages1);
+			messageRepo.deleteAll(messages2);
+
+			matchRepo.deleteById(match.getId());
+
+			userRepo.deleteById(user1.getId());
+			userRepo.deleteById(user2.getId());
+		}
+	}
+	
+	@Test
+	void victory() {
+		var credentials1 = new UserCredentials("user1", "user1@email.com", "user1Password");
+		var credentials2 = new UserCredentials("user2", "user2@email.com", "user2Password");
+		var user1 = userService.registerNewUser(credentials1);
+		var user2 = userService.registerNewUser(credentials2);
+
+		var pendingMatch = matchService.createMatch(user1.getId(), user2.getId());
+		var match = matchService.acceptInvite(pendingMatch.getId());
+		try {
+			var chessBoard = new ChessBoard();
+			chessBoard.placePiece(new Rook(chessBoard, Color.WHITE), "a6");
+			chessBoard.placePiece(new Rook(chessBoard, Color.WHITE), "b7");
+			chessBoard.placePiece(new King(chessBoard, Color.WHITE), "d1");
+			chessBoard.placePiece(new King(chessBoard, Color.BLACK), "h8");
+			
+			var mapper = new ObjectMapper();
+			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(chessBoard.getBoard());
+			match.setChessBoard(json);
+			var match1 = matchService.updateMatch(match);
+			assertEquals(match1.getStatus(), MatchStatus.INPROGRESS);
+			
+			gameService.move(match.getId(), "h8", "g8");
+			var victory = gameService.move(match.getId(), "a6", "a8");
+			assertEquals(victory.getStatus(), MatchStatus.COMPLETED);
+			assertTrue(victory.getWinningPlayerId() == user1.getId());
 		}
 		catch(Exception e) {
 			fail(e);
