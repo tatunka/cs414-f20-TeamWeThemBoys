@@ -11,11 +11,9 @@ import "./MatchStyle.css";
 import * as gameService from "../../service/gameService";
 
 const MatchBoard = (props) => {
-  const boardState = props.boardState;
-  const activeColor = props.activeColor;
-  const matchId = props.matchId;
+  const { boardState, activeColor, matchId, setActiveMatch } = props;
   const [chessBoard, setChessBoard] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState([]);
   const whitePieces = [
     "\u2659",
     "\u2656",
@@ -33,41 +31,42 @@ const MatchBoard = (props) => {
     "\u265B",
   ];
 
-  const selectPiece = async (selectedPieceData) => {
+  const selectPiece = (selectedPieceData) => {
     if (
       (activeColor === "white" ? whitePieces : blackPieces).includes(
         selectedPieceData.pieceName
       )
     ) {
-      if (selected === null) {
-        setSelected(selectedPieceData);
-        const moves = await gameService.legalMoves(
-          matchId,
-          selectedPieceData.location
-        );
-        if (moves.length > 0) {
-          console.log("before highlight", chessBoard);
-          highlightSquares(moves);
-        } else {
-          setChessBoard(populateBoard());
-        }
-      }
+      let tempSelected = [];
+      tempSelected.push(selectedPieceData);
+      setSelected(tempSelected);
     } else {
-      if (selected !== null) {
-        console.log("else here");
-        // const move = await gameService.move(
-        //   matchId,
-        //   selected.location,
-        //   selectedPieceData.location
-        // );
-      }
+      let tempSelected = selected;
+      tempSelected.push(selectedPieceData);
+      setSelected(tempSelected);
     }
   };
 
+  const showLegalMoves = async () => {
+    const moves = await gameService.legalMoves(matchId, selected[0].location);
+    if (moves.length > 0) {
+      highlightSquares(moves);
+    } else {
+      setChessBoard(populateBoard());
+    }
+  };
+
+  const makeMove = async () => {
+    const move = await gameService.move(
+      matchId,
+      selected[0].location,
+      selected[2].location
+    );
+    if (move) setActiveMatch(move);
+  };
+
   const highlightSquares = (moveList) => {
-    console.log("chessBoard", chessBoard);
     let tempBoard = populateBoard(); //[...chessBoard];
-    console.log("tempboard", tempBoard);
     for (let i = 0; i < moveList.length; i++) {
       let location = findLocation(moveList[i]);
       let matchFound = false;
@@ -104,7 +103,6 @@ const MatchBoard = (props) => {
         );
       }
     }
-    console.log("changed tempBoard", tempBoard);
     setChessBoard(tempBoard);
   };
 
@@ -197,7 +195,6 @@ const MatchBoard = (props) => {
 
   useEffect(() => {
     if (boardState.length === 0) {
-      console.log("boardstate empty");
       setChessBoard(createEmptyBoard());
     }
     if (boardState.length > 0) {
@@ -205,6 +202,17 @@ const MatchBoard = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boardState]);
+
+  if (selected.length === 1) {
+    showLegalMoves();
+    let tempSelected = selected;
+    tempSelected.push({});
+    setSelected(tempSelected);
+  }
+  if (selected.length === 3) {
+    makeMove();
+    setSelected([]);
+  }
 
   return (
     <div className={"mainBody"}>
@@ -219,5 +227,6 @@ MatchBoard.propTypes = {
   boardState: PropTypes.array,
   activeColor: PropTypes.string,
   matchId: PropTypes.number,
+  setActiveMatch: PropTypes.func,
 };
 export default MatchBoard;
