@@ -46,17 +46,22 @@
   background-color: sandybrown;
 }
 
+.blackBoardSquare {
+  flex: 1;
+  background-color: saddlebrown;
+}
+
+.blueBoardSquare{
+  flex: 1;
+  background-color: lightskyblue;
+}
+
 .hiddenBoardSquare {
   flex: 1;
   background-color: navajowhite;
 }
 .transparent {
   opacity: 0%;
-}
-
-.blackBoardSquare {
-  flex: 1;
-  background-color: saddlebrown;
 }
 
 .center {

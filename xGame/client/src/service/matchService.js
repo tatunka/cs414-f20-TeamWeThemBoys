@@ -10,7 +10,7 @@ export const acceptInvite = (matchId) => {
 
   return utils
     .basicAPI(url, "Accept Invite", {
-      method: "PATCH"
+      method: "PATCH",
     })
     .then((response) => {
       if (response) {
@@ -24,14 +24,32 @@ export const acceptInvite = (matchId) => {
     });
 };
 
-
 export const createMatch = (creationObject) => {
   const { whiteID, blackID } = creationObject;
   const url = `${matchServiceURL}?whiteId=${whiteID}&blackId=${blackID}`;
 
   return utils
     .basicAPI(url, "Create Match", {
-      method: "POST"
+      method: "POST",
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
+
+export const getMatch = (matchId) => {
+  const url = `${matchServiceURL}?matchId=${matchId}`;
+
+  return utils
+    .basicAPI(url, "Get Match", {
+      method: "GET",
     })
     .then((response) => {
       if (response) {

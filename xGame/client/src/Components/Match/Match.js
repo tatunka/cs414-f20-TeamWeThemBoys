@@ -11,7 +11,7 @@ import MatchBoard from "./MatchBoard";
 import "./MatchStyle.css";
 
 const Match = (props) => {
-  const { isOpen, activeMatch } = props;
+  const { isOpen, activeMatch, setActiveMatch } = props;
 
   let boardStateDefault = [];
 
@@ -35,7 +35,7 @@ const Match = (props) => {
         if (piece) {
           const newPiece = {
             pieceName: getPieceName(piece.color, piece.type),
-            location: piece.position
+            location: piece.position,
           };
           newBoardState.push(newPiece);
         }
@@ -65,7 +65,7 @@ const Match = (props) => {
   };
 
   const determineActiveColor = () => {
-    return activeMatch?.turnCount % 2 === 0 ? "white" : "black";
+    return activeMatch?.turnCount % 2 === 0 ? "black" : "white";
   };
 
   return (
@@ -79,7 +79,12 @@ const Match = (props) => {
               turnCounter={activeMatch?.turnCount}
               boardState={boardState}
             />
-            <MatchBoard boardState={boardState} activeColor={"white"} />
+            <MatchBoard
+              boardState={boardState}
+              activeMatch={activeMatch}
+              activeColor={determineActiveColor()}
+              setActiveMatch={setActiveMatch}
+            />
             <MatchPlayerStats
               playerName={activeMatch?.blackPlayerNickname}
               activeColor={determineActiveColor()}
@@ -108,6 +113,7 @@ const Match = (props) => {
 
 Match.propTypes = {
   isOpen: PropTypes.bool,
+  setActiveMatch: PropTypes.func,
   activeMatch: PropTypes.shape({
     id: PropTypes.number,
     whitePlayerId: PropTypes.number,
@@ -115,8 +121,8 @@ Match.propTypes = {
     whitePlayerNickname: PropTypes.string,
     blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number,
-    chessBoard: PropTypes.array
-  })
+    chessBoard: PropTypes.array,
+  }),
 };
 
 Match.defaultProps = {
@@ -128,8 +134,8 @@ Match.defaultProps = {
     whitePlayerNickname: "",
     blackPlayerNickname: "",
     turnCount: 0,
-    chessBoard: []
-  }
+    chessBoard: [],
+  },
 };
 
 export default Match;
