@@ -62,7 +62,11 @@ const MatchBoard = (props) => {
       selected[0].location,
       selected[2].location
     );
-    if (move) setActiveMatch(move);
+    if (move.status !== 400) {
+      setActiveMatch(move);
+    } else {
+      setSelected([]);
+    }
   };
 
   const highlightSquares = (moveList) => {
