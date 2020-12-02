@@ -81,7 +81,7 @@ const Match = (props) => {
             />
             <MatchBoard
               boardState={boardState}
-              matchId={activeMatch?.id}
+              activeMatch={activeMatch}
               activeColor={determineActiveColor()}
               setActiveMatch={setActiveMatch}
             />

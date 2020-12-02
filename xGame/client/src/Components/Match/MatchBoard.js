@@ -9,11 +9,34 @@ import {
 
 import "./MatchStyle.css";
 import * as gameService from "../../service/gameService";
+import Modal from "@material-ui/core/Modal";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  modalStyles: {
+    display: "flex",
+    flexDirection: "column",
+    top: "50%",
+    left: "50%",
+    position: "fixed",
+    width: "400",
+    height: "400",
+    backgroundColor: "white",
+    border: "2px solid #000",
+    borderRadius: "5px",
+    alignItems: "center",
+    padding: "5px",
+  },
+}));
 
 const MatchBoard = (props) => {
-  const { boardState, activeColor, matchId, setActiveMatch } = props;
+  const classes = useStyles();
+  const { boardState, activeColor, activeMatch, setActiveMatch } = props;
   const [chessBoard, setChessBoard] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [winningPlayer, setWinningPlayer] = useState("");
   const whitePieces = [
     "\u2659",
     "\u2656",
@@ -32,23 +55,28 @@ const MatchBoard = (props) => {
   ];
 
   const selectPiece = (selectedPieceData) => {
-    if (
-      (activeColor === "white" ? whitePieces : blackPieces).includes(
-        selectedPieceData.pieceName
-      )
-    ) {
-      let tempSelected = [];
-      tempSelected.push(selectedPieceData);
-      setSelected(tempSelected);
-    } else {
-      let tempSelected = selected;
-      tempSelected.push(selectedPieceData);
-      setSelected(tempSelected);
+    if (activeMatch.status === "INPROGRESS") {
+      if (
+        (activeColor === "white" ? whitePieces : blackPieces).includes(
+          selectedPieceData.pieceName
+        )
+      ) {
+        let tempSelected = [];
+        tempSelected.push(selectedPieceData);
+        setSelected(tempSelected);
+      } else {
+        let tempSelected = selected;
+        tempSelected.push(selectedPieceData);
+        setSelected(tempSelected);
+      }
     }
   };
 
   const showLegalMoves = async () => {
-    const moves = await gameService.legalMoves(matchId, selected[0].location);
+    const moves = await gameService.legalMoves(
+      activeMatch.id,
+      selected[0].location
+    );
     if (moves.length > 0) {
       highlightSquares(moves);
     } else {
@@ -58,7 +86,7 @@ const MatchBoard = (props) => {
 
   const makeMove = async () => {
     const move = await gameService.move(
-      matchId,
+      activeMatch.id,
       selected[0].location,
       selected[2].location
     );
@@ -207,6 +235,13 @@ const MatchBoard = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boardState]);
 
+  useEffect(() => {
+    if (activeMatch.status === "COMPLETED") {
+      setWinningPlayer(activeMatch.winningPlayerNickname);
+      setModalOpen(true);
+    }
+  }, [activeMatch.status]);
+
   if (selected.length === 1) {
     showLegalMoves();
     let tempSelected = selected;
@@ -223,6 +258,18 @@ const MatchBoard = (props) => {
     <div className={"mainBody"}>
       <Grid container className={"gameBoard"} spacing={0}>
         {showTable(chessBoard)}
+        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <div className={classes.modalStyles}>
+            <h3>Congratulations {winningPlayer}!</h3>
+            <Button
+              onClick={() => setModalOpen(false)}
+              variant={"contained"}
+              color={"secondary"}
+            >
+              close
+            </Button>
+          </div>
+        </Modal>
       </Grid>
     </div>
   );
@@ -231,7 +278,15 @@ const MatchBoard = (props) => {
 MatchBoard.propTypes = {
   boardState: PropTypes.array,
   activeColor: PropTypes.string,
-  matchId: PropTypes.number,
+  activeMatch: PropTypes.shape({
+    id: PropTypes.number,
+    whitePlayerId: PropTypes.number,
+    blackPlayerId: PropTypes.number,
+    whitePlayerNickname: PropTypes.string,
+    blackPlayerNickname: PropTypes.string,
+    turnCount: PropTypes.number,
+    chessBoard: PropTypes.array,
+  }),
   setActiveMatch: PropTypes.func,
 };
 export default MatchBoard;
