@@ -64,4 +64,11 @@ public class GameController {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing board.", e);
 		}
 	}
+	
+	@PatchMapping("/game/promote")
+	public MatchViewModel promotePawn(@RequestParam(value = "matchId") int matchId, 
+			@RequestParam(value = "position") String position,
+			@RequestParam(value = "piece") String piece) {
+		return gameService.promotePawn(matchId, position, piece);
+	}
 }

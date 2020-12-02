@@ -191,17 +191,20 @@ public class ChessBoard {
 	 * @param pawn - the Pawn to promote
 	 * @param promotionPiece - class of the new 
 	 * @return
+	 * @throws IllegalPositionException 
 	 */
-	public boolean promotePawn(Pawn pawn, Class<?> promotionPiece) {
+	public boolean promotePawn(String pawnPosition, Class<?> promotionPiece) throws IllegalPositionException {
 		String[] wRank8 = {"a5", "a6", "a7", "a8", "b8", "c8", "d8"};
 		String[] bRank8 = {"h4", "h3", "h2", "h1", "g1", "f1", "e1"};
 		List<String> wRank8List = Arrays.asList(wRank8);
 		List<String> bRank8List = Arrays.asList(bRank8);
+		var pawn = getPiece(pawnPosition);
 		var color = pawn.getColor();
 		
 		String position = pawn.getPosition();
-		if(color == Color.WHITE && wRank8List.contains(position) ||
-		   color == Color.BLACK && bRank8List.contains(position)) {
+		if(pawn instanceof Pawn &&
+				(color == Color.WHITE && wRank8List.contains(position) ||
+				color == Color.BLACK && bRank8List.contains(position))) {
 			int row = Integer.parseInt(position.substring(1)) - 1;
 			int col = (int)position.charAt(0) - 97;
 			
