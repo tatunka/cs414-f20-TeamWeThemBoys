@@ -15,8 +15,8 @@ export const register = (registerObject) => {
       body: JSON.stringify({
         nickname: nickname,
         email: email,
-        password: password
-      })
+        password: password,
+      }),
     })
     .then((response) => {
       if (response) {
@@ -39,8 +39,28 @@ export const login = (loginObject) => {
       method: "POST",
       body: JSON.stringify({
         email: email,
-        password: password
-      })
+        password: password,
+      }),
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
+
+export const deregister = (userId) => {
+  const url = `${userServiceURL}/deactivate`;
+
+  return utils
+    .basicAPI(url, "Deactivate User", {
+      method: "POST",
+      body: userId,
     })
     .then((response) => {
       if (response) {
@@ -59,7 +79,7 @@ export const search = (param) => {
 
   return utils
     .basicAPI(url, "Find User", {
-      method: "GET"
+      method: "GET",
     })
     .then((response) => {
       if (response) {

@@ -11,7 +11,7 @@ import {
   Drawer,
   Card,
   CardContent,
-  CardActions
+  CardActions,
 } from "@material-ui/core";
 import { Row } from "reactstrap";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -25,14 +25,14 @@ import * as matchService from "../../service/matchService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   logout: {
     color: "#ffffff",
-    textTransform: "inherit"
+    textTransform: "inherit",
   },
   drawerPaper: {
-    width: 240
+    width: 240,
   },
   notificationsDrawerHeader: {
     display: "flex",
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   profileDrawerHeader: {
     display: "flex",
@@ -48,11 +48,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   notificationTitle: {
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 }));
 
 const Header = (props) => {
@@ -62,7 +62,7 @@ const Header = (props) => {
   const [showProfile, setShowProfile] = useState(false);
   const [
     showUnregisterConfirmation,
-    setShowUnregisterConfirmation
+    setShowUnregisterConfirmation,
   ] = React.useState(false);
 
   const toggleNotifications = async () => {
@@ -203,6 +203,8 @@ const Header = (props) => {
           <UnregisterDialog
             showUnregisterConfirmation={showUnregisterConfirmation}
             setShowUnregisterConfirmation={setShowUnregisterConfirmation}
+            activeUser={activeUser}
+            logoutUser={logOutUser}
           />
         </>
       ) : (
@@ -216,14 +218,14 @@ Header.propTypes = {
   activeUser: PropTypes.object,
   logOutUser: PropTypes.func,
   setActiveMatch: PropTypes.func,
-  fetchNotifications: PropTypes.func
+  fetchNotifications: PropTypes.func,
 };
 
 Header.defaultProps = {
   activeUser: {},
   logOutUser: () => {},
   setActiveMatch: () => {},
-  fetchNotifications: () => {}
+  fetchNotifications: () => {},
 };
 
 export default Header;
