@@ -42,52 +42,31 @@ const MatchSelect = (props) => {
         )}
         <Container maxWidth="sm">
           <Paper elevation={0} style={{maxHeight: 200, overflow: 'auto'}}>
-
-          <Formik
-            onSubmit={async (values) => {
-              if(values) {
-                const match = await matchService.getMatch(values?.selectedMatch)
-                if (match?.error) setSelectError(match?.message);
-                else setActiveMatch(match);
-              }
-            }}
-            initialValues={{
-              selectedMatch: "",
-            }}
-          >
-            {(formProps) => {
-                const { setFieldValue, values } = formProps;
+            <List dense={true}>
+              {matchList?.map((X) => {
                 return (
-                  <List dense={true}>
-                    {matchList?.map((X) => {
-                      return (
-                        <ListItem key={X?.id}>
-                          <ListItemText
-                            primary={`Player ${X?.whitePlayerNickname} vs Player ${X?.blackPlayerNickname}`}
-                            secondary={`Match ID is ${X?.id}`}
-                          />
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              type="submit"
-                              onClick={(e) => setFieldValue("selectedMatch", e.target.key)}
-                              edge="end"
-                              aria-label="play"
-                            >
-                              <PlayIcon />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                      );                  
-                    })}
-                  </List>
-                );
-            }}
-          </Formik>
-
+                  <ListItem key={X?.id}>
+                    <ListItemText
+                      primary={`Player ${X?.whitePlayerNickname} vs Player ${X?.blackPlayerNickname}`}
+                      secondary={`Match ID is ${X?.id} on turn ${X?.turnCount}`}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        type="submit"
+                        //onClick={(e) => setFieldValue("selectedMatch", e.target.key)}
+                        onClick={() => setActiveMatch(X)}
+                        edge="end"
+                        aria-label="play"
+                      >
+                        <PlayIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                );                  
+              })}
+            </List>
           </Paper>
         </Container>
-
-
 
         <Button variant="outlined" color="primary" onClick={() => {setShowMatchCreation(true)} }>
                 Create a Match
