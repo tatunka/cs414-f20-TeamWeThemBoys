@@ -398,4 +398,62 @@ class ChessMatchService {
 			}
 		}
 	}
+	
+	@Test
+	void getAllOngoing() {
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel match = null;
+		MatchViewModel match2 = null;
+		
+		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			//start match
+			match = service.createMatch(player1.getId(), player2.getId());
+			service.acceptInvite(match.getId());
+			
+			var matches1 = service.getAllOngoing(player1.getId());
+			var matches2 = service.getAllOngoing(player2.getId());
+			assertEquals(matches1.get(0).getId(), match.getId());
+			assertEquals(matches1.get(0).getWhitePlayerId(), player1.getId());
+			assertEquals(matches1.get(0).getBlackPlayerId(), player2.getId());
+			assertEquals(matches1.get(0).getStatus(), MatchStatus.INPROGRESS);
+			assertEquals(matches1.size(), 1);
+			assertEquals(matches2.get(0).getId(), match.getId());
+			assertEquals(matches2.get(0).getWhitePlayerId(), player1.getId());
+			assertEquals(matches2.get(0).getBlackPlayerId(), player2.getId());
+			assertEquals(matches2.get(0).getStatus(), MatchStatus.INPROGRESS);
+			assertEquals(matches2.size(), 1);
+			match2 = service.createMatch(player1.getId(), player2.getId());
+			service.acceptInvite(match2.getId());
+			var matches3 = service.getAllOngoing(player1.getId());
+			var matches4 = service.getAllOngoing(player2.getId());
+			assertEquals(matches3.size(), 2);
+			assertEquals(matches4.size(), 2);
+		}
+		catch(Exception e) {
+			fail(e);
+		}
+		finally {
+			//cleanup
+			if(match != null) {
+				matchRepo.deleteById(match.getId());
+			}
+			if(match2 != null) {
+				matchRepo.deleteById(match2.getId());
+			}
+			if(player1 != null) {
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
+				messageRepo.deleteAll(messages);
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(player2.getId());
+				messageRepo.deleteAll(messages2);
+				userRepo.delete(player2);
+			}
+		}
+	}
 }

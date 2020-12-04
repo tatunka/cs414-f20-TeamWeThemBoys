@@ -1,5 +1,7 @@
 package com.xgame.restservice.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,6 +53,11 @@ public class ChessMatchController {
 	@GetMapping("/match")
 	public MatchViewModel getMatch(@RequestParam(value = "matchId") int matchId) {
 		return matchService.getMatch(matchId);
+	}
+	
+	@GetMapping("/matches")
+	public List<MatchViewModel> getAllOngoing(@RequestParam(value = "playerId") int playerId) {
+		return matchService.getAllOngoing(playerId);
 	}
 	
 }
