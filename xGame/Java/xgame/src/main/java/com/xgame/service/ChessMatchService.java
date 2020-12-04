@@ -292,4 +292,27 @@ public class ChessMatchService implements IChessMatchService {
 				.map(m -> new MatchViewModel(m))
 				.collect(Collectors.toList());
 	}
+	
+	@Override
+	public void forfeit(int matchId, int playerId) {
+		var m = matchRepo.findById(matchId);
+		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that ID exists."));
+		var match = m.get();
+		if(match.getBlackPlayer().getId() != playerId && match.getWhitePlayer().getId() != playerId) {
+			m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't forfeit match. Player is not associated with match!"));
+		}
+		var winningPlayer = match.getWhitePlayer().getId() == playerId ? 
+				match.getBlackPlayer() : 
+				match.getWhitePlayer();
+		var losingPlayer = match.getWhitePlayer().getId() == playerId ? 
+				match.getWhitePlayer() : 
+				match.getBlackPlayer();
+				
+		match.setMatchStatus(MatchStatus.COMPLETED);
+		match.setMatchOutcome(MatchOutcome.FORFEIT);
+		match.setWinningPlayer(winningPlayer);
+		matchRepo.save(match);
+		
+		messageRepo.save(new Message(winningPlayer, losingPlayer + " has forfeited! You win!"));
+	}
 }

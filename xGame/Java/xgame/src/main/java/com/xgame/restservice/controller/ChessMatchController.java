@@ -60,4 +60,10 @@ public class ChessMatchController {
 		return matchService.getAllOngoing(playerId);
 	}
 	
+	@PatchMapping("/match/forfeit")
+	public void forfeit(@RequestParam(value = "matchId") int matchId,
+			@RequestParam(value = "playerId") int playerId) {
+		matchService.forfeit(matchId, playerId);
+	}
+	
 }

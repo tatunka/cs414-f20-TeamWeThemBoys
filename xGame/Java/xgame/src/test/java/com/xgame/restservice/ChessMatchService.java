@@ -456,4 +456,43 @@ class ChessMatchService {
 			}
 		}
 	}
+	
+	@Test
+	void forfeit() {
+		User player1 = null;
+		User player2 = null;
+		MatchViewModel match = null;
+		
+		try {
+			player1 = userRepo.save(new User("junit1", "junit1@email.com", "junit1password"));
+			player2 = userRepo.save(new User("junit2", "junit2@email.com", "junit2password"));
+			
+			//start match
+			match = service.createMatch(player1.getId(), player2.getId());
+			service.acceptInvite(match.getId());
+			service.forfeit(match.getId(), player1.getId());
+			var match1 = service.getMatch(match.getId());
+			assertEquals(match1.getWinningPlayerId(), player2.getId());
+			assertEquals(match1.getStatus(), MatchStatus.COMPLETED);
+		}
+		catch(Exception e) {
+			fail(e);
+		}
+		finally {
+			//cleanup
+			if(match != null) {
+				matchRepo.deleteById(match.getId());
+			}
+			if(player1 != null) {
+				var messages = messageRepo.findByUserIdAndReadTimestampIsNull(player1.getId());
+				messageRepo.deleteAll(messages);
+				userRepo.delete(player1);
+			}
+			if(player2 != null) {
+				var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(player2.getId());
+				messageRepo.deleteAll(messages2);
+				userRepo.delete(player2);
+			}
+		}
+	}
 }

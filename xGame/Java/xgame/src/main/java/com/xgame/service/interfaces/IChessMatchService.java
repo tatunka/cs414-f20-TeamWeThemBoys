@@ -16,4 +16,5 @@ public interface IChessMatchService {
 	MatchOutcome suggestDraw(int matchId, int playerId);
 	void denyDraw(int matchId, int playerId);
 	List<MatchViewModel> getAllOngoing(int playerId);
+	void forfeit(int matchId, int playerId);
 }
