@@ -1,7 +1,9 @@
 package com.xgame.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -281,5 +283,13 @@ public class ChessMatchService implements IChessMatchService {
 			
 		messageRepo.save(new Message(player, "You have denied the draw. Match " + matchId + " is still going!"));
 		messageRepo.save(new Message(opponent.get(), player.getNickname() + " has denied the draw. Match " + matchId + " is still going!"));
+	}
+	
+	@Override
+	public List<MatchViewModel> getAllOngoing(int playerId){
+		var matches = matchRepo.findByWhitePlayerIdOrBlackPlayerIdAndMatchStatus(playerId, playerId, MatchStatus.INPROGRESS);
+		return matches.stream()
+				.map(m -> new MatchViewModel(m))
+				.collect(Collectors.toList());
 	}
 }
