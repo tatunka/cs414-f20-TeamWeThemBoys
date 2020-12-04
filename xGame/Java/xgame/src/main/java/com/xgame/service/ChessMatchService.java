@@ -172,6 +172,7 @@ public class ChessMatchService implements IChessMatchService {
 		match.setTurnCount(match.getTurnCount() + 1);
 		match.setChessBoard(matchState.getChessBoard());
 		match.setMatchStatus(MatchStatus.COMPLETED);
+		match.setMatchOutcome(MatchOutcome.VICTORY);
 		//set winner if match ended in a victory
 		if(winnerId.isPresent()) {
 			var winner = match.getBlackPlayer().getId() == winnerId.get() ? match.getBlackPlayer() : match.getWhitePlayer();
