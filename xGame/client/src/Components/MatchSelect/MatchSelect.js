@@ -43,7 +43,7 @@ const MatchSelect = (props) => {
         <Container maxWidth="sm">
           <Paper elevation={0} style={{maxHeight: 200, overflow: 'auto'}}>
             <List dense={true}>
-              {matchList?.map((X) => {
+              {matchList && matchList?.map((X) => {
                 return (
                   <ListItem key={X?.id}>
                     <ListItemText
