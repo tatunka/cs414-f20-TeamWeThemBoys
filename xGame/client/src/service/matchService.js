@@ -62,3 +62,22 @@ export const getMatch = (matchId) => {
       return false;
     });
 };
+
+export const getActiveMatches = (playerId) => {
+  const url = `${matchServiceURL}es?playerId=${playerId}`;
+
+  return utils
+    .basicAPI(url, "Get Active Matches", {
+      method: "GET",
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
