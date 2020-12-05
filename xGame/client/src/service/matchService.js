@@ -119,3 +119,41 @@ export const forfeitMatch = (matchId, playerId) => {
       return false;
     });
 };
+
+export const suggestDraw = (matchId, playerId) => {
+  const url = `${matchServiceURL}/draw?matchId=${matchId}&playerId=${playerId}`;
+
+  return utils
+    .basicAPI(url, "Suggest Draw", {
+      method: "PATCH"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        return false;
+    });
+};
+
+export const denyDraw = (matchId, playerId) => {
+  const url = `${matchServiceURL}/draw/deny?matchId=${matchId}&playerId=${playerId}`;
+
+  return utils
+    .basicAPI(url, "Deny Draw", {
+      method: "PATCH"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        return false;
+    });
+};
