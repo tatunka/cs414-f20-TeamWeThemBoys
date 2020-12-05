@@ -111,6 +111,11 @@ const Header = (props) => {
                     gutterBottom
                   >
                     {isInvitation ? "Invitation" : "Message"}
+                    {!isInvitation && (
+                      <IconButton onClick={() => readOneNotification(notification?.id)}>
+                        <ReadIcon fontSize="small" />
+                      </IconButton>
+                    )}
                   </Typography>
                   <Typography variant="h6" component="h2" align="left">
                     {notification?.content}
@@ -135,11 +140,6 @@ const Header = (props) => {
                         Reject
                       </Button>
                     </CardActions>
-                  )}
-                  {!isInvitation && (
-                    <IconButton onClick={() => readOneNotification(notification?.id)}>
-                      <ReadIcon fontSize="small" />
-                    </IconButton>
                   )}
                 </CardContent>
               </Card>
