@@ -41,7 +41,7 @@ public class ChessMatchService implements IChessMatchService {
 	public MatchViewModel createMatch(int whiteId, int blackId) {
 		var whitePlayer = userRepo.findById(whiteId);
 		var blackPlayer = userRepo.findById(blackId);
-		var match = new ChessMatch("This is a chessboard");
+		var match = new ChessMatch("[]");
 		
 		if(whitePlayer.isPresent() && blackPlayer.isPresent() && 
 				!whitePlayer.get().getIsDeleted() && 
