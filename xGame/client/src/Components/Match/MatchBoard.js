@@ -336,7 +336,7 @@ const MatchBoard = (props) => {
     return (
       <Modal open={promoteModalOpen} onClose={() => setPromoteModalOpen(false)}>
         <div className={classes.modalStyles}>
-          <h3>Choose which piece you want to promote your Pawn too</h3>
+          <h3>Choose which piece you want to promote your Pawn to</h3>
           <Grid container className={"gameBoard"}>
             {showTable(getPromotionList())}
           </Grid>
