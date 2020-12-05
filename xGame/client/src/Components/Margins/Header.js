@@ -11,9 +11,8 @@ import {
   Drawer,
   Card,
   CardContent,
-  CardActions,
+  CardActions
 } from "@material-ui/core";
-import { Row } from "reactstrap";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -26,17 +25,18 @@ import Profile from "../Profile/Profile";
 import UnregisterDialog from "./UnregisterDialog";
 import * as matchService from "../../service/matchService";
 import * as messageService from "../../service/messageService";
+import * as userService from "../../service/userService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   logout: {
     color: "#ffffff",
-    textTransform: "inherit",
+    textTransform: "inherit"
   },
   drawerPaper: {
-    width: 240,
+    width: 240
   },
   notificationsDrawerHeader: {
     display: "flex",
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
+    justifyContent: "flex-end"
   },
   profileDrawerHeader: {
     display: "flex",
@@ -52,11 +52,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-start",
+    justifyContent: "flex-start"
   },
   notificationTitle: {
-    fontSize: 14,
-  },
+    fontSize: 14
+  }
 }));
 
 const Header = (props) => {
@@ -64,14 +64,23 @@ const Header = (props) => {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [profileData, setProfileData] = useState({});
   const [
     showUnregisterConfirmation,
-    setShowUnregisterConfirmation,
+    setShowUnregisterConfirmation
   ] = React.useState(false);
 
   const toggleNotifications = async () => {
     if (!showNotifications) await fetchNotifications();
     setShowNotifications(!showNotifications);
+  };
+
+  const toggleShowProfile = async () => {
+    if (!showProfile) {
+      const newProfileData = await userService.getProfile(activeUser?.id);
+      if (newProfileData) setProfileData(newProfileData);
+    }
+    setShowProfile(!showProfile);
   };
 
   const handleAcceptMatch = async (matchId) => {
@@ -81,7 +90,8 @@ const Header = (props) => {
   };
 
   const handleRejectMatch = (matchId) => {
-    console.log("TODO: Implement match rejection");
+    matchService.rejectInvite(matchId, activeUser?.id);
+    toggleNotifications();
   };
 
   const readAllNotifications = async () => {
@@ -151,7 +161,7 @@ const Header = (props) => {
         </div>
       );
     }
-    return <div>test</div>;
+    return <div>No Notifications!</div>;
   };
 
   return (
@@ -172,12 +182,7 @@ const Header = (props) => {
                 Log out
               </Button>
               <Tooltip title="Profile" aria-label="Profile">
-                <IconButton
-                  color="inherit"
-                  onClick={() => {
-                    setShowProfile(!showProfile);
-                  }}
-                >
+                <IconButton color="inherit" onClick={toggleShowProfile}>
                   <AccountCircle />
                 </IconButton>
               </Tooltip>
@@ -232,7 +237,7 @@ const Header = (props) => {
             >
               Deregister
             </Button>
-            <Profile />
+            <Profile profileData={profileData} />
           </Drawer>
           <UnregisterDialog
             showUnregisterConfirmation={showUnregisterConfirmation}
@@ -252,14 +257,14 @@ Header.propTypes = {
   activeUser: PropTypes.object,
   logOutUser: PropTypes.func,
   setActiveMatch: PropTypes.func,
-  fetchNotifications: PropTypes.func,
+  fetchNotifications: PropTypes.func
 };
 
 Header.defaultProps = {
   activeUser: {},
   logOutUser: () => {},
   setActiveMatch: () => {},
-  fetchNotifications: () => {},
+  fetchNotifications: () => {}
 };
 
 export default Header;
