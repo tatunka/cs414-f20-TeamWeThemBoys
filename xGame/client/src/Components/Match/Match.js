@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Collapse, Row, Col } from "reactstrap";
 import PropTypes from "prop-types";
-import { Button } from "@material-ui/core";
+import { Button, ButtonGroup } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChess } from "@fortawesome/free-solid-svg-icons";
 
 import MatchPlayerStats from "./MatchPlayerStats";
 import MatchBoard from "./MatchBoard";
+import MatchDrawDialog from './MatchDrawDialog';
 import * as matchService from "../../service/matchService";
 
 import "./MatchStyle.css";
@@ -36,7 +37,7 @@ const Match = (props) => {
         if (piece) {
           const newPiece = {
             pieceName: getPieceName(piece.color, piece.type),
-            location: piece.position,
+            location: piece.position
           };
           newBoardState.push(newPiece);
         }
@@ -73,7 +74,17 @@ const Match = (props) => {
     matchService.forfeitMatch(activeMatch?.id, activeUser?.id);
   };
 
+  const handleDrawClick = () => {
+    matchService.suggestDraw(activeMatch?.id, activeUser?.id);
+  };
+
   return (
+    <div>
+      <MatchDrawDialog
+          activeUser={activeUser}
+          activeMatch={activeMatch}
+          showDrawDialog={activeMatch?.isDrawSuggestedByWhite !== activeMatch?.isDrawSuggestedByBlack}
+      />
     <Collapse isOpen={isOpen}>
       <Row>
         {activeMatch ? (
@@ -90,7 +101,6 @@ const Match = (props) => {
                 activeMatch={activeMatch}
                 activeColor={determineActiveColor()}
                 setActiveMatch={setActiveMatch}
-                playerId={activeUser.id}
               />
               <MatchPlayerStats
                 playerName={activeMatch?.blackPlayerNickname}
@@ -102,13 +112,19 @@ const Match = (props) => {
             </Row>
             <Row className="fullSize">
               <div className="d-flex justify-content-center">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleForfeitClick}
-                >
-                  Forfeit
-                </Button>
+                <ButtonGroup variant="contained">
+                  <Button
+                    onClick={handleDrawClick}
+                  >
+                    Draw
+                  </Button>
+                  <Button
+                    color="secondary"
+                    onClick={handleForfeitClick}
+                  >
+                    Forfeit
+                  </Button>
+                </ButtonGroup>
               </div>
             </Row>
           </>
@@ -120,6 +136,7 @@ const Match = (props) => {
         )}
       </Row>
     </Collapse>
+    </div>
   );
 };
 
@@ -134,8 +151,8 @@ Match.propTypes = {
     whitePlayerNickname: PropTypes.string,
     blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number,
-    chessBoard: PropTypes.array,
-  }),
+    chessBoard: PropTypes.array
+  })
 };
 
 Match.defaultProps = {
@@ -148,8 +165,8 @@ Match.defaultProps = {
     whitePlayerNickname: "",
     blackPlayerNickname: "",
     turnCount: 0,
-    chessBoard: [],
-  },
+    chessBoard: []
+  }
 };
 
 export default Match;
