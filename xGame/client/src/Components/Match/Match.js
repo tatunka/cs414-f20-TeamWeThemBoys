@@ -36,7 +36,7 @@ const Match = (props) => {
         if (piece) {
           const newPiece = {
             pieceName: getPieceName(piece.color, piece.type),
-            location: piece.position
+            location: piece.position,
           };
           newBoardState.push(newPiece);
         }
@@ -90,6 +90,7 @@ const Match = (props) => {
                 activeMatch={activeMatch}
                 activeColor={determineActiveColor()}
                 setActiveMatch={setActiveMatch}
+                playerId={activeUser.id}
               />
               <MatchPlayerStats
                 playerName={activeMatch?.blackPlayerNickname}
@@ -133,8 +134,8 @@ Match.propTypes = {
     whitePlayerNickname: PropTypes.string,
     blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number,
-    chessBoard: PropTypes.array
-  })
+    chessBoard: PropTypes.array,
+  }),
 };
 
 Match.defaultProps = {
@@ -147,8 +148,8 @@ Match.defaultProps = {
     whitePlayerNickname: "",
     blackPlayerNickname: "",
     turnCount: 0,
-    chessBoard: []
-  }
+    chessBoard: [],
+  },
 };
 
 export default Match;
