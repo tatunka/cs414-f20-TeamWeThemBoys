@@ -86,7 +86,8 @@ const Header = (props) => {
   };
 
   const handleRejectMatch = (matchId) => {
-    console.log("TODO: Implement match rejection");
+    matchService.rejectInvite(matchId, activeUser?.id);
+    toggleNotifications();
   };
 
   const classes = useStyles();
