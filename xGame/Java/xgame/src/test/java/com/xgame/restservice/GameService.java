@@ -201,6 +201,7 @@ public class GameService {
 			var knight = board[7][1];
 			assertEquals(knight.getClass(), Class.forName("com.xgame.service.engine.Knight"));
 			assertEquals(knight.getColor(), Color.WHITE);
+			assertEquals(knight.getPosition(), "b8");
 		}
 		catch(Exception e) {
 			fail(e);
