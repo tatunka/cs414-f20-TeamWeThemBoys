@@ -42,3 +42,22 @@ export const move = (matchId, fromPosition, toPosition) => {
       return false;
     });
 };
+
+export const promote = (matchId, position, pieceName) => {
+  const url = `${gameServiceURL}/promote?matchId=${matchId}&position=${position}&piece=${pieceName}`;
+
+  return utils
+    .basicAPI(url, "Promote a Pawn", {
+      method: "PATCH",
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
