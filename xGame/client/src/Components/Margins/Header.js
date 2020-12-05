@@ -18,10 +18,13 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ReadAllIcon from "@material-ui/icons/Email";
+import ReadIcon from "@material-ui/icons/MailOutline";
 
 import Profile from "../Profile/Profile";
 import UnregisterDialog from "./UnregisterDialog";
 import * as matchService from "../../service/matchService";
+import * as messageService from "../../service/messageService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -80,6 +83,16 @@ const Header = (props) => {
     console.log("TODO: Implement match rejection");
   };
 
+  const readAllNotifications = async () => {
+    const read = await messageService.readAllMessages(activeUser?.id);
+    toggleNotifications();
+  };
+
+  const readOneNotification = async (messageId) => {
+    const read = await messageService.readMessage(messageId);
+    toggleNotifications();
+  };
+
   const classes = useStyles();
 
   const Notifications = () => {
@@ -123,6 +136,9 @@ const Header = (props) => {
                       </Button>
                     </CardActions>
                   )}
+                  <IconButton onClick={() => readOneNotification(notification?.id)}>
+                    <ReadIcon fontSize="small" />
+                  </IconButton>
                 </CardContent>
               </Card>
             );
@@ -166,6 +182,9 @@ const Header = (props) => {
           >
             <div className={classes.notificationsDrawerHeader}>
               <Typography variant="h6">Notifications</Typography>
+              <IconButton onClick={readAllNotifications}>
+                <ReadAllIcon />
+              </IconButton>
               <IconButton onClick={toggleNotifications}>
                 <ChevronLeftIcon />
               </IconButton>
