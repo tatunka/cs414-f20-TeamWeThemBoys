@@ -136,9 +136,11 @@ const Header = (props) => {
                       </Button>
                     </CardActions>
                   )}
-                  <IconButton onClick={() => readOneNotification(notification?.id)}>
-                    <ReadIcon fontSize="small" />
-                  </IconButton>
+                  {!isInvitation && (
+                    <IconButton onClick={() => readOneNotification(notification?.id)}>
+                      <ReadIcon fontSize="small" />
+                    </IconButton>
+                  )}
                 </CardContent>
               </Card>
             );
