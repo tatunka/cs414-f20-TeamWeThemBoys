@@ -7,11 +7,12 @@ import { faChess } from "@fortawesome/free-solid-svg-icons";
 
 import MatchPlayerStats from "./MatchPlayerStats";
 import MatchBoard from "./MatchBoard";
+import * as matchService from "../../service/matchService";
 
 import "./MatchStyle.css";
 
 const Match = (props) => {
-  const { isOpen, activeMatch, setActiveMatch } = props;
+  const { isOpen, activeMatch, setActiveMatch, activeUser } = props;
 
   let boardStateDefault = [];
 
@@ -35,7 +36,7 @@ const Match = (props) => {
         if (piece) {
           const newPiece = {
             pieceName: getPieceName(piece.color, piece.type),
-            location: piece.position,
+            location: piece.position
           };
           newBoardState.push(newPiece);
         }
@@ -68,31 +69,48 @@ const Match = (props) => {
     return activeMatch?.turnCount % 2 === 0 ? "black" : "white";
   };
 
+  const handleForfeitClick = () => {
+    matchService.forfeitMatch(activeMatch?.id, activeUser?.id);
+  };
+
   return (
     <Collapse isOpen={isOpen}>
       <Row>
         {activeMatch ? (
-          <div className={"fullSize"}>
-            <MatchPlayerStats
-              playerName={activeMatch?.whitePlayerNickname}
-              activeColor={determineActiveColor()}
-              turnCounter={activeMatch?.turnCount}
-              boardState={boardState}
-            />
-            <MatchBoard
-              boardState={boardState}
-              activeMatch={activeMatch}
-              activeColor={determineActiveColor()}
-              setActiveMatch={setActiveMatch}
-            />
-            <MatchPlayerStats
-              playerName={activeMatch?.blackPlayerNickname}
-              activeColor={determineActiveColor()}
-              turnCounter={activeMatch?.turnCount}
-              boardState={boardState}
-              opponent={true}
-            />
-          </div>
+          <>
+            <Row className="fullSize">
+              <MatchPlayerStats
+                playerName={activeMatch?.whitePlayerNickname}
+                activeColor={determineActiveColor()}
+                turnCounter={activeMatch?.turnCount}
+                boardState={boardState}
+              />
+              <MatchBoard
+                boardState={boardState}
+                activeMatch={activeMatch}
+                activeColor={determineActiveColor()}
+                setActiveMatch={setActiveMatch}
+              />
+              <MatchPlayerStats
+                playerName={activeMatch?.blackPlayerNickname}
+                activeColor={determineActiveColor()}
+                turnCounter={activeMatch?.turnCount}
+                boardState={boardState}
+                opponent={true}
+              />
+            </Row>
+            <Row className="fullSize">
+              <div className="d-flex justify-content-center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleForfeitClick}
+                >
+                  Forfeit
+                </Button>
+              </div>
+            </Row>
+          </>
         ) : (
           <Col className="pt-3 pb-3">
             <FontAwesomeIcon icon={faChess} size="9x" />
@@ -100,18 +118,12 @@ const Match = (props) => {
           </Col>
         )}
       </Row>
-      <Row>
-        <div className={"center"}>
-          <Button variant="contained" color="secondary">
-            Forfeit
-          </Button>
-        </div>
-      </Row>
     </Collapse>
   );
 };
 
 Match.propTypes = {
+  activeUser: PropTypes.object,
   isOpen: PropTypes.bool,
   setActiveMatch: PropTypes.func,
   activeMatch: PropTypes.shape({
@@ -121,11 +133,12 @@ Match.propTypes = {
     whitePlayerNickname: PropTypes.string,
     blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number,
-    chessBoard: PropTypes.array,
-  }),
+    chessBoard: PropTypes.array
+  })
 };
 
 Match.defaultProps = {
+  activeUser: {},
   isOpen: true,
   activeMatch: {
     id: 0,
@@ -134,8 +147,8 @@ Match.defaultProps = {
     whitePlayerNickname: "",
     blackPlayerNickname: "",
     turnCount: 0,
-    chessBoard: [],
-  },
+    chessBoard: []
+  }
 };
 
 export default Match;

@@ -10,7 +10,7 @@ export const acceptInvite = (matchId) => {
 
   return utils
     .basicAPI(url, "Accept Invite", {
-      method: "PATCH",
+      method: "PATCH"
     })
     .then((response) => {
       if (response) {
@@ -30,7 +30,7 @@ export const createMatch = (creationObject) => {
 
   return utils
     .basicAPI(url, "Create Match", {
-      method: "POST",
+      method: "POST"
     })
     .then((response) => {
       if (response) {
@@ -49,7 +49,7 @@ export const getMatch = (matchId) => {
 
   return utils
     .basicAPI(url, "Get Match", {
-      method: "GET",
+      method: "GET"
     })
     .then((response) => {
       if (response) {
@@ -68,7 +68,26 @@ export const getActiveMatches = (playerId) => {
 
   return utils
     .basicAPI(url, "Get Active Matches", {
-      method: "GET",
+      method: "GET"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
+
+export const forfeitMatch = (matchId, playerId) => {
+  const url = `${matchServiceURL}/forfeit?matchId=${matchId}&playerId=${playerId}`;
+
+  return utils
+    .basicAPI(url, "Forfeit Match", {
+      method: "PATCH"
     })
     .then((response) => {
       if (response) {
