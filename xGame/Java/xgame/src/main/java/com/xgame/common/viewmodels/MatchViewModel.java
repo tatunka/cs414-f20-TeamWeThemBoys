@@ -14,6 +14,8 @@ public class MatchViewModel {
 	private String winningPlayerNickname;
 	private int turnCount;
 	private MatchStatus status;
+	private boolean isDrawSuggestedByWhite;
+	private boolean isDrawSuggestedByBlack;
 	@JsonRawValue
 	private String chessBoard;
 	
@@ -31,6 +33,8 @@ public class MatchViewModel {
 			this.turnCount = match.getTurnCount();
 			this.chessBoard = match.getChessBoard();
 			this.status = match.getMatchStatus();
+			this.isDrawSuggestedByWhite = match.getIsDrawSuggestedByWhite();
+			this.isDrawSuggestedByBlack = match.getIsDrawSuggestedByBlack();
 		}
 		
 		if(winningPlayer != null) {
@@ -85,5 +89,21 @@ public class MatchViewModel {
 
 	public void setWinningPlayerNickname(String winningPlayerNickname) {
 		this.winningPlayerNickname = winningPlayerNickname;
+	}
+
+	public boolean isDrawSuggestedByWhite() {
+		return isDrawSuggestedByWhite;
+	}
+
+	public void setDrawSuggestedByWhite(boolean isDrawSuggestedByWhite) {
+		this.isDrawSuggestedByWhite = isDrawSuggestedByWhite;
+	}
+
+	public boolean isDrawSuggestedByBlack() {
+		return isDrawSuggestedByBlack;
+	}
+
+	public void setDrawSuggestedByBlack(boolean isDrawSuggestedByBlack) {
+		this.isDrawSuggestedByBlack = isDrawSuggestedByBlack;
 	}
 }
