@@ -273,7 +273,7 @@ const MatchBoard = (props) => {
         "BishopModal",
         () => {
           let temp = promoteData;
-          promoteData.push("Bishop");
+          temp.push("Bishop");
           setPromoteData(temp);
           setPromoteModalOpen(false);
         }
@@ -286,7 +286,7 @@ const MatchBoard = (props) => {
         "KnightModal",
         () => {
           let temp = promoteData;
-          promoteData.push("Knight");
+          temp.push("Knight");
           setPromoteData(temp);
           setPromoteModalOpen(false);
         }
@@ -299,7 +299,7 @@ const MatchBoard = (props) => {
         "RookModal",
         () => {
           let temp = promoteData;
-          promoteData.push("Rook");
+          temp.push("Rook");
           setPromoteData(temp);
           setPromoteModalOpen(false);
         }
@@ -312,7 +312,7 @@ const MatchBoard = (props) => {
         "QueenModal",
         () => {
           let temp = promoteData;
-          promoteData.push("Queen");
+          temp.push("Queen");
           setPromoteData(temp);
           setPromoteModalOpen(false);
         }
