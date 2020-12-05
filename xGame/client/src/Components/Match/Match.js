@@ -35,7 +35,7 @@ const Match = (props) => {
         if (piece) {
           const newPiece = {
             pieceName: getPieceName(piece.color, piece.type),
-            location: piece.position,
+            location: piece.position
           };
           newBoardState.push(newPiece);
         }
@@ -92,6 +92,13 @@ const Match = (props) => {
               boardState={boardState}
               opponent={true}
             />
+            <Row>
+              <div className={"center"}>
+                <Button variant="contained" color="secondary">
+                  Forfeit
+                </Button>
+              </div>
+            </Row>
           </div>
         ) : (
           <Col className="pt-3 pb-3">
@@ -99,13 +106,6 @@ const Match = (props) => {
             <div className="h3 pt-3">No match open</div>
           </Col>
         )}
-      </Row>
-      <Row>
-        <div className={"center"}>
-          <Button variant="contained" color="secondary">
-            Forfeit
-          </Button>
-        </div>
       </Row>
     </Collapse>
   );
@@ -121,8 +121,8 @@ Match.propTypes = {
     whitePlayerNickname: PropTypes.string,
     blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number,
-    chessBoard: PropTypes.array,
-  }),
+    chessBoard: PropTypes.array
+  })
 };
 
 Match.defaultProps = {
@@ -134,8 +134,8 @@ Match.defaultProps = {
     whitePlayerNickname: "",
     blackPlayerNickname: "",
     turnCount: 0,
-    chessBoard: [],
-  },
+    chessBoard: []
+  }
 };
 
 export default Match;
