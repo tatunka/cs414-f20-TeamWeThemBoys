@@ -41,7 +41,11 @@ const App = () => {
             activeUser={activeUser}
             setActiveMatch={setActiveMatch}
           />
-          <Match activeMatch={activeMatch} setActiveMatch={setActiveMatch} />
+          <Match
+            activeUser={activeUser}
+            activeMatch={activeMatch}
+            setActiveMatch={setActiveMatch}
+          />
         </div>
       ) : (
         <LoginContainer logInUser={logInUser} />
