@@ -58,6 +58,7 @@ public class GameService implements IGameService {
 		//make a move, update local board
 		board.move(fromPosition, toPosition);
 		this.match.setChessBoard(stringifyBoard());
+		this.match.setTurnCount(this.match.getTurnCount() + 1);
 		
 		//update board in database
 		var outcome = this.board.getOutcome();

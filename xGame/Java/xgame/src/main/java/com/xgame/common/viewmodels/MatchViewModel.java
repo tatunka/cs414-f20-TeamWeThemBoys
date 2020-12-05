@@ -62,6 +62,9 @@ public class MatchViewModel {
 	public int getTurnCount() {
 		return turnCount;
 	}
+	public void setTurnCount(int turnCount) {
+		this.turnCount = turnCount;
+	}
 	public String getChessBoard() {
 		return chessBoard;
 	}

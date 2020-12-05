@@ -149,7 +149,7 @@ public class ChessMatchService implements IChessMatchService {
 		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that id exists."));
 		var match = m.get();
 		
-		match.setTurnCount(match.getTurnCount() + 1);
+		match.setTurnCount(matchState.getTurnCount());
 		match.setChessBoard(matchState.getChessBoard());
 		var updatedMatch = matchRepo.save(match);
 		
