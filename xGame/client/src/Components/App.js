@@ -37,7 +37,10 @@ const App = () => {
       />
       {activeUser.isLoggedIn ? (
         <div className="pages">
-          <MatchSelect activeUser={activeUser} />
+          <MatchSelect
+            activeUser={activeUser}
+            setActiveMatch={setActiveMatch}
+          />
           <Match activeMatch={activeMatch} setActiveMatch={setActiveMatch} />
         </div>
       ) : (
