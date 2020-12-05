@@ -1,5 +1,6 @@
 package com.xgame.service.interfaces;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.xgame.common.enums.MatchOutcome;
@@ -14,4 +15,6 @@ public interface IChessMatchService {
 	MatchViewModel EndMatch(MatchViewModel matchState, Optional<Integer> winnerId);
 	MatchOutcome suggestDraw(int matchId, int playerId);
 	void denyDraw(int matchId, int playerId);
+	List<MatchViewModel> getAllOngoing(int playerId);
+	void forfeit(int matchId, int playerId);
 }

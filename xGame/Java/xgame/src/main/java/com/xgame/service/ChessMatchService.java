@@ -1,7 +1,9 @@
 package com.xgame.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -170,6 +172,7 @@ public class ChessMatchService implements IChessMatchService {
 		match.setTurnCount(match.getTurnCount() + 1);
 		match.setChessBoard(matchState.getChessBoard());
 		match.setMatchStatus(MatchStatus.COMPLETED);
+		match.setMatchOutcome(MatchOutcome.VICTORY);
 		//set winner if match ended in a victory
 		if(winnerId.isPresent()) {
 			var winner = match.getBlackPlayer().getId() == winnerId.get() ? match.getBlackPlayer() : match.getWhitePlayer();
@@ -281,5 +284,36 @@ public class ChessMatchService implements IChessMatchService {
 			
 		messageRepo.save(new Message(player, "You have denied the draw. Match " + matchId + " is still going!"));
 		messageRepo.save(new Message(opponent.get(), player.getNickname() + " has denied the draw. Match " + matchId + " is still going!"));
+	}
+	
+	@Override
+	public List<MatchViewModel> getAllOngoing(int playerId){
+		var matches = matchRepo.findByWhitePlayerIdOrBlackPlayerIdAndMatchStatus(playerId, playerId, MatchStatus.INPROGRESS);
+		return matches.stream()
+				.map(m -> new MatchViewModel(m))
+				.collect(Collectors.toList());
+	}
+	
+	@Override
+	public void forfeit(int matchId, int playerId) {
+		var m = matchRepo.findById(matchId);
+		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that ID exists."));
+		var match = m.get();
+		if(match.getBlackPlayer().getId() != playerId && match.getWhitePlayer().getId() != playerId) {
+			m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't forfeit match. Player is not associated with match!"));
+		}
+		var winningPlayer = match.getWhitePlayer().getId() == playerId ? 
+				match.getBlackPlayer() : 
+				match.getWhitePlayer();
+		var losingPlayer = match.getWhitePlayer().getId() == playerId ? 
+				match.getWhitePlayer() : 
+				match.getBlackPlayer();
+				
+		match.setMatchStatus(MatchStatus.COMPLETED);
+		match.setMatchOutcome(MatchOutcome.FORFEIT);
+		match.setWinningPlayer(winningPlayer);
+		matchRepo.save(match);
+		
+		messageRepo.save(new Message(winningPlayer, losingPlayer + " has forfeited! You win!"));
 	}
 }

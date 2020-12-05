@@ -9,6 +9,7 @@ import com.xgame.service.engine.ChessPiece.Color;
 
 public class MatchHistoryViewModel {
 	
+	private int id;
 	private Timestamp startTime;
 	private Timestamp endTime;
 	private String opponentNickname;
@@ -19,6 +20,7 @@ public class MatchHistoryViewModel {
 	
 	public MatchHistoryViewModel(ChessMatch match, User user) {
 		MatchViewModel matchView = new MatchViewModel(match);
+		this.id = match.getId();
 		this.startTime = match.getStartTimestamp();
 		this.endTime = match.getLastTurnTimestamp();
 		this.color = matchView.getBlackPlayerId() == user.getId() ? Color.BLACK : Color.WHITE;
@@ -54,5 +56,13 @@ public class MatchHistoryViewModel {
 
 	public String getWinningPlayer() {
 		return winningPlayer;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

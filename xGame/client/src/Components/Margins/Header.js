@@ -13,15 +13,19 @@ import {
   CardContent,
   CardActions
 } from "@material-ui/core";
-import { Row } from "reactstrap";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ReadAllIcon from "@material-ui/icons/Email";
+import ReadIcon from "@material-ui/icons/MailOutline";
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Profile from "../Profile/Profile";
 import UnregisterDialog from "./UnregisterDialog";
 import * as matchService from "../../service/matchService";
+import * as messageService from "../../service/messageService";
+import * as userService from "../../service/userService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -60,6 +64,7 @@ const Header = (props) => {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [profileData, setProfileData] = useState({});
   const [
     showUnregisterConfirmation,
     setShowUnregisterConfirmation
@@ -70,6 +75,14 @@ const Header = (props) => {
     setShowNotifications(!showNotifications);
   };
 
+  const toggleShowProfile = async () => {
+    if (!showProfile) {
+      const newProfileData = await userService.getProfile(activeUser?.id);
+      if (newProfileData) setProfileData(newProfileData);
+    }
+    setShowProfile(!showProfile);
+  };
+
   const handleAcceptMatch = async (matchId) => {
     const matchData = await matchService.acceptInvite(matchId);
     if (matchData) setActiveMatch(matchData);
@@ -77,7 +90,18 @@ const Header = (props) => {
   };
 
   const handleRejectMatch = (matchId) => {
-    console.log("TODO: Implement match rejection");
+    matchService.rejectInvite(matchId, activeUser?.id);
+    toggleNotifications();
+  };
+
+  const readAllNotifications = async () => {
+    const read = await messageService.readAllMessages(activeUser?.id);
+    toggleNotifications();
+  };
+
+  const readOneNotification = async (messageId) => {
+    const read = await messageService.readMessage(messageId);
+    toggleNotifications();
   };
 
   const classes = useStyles();
@@ -98,6 +122,13 @@ const Header = (props) => {
                     gutterBottom
                   >
                     {isInvitation ? "Invitation" : "Message"}
+                    {!isInvitation && (
+                      <Tooltip title="Mark as Read" aria-label="Mark as Read">
+                        <IconButton onClick={() => readOneNotification(notification?.id)}>
+                          <ReadIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                   </Typography>
                   <Typography variant="h6" component="h2" align="left">
                     {notification?.content}
@@ -130,7 +161,7 @@ const Header = (props) => {
         </div>
       );
     }
-    return <div>test</div>;
+    return <div>No Notifications!</div>;
   };
 
   return (
@@ -139,23 +170,22 @@ const Header = (props) => {
         <>
           <AppBar position="static">
             <Toolbar>
-              <IconButton color="inherit" onClick={toggleNotifications}>
-                <NotificationsIcon />
-              </IconButton>
+              <Tooltip title="Notifications" aria-label="Notifications">
+                <IconButton color="inherit" onClick={toggleNotifications}>
+                  <NotificationsIcon />
+                </IconButton>
+              </Tooltip>
               <div className={classes.grow}></div>
               <Typography variant="h6">Legan Chess Online</Typography>
               <div className={classes.grow}></div>
               <Button onClick={logOutUser} className={classes.logout}>
                 Log out
               </Button>
-              <IconButton
-                color="inherit"
-                onClick={() => {
-                  setShowProfile(!showProfile);
-                }}
-              >
-                <AccountCircle />
-              </IconButton>
+              <Tooltip title="Profile" aria-label="Profile">
+                <IconButton color="inherit" onClick={toggleShowProfile}>
+                  <AccountCircle />
+                </IconButton>
+              </Tooltip>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -166,9 +196,16 @@ const Header = (props) => {
           >
             <div className={classes.notificationsDrawerHeader}>
               <Typography variant="h6">Notifications</Typography>
-              <IconButton onClick={toggleNotifications}>
-                <ChevronLeftIcon />
-              </IconButton>
+              <Tooltip title="Mark All as Read" aria-label="Mark All as Read">
+                <IconButton onClick={readAllNotifications}>
+                  <ReadAllIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Close" aria-label="Close">
+                <IconButton onClick={toggleNotifications}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Tooltip>
             </div>
             <Notifications />
           </Drawer>
@@ -179,9 +216,11 @@ const Header = (props) => {
             classes={{ paper: classes.drawerPaper }}
           >
             <div className={classes.profileDrawerHeader}>
-              <IconButton onClick={() => setShowProfile(false)}>
-                <ChevronRightIcon />
-              </IconButton>
+              <Tooltip title="Close" aria-label="Close">
+                <IconButton onClick={() => setShowProfile(false)}>
+                  <ChevronRightIcon />
+                </IconButton>
+              </Tooltip>
               <Typography variant="h6" className="pr-2">
                 Profile
               </Typography>
@@ -198,11 +237,13 @@ const Header = (props) => {
             >
               Deregister
             </Button>
-            <Profile />
+            <Profile profileData={profileData} />
           </Drawer>
           <UnregisterDialog
             showUnregisterConfirmation={showUnregisterConfirmation}
             setShowUnregisterConfirmation={setShowUnregisterConfirmation}
+            activeUser={activeUser}
+            logoutUser={logOutUser}
           />
         </>
       ) : (

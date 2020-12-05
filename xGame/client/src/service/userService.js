@@ -54,11 +54,50 @@ export const login = (loginObject) => {
     });
 };
 
+export const deregister = (userId) => {
+  const url = `${userServiceURL}/deactivate`;
+
+  return utils
+    .basicAPI(url, "Deactivate User", {
+      method: "POST",
+      body: userId
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
+
 export const search = (param) => {
   const url = `${userServiceURL}/search?param=${param}`;
 
   return utils
     .basicAPI(url, "Find User", {
+      method: "GET"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
+
+export const getProfile = (id) => {
+  const url = `${userServiceURL}/profile?id=${id}`;
+
+  return utils
+    .basicAPI(url, "Get User Profile", {
       method: "GET"
     })
     .then((response) => {
