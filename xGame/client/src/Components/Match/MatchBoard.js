@@ -36,7 +36,13 @@ const useStyles = makeStyles((theme) => ({
 
 const MatchBoard = (props) => {
   const classes = useStyles();
-  const { boardState, activeColor, activeMatch, setActiveMatch } = props;
+  const {
+    boardState,
+    activeColor,
+    activeMatch,
+    setActiveMatch,
+    playerId,
+  } = props;
   const [chessBoard, setChessBoard] = useState([]);
   const [selected, setSelected] = useState([]);
   const [endGameModalOpen, setEndgameModalOpen] = useState(false);
@@ -63,7 +69,12 @@ const MatchBoard = (props) => {
   ];
 
   const selectPiece = (selectedPieceData) => {
-    if (activeMatch.status === "INPROGRESS") {
+    if (
+      activeMatch.status === "INPROGRESS" &&
+      (activeColor === "white"
+        ? playerId === activeMatch.whitePlayerId
+        : playerId === activeMatch.blackPlayerId)
+    ) {
       if (
         (activeColor === "white" ? whitePieces : blackPieces).includes(
           selectedPieceData.pieceName
@@ -98,7 +109,7 @@ const MatchBoard = (props) => {
       selected[0].location,
       selected[2].location
     );
-    if (move.status !== 400) {
+    if (move.status !== 400 && move.status !== 500) {
       setActiveMatch(move);
     } else {
       setSelected([]);
@@ -406,5 +417,6 @@ MatchBoard.propTypes = {
     chessBoard: PropTypes.array,
   }),
   setActiveMatch: PropTypes.func,
+  playerId: PropTypes.number,
 };
 export default MatchBoard;

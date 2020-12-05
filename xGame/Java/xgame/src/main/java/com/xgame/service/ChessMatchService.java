@@ -41,7 +41,7 @@ public class ChessMatchService implements IChessMatchService {
 	public MatchViewModel createMatch(int whiteId, int blackId) {
 		var whitePlayer = userRepo.findById(whiteId);
 		var blackPlayer = userRepo.findById(blackId);
-		var match = new ChessMatch("This is a chessboard");
+		var match = new ChessMatch("[]");
 		
 		if(whitePlayer.isPresent() && blackPlayer.isPresent() && 
 				!whitePlayer.get().getIsDeleted() && 
@@ -149,7 +149,7 @@ public class ChessMatchService implements IChessMatchService {
 		m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No match with that id exists."));
 		var match = m.get();
 		
-		match.setTurnCount(match.getTurnCount() + 1);
+		match.setTurnCount(matchState.getTurnCount());
 		match.setChessBoard(matchState.getChessBoard());
 		var updatedMatch = matchRepo.save(match);
 		

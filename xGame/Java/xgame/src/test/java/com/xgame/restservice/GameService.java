@@ -238,10 +238,11 @@ public class GameService {
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(chessBoard.getBoard());
 			match.setChessBoard(json);
+			match.setTurnCount(2);
 			var match1 = matchService.updateMatch(match);
 			assertEquals(match1.getStatus(), MatchStatus.INPROGRESS);
 			
-			gameService.move(match.getId(), "h8", "g8");
+			var m1 = gameService.move(match.getId(), "h8", "g8");
 			var victory = gameService.move(match.getId(), "a6", "a8");
 			assertEquals(victory.getStatus(), MatchStatus.COMPLETED);
 			assertTrue(victory.getWinningPlayerId() == user1.getId());
