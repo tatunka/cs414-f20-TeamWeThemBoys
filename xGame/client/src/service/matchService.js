@@ -24,6 +24,25 @@ export const acceptInvite = (matchId) => {
     });
 };
 
+export const rejectInvite = (matchId, playerId) => {
+  const url = `${matchServiceURL}/reject?matchId=${matchId}&playerId=${playerId}`;
+
+  return utils
+    .basicAPI(url, "Reject Invite", {
+      method: "PATCH"
+    })
+    .then((response) => {
+      if (response) {
+        return response;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return false;
+    });
+};
+
 export const createMatch = (creationObject) => {
   const { whiteID, blackID } = creationObject;
   const url = `${matchServiceURL}?whiteId=${whiteID}&blackId=${blackID}`;
