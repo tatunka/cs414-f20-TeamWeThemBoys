@@ -53,7 +53,6 @@ const MatchSelect = (props) => {
                     <ListItemSecondaryAction>
                       <IconButton
                         type="submit"
-                        //onClick={(e) => setFieldValue("selectedMatch", e.target.key)}
                         onClick={() => setActiveMatch(X)}
                         edge="end"
                         aria-label="play"
