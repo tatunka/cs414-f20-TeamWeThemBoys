@@ -17,11 +17,15 @@ const useStyles = makeStyles((theme) => ({
   modalStyles: {
     display: "flex",
     flexDirection: "column",
-    top: "50%",
+    margins: "auto",
+    position: "absolute",
     left: "50%",
-    position: "fixed",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
     width: "400",
     height: "400",
+    maxWidth: "50%",
+    maxHeight: "50%",
     backgroundColor: "white",
     border: "2px solid #000",
     borderRadius: "5px",
@@ -41,8 +45,12 @@ const MatchBoard = (props) => {
   } = props;
   const [chessBoard, setChessBoard] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [endGameModalOpen, setEndgameModalOpen] = useState(false);
+  const [promoteModalOpen, setPromoteModalOpen] = useState(false);
   const [winningPlayer, setWinningPlayer] = useState("");
+  const [promoteData, setPromoteData] = useState([]);
+  const whitePromotionalSpaces = ["a5", "a6", "a7", "a8", "b8", "c8", "d8"];
+  const blackPromotionalSpaces = ["h4", "h3", "h2", "h1", "g1", "f1", "e1"];
   const whitePieces = [
     "\u2659",
     "\u2656",
@@ -219,6 +227,20 @@ const MatchBoard = (props) => {
       } else {
         boardColor = "black";
       }
+      if (
+        piece.pieceName === "\u2659" &&
+        whitePromotionalSpaces.includes(piece.location)
+      ) {
+        setPromoteData([piece.location]);
+        setPromoteModalOpen(true);
+      }
+      if (
+        piece.pieceName === "\u265F" &&
+        blackPromotionalSpaces.includes(piece.location)
+      ) {
+        setPromoteData([piece.location]);
+        setPromoteModalOpen(true);
+      }
       let newBoardSquare = createBoardPiece(
         piece.pieceName,
         boardColor,
@@ -236,6 +258,107 @@ const MatchBoard = (props) => {
     return newBoard;
   };
 
+  const endGameModal = () => {
+    return (
+      <Modal open={endGameModalOpen} onClose={() => setEndgameModalOpen(false)}>
+        <div className={classes.modalStyles}>
+          <h3>Congratulations {winningPlayer}!</h3>
+          <Button
+            onClick={() => setEndgameModalOpen(false)}
+            variant={"contained"}
+            color={"secondary"}
+          >
+            close
+          </Button>
+        </div>
+      </Modal>
+    );
+  };
+
+  const getPromotionList = () => {
+    let buttons = [];
+    buttons.push(
+      createBoardPiece(
+        activeColor === "white" ? "\u265D" : "\u2657",
+        "black",
+        "BishopModal",
+        () => {
+          let temp = promoteData;
+          temp.push("Bishop");
+          setPromoteData(temp);
+          setPromoteModalOpen(false);
+        }
+      )
+    );
+    buttons.push(
+      createBoardPiece(
+        activeColor === "white" ? "\u265E" : "\u2658",
+        "black",
+        "KnightModal",
+        () => {
+          let temp = promoteData;
+          temp.push("Knight");
+          setPromoteData(temp);
+          setPromoteModalOpen(false);
+        }
+      )
+    );
+    buttons.push(
+      createBoardPiece(
+        activeColor === "white" ? "\u265C" : "\u2656",
+        "black",
+        "RookModal",
+        () => {
+          let temp = promoteData;
+          temp.push("Rook");
+          setPromoteData(temp);
+          setPromoteModalOpen(false);
+        }
+      )
+    );
+    buttons.push(
+      createBoardPiece(
+        activeColor === "white" ? "\u265B" : "\u2655",
+        "black",
+        "QueenModal",
+        () => {
+          let temp = promoteData;
+          temp.push("Queen");
+          setPromoteData(temp);
+          setPromoteModalOpen(false);
+        }
+      )
+    );
+    return buttons;
+  };
+
+  const promoteModal = () => {
+    return (
+      <Modal open={promoteModalOpen} onClose={() => setPromoteModalOpen(false)}>
+        <div className={classes.modalStyles}>
+          <h3>Choose which piece you want to promote your Pawn to</h3>
+          <Grid container className={"gameBoard"}>
+            {showTable(getPromotionList())}
+          </Grid>
+          <Button
+            onClick={() => setPromoteModalOpen(false)}
+            variant={"contained"}
+            color={"secondary"}
+          >
+            close
+          </Button>
+        </div>
+      </Modal>
+    );
+  };
+
+  const makePromoteCall = async (matchId, location, pieceName) => {
+    const game = await gameService.promote(matchId, location, pieceName);
+    if (game) {
+      setActiveMatch(game);
+    }
+  };
+
   useEffect(() => {
     if (boardState.length === 0) {
       setChessBoard(createEmptyBoard());
@@ -249,9 +372,14 @@ const MatchBoard = (props) => {
   useEffect(() => {
     if (activeMatch.status === "COMPLETED") {
       setWinningPlayer(activeMatch.winningPlayerNickname);
-      setModalOpen(true);
+      setEndgameModalOpen(true);
     }
   }, [activeMatch.status]);
+
+  if (promoteData.length === 2) {
+    makePromoteCall(activeMatch.id, promoteData[0], promoteData[1]);
+    setPromoteData([]);
+  }
 
   if (selected.length === 1) {
     showLegalMoves();
@@ -269,18 +397,8 @@ const MatchBoard = (props) => {
     <div className={"mainBody"}>
       <Grid container className={"gameBoard"} spacing={0}>
         {showTable(chessBoard)}
-        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-          <div className={classes.modalStyles}>
-            <h3>Congratulations {winningPlayer}!</h3>
-            <Button
-              onClick={() => setModalOpen(false)}
-              variant={"contained"}
-              color={"secondary"}
-            >
-              close
-            </Button>
-          </div>
-        </Modal>
+        {endGameModal()}
+        {promoteModal()}
       </Grid>
     </div>
   );
