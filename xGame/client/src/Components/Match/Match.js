@@ -7,13 +7,19 @@ import { faChess } from "@fortawesome/free-solid-svg-icons";
 
 import MatchPlayerStats from "./MatchPlayerStats";
 import MatchBoard from "./MatchBoard";
-import MatchDrawDialog from './MatchDrawDialog';
+import MatchDrawDialog from "./MatchDrawDialog";
 import * as matchService from "../../service/matchService";
 
 import "./MatchStyle.css";
 
 const Match = (props) => {
-  const { isOpen, activeMatch, setActiveMatch, activeUser } = props;
+  const {
+    isOpen,
+    activeMatch,
+    setActiveMatch,
+    activeUser,
+    refreshActiveMatch
+  } = props;
 
   let boardStateDefault = [];
 
@@ -66,76 +72,79 @@ const Match = (props) => {
     }
   };
 
-  const determineActiveColor = () => {
-    return activeMatch?.turnCount % 2 === 0 ? "black" : "white";
-  };
+  const activeColor = activeMatch?.turnCount % 2 === 0 ? "black" : "white";
 
   const handleForfeitClick = () => {
     matchService.forfeitMatch(activeMatch?.id, activeUser?.id);
   };
 
-  const handleDrawClick = () => {
-    matchService.suggestDraw(activeMatch?.id, activeUser?.id);
+  const handleDrawClick = async () => {
+    await matchService.suggestDraw(activeMatch?.id, activeUser?.id);
+    refreshActiveMatch();
   };
+
+  console.log("ACTIVE USER:", activeUser);
+
+  const showDrawDialog =
+    activeMatch?.drawSuggestedByWhite !== activeMatch?.drawSuggestedByBlack &&
+    ((activeMatch?.blackPlayerId === activeUser?.id &&
+      activeMatch?.drawSuggestedByWhite) ||
+      (activeMatch?.whitePlayerId === activeUser?.id &&
+        activeMatch?.drawSuggestedByBlack));
 
   return (
     <div>
       <MatchDrawDialog
-          activeUser={activeUser}
-          activeMatch={activeMatch}
-          showDrawDialog={activeMatch?.isDrawSuggestedByWhite !== activeMatch?.isDrawSuggestedByBlack}
+        activeUser={activeUser}
+        activeMatch={activeMatch}
+        showDrawDialog={showDrawDialog}
+        refreshActiveMatch={refreshActiveMatch}
       />
-    <Collapse isOpen={isOpen}>
-      <Row>
-        {activeMatch ? (
-          <>
-            <Row className="fullSize">
-              <MatchPlayerStats
-                playerName={activeMatch?.whitePlayerNickname}
-                activeColor={determineActiveColor()}
-                turnCounter={activeMatch?.turnCount}
-                boardState={boardState}
-              />
-              <MatchBoard
-                boardState={boardState}
-                activeMatch={activeMatch}
-                activeColor={determineActiveColor()}
-                setActiveMatch={setActiveMatch}
-              />
-              <MatchPlayerStats
-                playerName={activeMatch?.blackPlayerNickname}
-                activeColor={determineActiveColor()}
-                turnCounter={activeMatch?.turnCount}
-                boardState={boardState}
-                opponent={true}
-              />
-            </Row>
-            <Row className="fullSize">
-              <div className="d-flex justify-content-center">
-                <ButtonGroup variant="contained">
-                  <Button
-                    onClick={handleDrawClick}
-                  >
-                    Draw
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onClick={handleForfeitClick}
-                  >
-                    Forfeit
-                  </Button>
-                </ButtonGroup>
-              </div>
-            </Row>
-          </>
-        ) : (
-          <Col className="pt-3 pb-3">
-            <FontAwesomeIcon icon={faChess} size="9x" />
-            <div className="h3 pt-3">No match open</div>
-          </Col>
-        )}
-      </Row>
-    </Collapse>
+      <Collapse isOpen={isOpen}>
+        <Row>
+          {activeMatch ? (
+            <>
+              <Row className="fullSize">
+                <MatchPlayerStats
+                  playerName={activeMatch?.whitePlayerNickname}
+                  activeColor={activeColor}
+                  turnCounter={activeMatch?.turnCount}
+                  boardState={boardState}
+                />
+                <MatchBoard
+                  boardState={boardState}
+                  activeMatch={activeMatch}
+                  activeColor={activeColor}
+                  setActiveMatch={setActiveMatch}
+                  playerId={activeUser?.id}
+                />
+                <MatchPlayerStats
+                  playerName={activeMatch?.blackPlayerNickname}
+                  activeColor={activeColor}
+                  turnCounter={activeMatch?.turnCount}
+                  boardState={boardState}
+                  opponent={true}
+                />
+              </Row>
+              <Row className="fullSize">
+                <div className="d-flex justify-content-center">
+                  <ButtonGroup variant="contained">
+                    <Button onClick={handleDrawClick}>Draw</Button>
+                    <Button color="secondary" onClick={handleForfeitClick}>
+                      Forfeit
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Row>
+            </>
+          ) : (
+            <Col className="pt-3 pb-3">
+              <FontAwesomeIcon icon={faChess} size="9x" />
+              <div className="h3 pt-3">No match open</div>
+            </Col>
+          )}
+        </Row>
+      </Collapse>
     </div>
   );
 };
@@ -144,6 +153,7 @@ Match.propTypes = {
   activeUser: PropTypes.object,
   isOpen: PropTypes.bool,
   setActiveMatch: PropTypes.func,
+  refreshActiveMatch: PropTypes.func,
   activeMatch: PropTypes.shape({
     id: PropTypes.number,
     whitePlayerId: PropTypes.number,
@@ -158,6 +168,8 @@ Match.propTypes = {
 Match.defaultProps = {
   activeUser: {},
   isOpen: true,
+  setActiveMatch: () => {},
+  refreshActiveMatch: () => {},
   activeMatch: {
     id: 0,
     whitePlayerId: 0,

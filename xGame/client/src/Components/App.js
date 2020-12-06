@@ -8,6 +8,7 @@ import Footer from "./Margins/Footer";
 
 import "./App.css";
 import * as messageService from "../service/messageService";
+import * as matchService from "../service/matchService";
 
 const App = () => {
   const [activeUser, setActiveUser] = useState({ isLoggedIn: false });
@@ -25,6 +26,11 @@ const App = () => {
   const fetchNotifications = async () => {
     const notifications = await messageService.getMessages(activeUser?.id);
     setActiveUser({ ...activeUser, notifications: notifications });
+  };
+
+  const refreshActiveMatch = async () => {
+    const newMatch = await matchService.getMatch(activeMatch?.id);
+    setActiveMatch(newMatch);
   };
 
   return (
@@ -45,6 +51,7 @@ const App = () => {
             activeUser={activeUser}
             activeMatch={activeMatch}
             setActiveMatch={setActiveMatch}
+            refreshActiveMatch={refreshActiveMatch}
           />
         </div>
       ) : (
