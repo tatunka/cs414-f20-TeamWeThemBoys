@@ -205,15 +205,15 @@ public class ChessBoard {
 		if(pawn instanceof Pawn &&
 				(color == Color.WHITE && wRank8List.contains(position) ||
 				color == Color.BLACK && bRank8List.contains(position))) {
-			int row = Integer.parseInt(position.substring(1)) - 1;
-			int col = (int)position.charAt(0) - 97;
 			
 			if(ChessPiece.class.isAssignableFrom(promotionPiece) && 
 					promotionPiece != King.class && promotionPiece != Pawn.class) {
 				try {
-					board[row][col] = (ChessPiece) promotionPiece
+					this.placeNull(position);
+					var piece = (ChessPiece) promotionPiece
 							.getDeclaredConstructor(ChessBoard.class, Color.class)
 							.newInstance(this, pawn.getColor());
+					this.placePiece(piece, position);
 					return true;
 				}
 				catch (Exception e) {
