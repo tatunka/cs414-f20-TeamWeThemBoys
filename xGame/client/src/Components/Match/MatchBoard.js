@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {
   findLocation,
   createBoardPiece,
-  showTable,
+  showTable
 } from "./HelpfulMatchTools.js";
 
 import "./MatchStyle.css";
@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #000",
     borderRadius: "5px",
     alignItems: "center",
-    padding: "5px",
-  },
+    padding: "5px"
+  }
 }));
 
 const MatchBoard = (props) => {
@@ -41,7 +41,7 @@ const MatchBoard = (props) => {
     activeColor,
     activeMatch,
     setActiveMatch,
-    playerId,
+    playerId
   } = props;
   const [chessBoard, setChessBoard] = useState([]);
   const [selected, setSelected] = useState([]);
@@ -57,7 +57,7 @@ const MatchBoard = (props) => {
     "\u2657",
     "\u2658",
     "\u2654",
-    "\u2655",
+    "\u2655"
   ];
   const blackPieces = [
     "\u265F",
@@ -65,7 +65,7 @@ const MatchBoard = (props) => {
     "\u265D",
     "\u265E",
     "\u265A",
-    "\u265B",
+    "\u265B"
   ];
 
   const selectPiece = (selectedPieceData) => {
@@ -132,7 +132,7 @@ const MatchBoard = (props) => {
               selectPiece({
                 pieceName: piece.pieceName,
                 location: piece.location,
-                squareColor: "blue",
+                squareColor: "blue"
               });
             }
           );
@@ -148,7 +148,7 @@ const MatchBoard = (props) => {
             selectPiece({
               pieceName: null,
               location: moveList[i],
-              squareColor: "blue",
+              squareColor: "blue"
             });
           }
         );
@@ -171,7 +171,7 @@ const MatchBoard = (props) => {
                 selectPiece({
                   pieceName: null,
                   location: tempLocation,
-                  squareColor: "white",
+                  squareColor: "white"
                 });
               })
             );
@@ -181,7 +181,7 @@ const MatchBoard = (props) => {
                 selectPiece({
                   pieceName: null,
                   location: tempLocation,
-                  squareColor: "black",
+                  squareColor: "black"
                 });
               })
             );
@@ -193,7 +193,7 @@ const MatchBoard = (props) => {
                 selectPiece({
                   pieceName: null,
                   location: tempLocation,
-                  squareColor: "black",
+                  squareColor: "black"
                 });
               })
             );
@@ -203,7 +203,7 @@ const MatchBoard = (props) => {
                 selectPiece({
                   pieceName: null,
                   location: tempLocation,
-                  squareColor: "white",
+                  squareColor: "white"
                 });
               })
             );
@@ -249,7 +249,7 @@ const MatchBoard = (props) => {
           selectPiece({
             pieceName: piece.pieceName,
             location: piece.location,
-            squareColor: boardColor,
+            squareColor: boardColor
           });
         }
       );
@@ -414,9 +414,9 @@ MatchBoard.propTypes = {
     whitePlayerNickname: PropTypes.string,
     blackPlayerNickname: PropTypes.string,
     turnCount: PropTypes.number,
-    chessBoard: PropTypes.array,
+    chessBoard: PropTypes.array
   }),
   setActiveMatch: PropTypes.func,
-  playerId: PropTypes.number,
+  playerId: PropTypes.number
 };
 export default MatchBoard;
