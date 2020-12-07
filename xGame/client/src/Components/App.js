@@ -21,6 +21,7 @@ const App = () => {
 
   const logOutUser = () => {
     setActiveUser({ isLoggedIn: false });
+    setActiveMatch(null);
   };
 
   const fetchNotifications = async () => {

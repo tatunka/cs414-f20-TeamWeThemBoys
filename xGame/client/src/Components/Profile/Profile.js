@@ -11,8 +11,8 @@ const Profile = (props) => {
         return winningPlayer === profileData?.user ? "Victory" : "Defeat";
       case "FORFEIT":
         return winningPlayer === profileData?.user
-          ? "Defeat by forfeit"
-          : "Victory by forfeit";
+          ? "Victory by forfeit"
+          : "Defeat by forfeit";
       default:
         return "Draw";
     }

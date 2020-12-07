@@ -38,7 +38,7 @@ const MatchBoard = (props) => {
   const classes = useStyles();
   const {
     boardState,
-    activeColor,
+    isWhiteTurn,
     activeMatch,
     setActiveMatch,
     playerId
@@ -47,7 +47,7 @@ const MatchBoard = (props) => {
   const [selected, setSelected] = useState([]);
   const [endGameModalOpen, setEndgameModalOpen] = useState(false);
   const [promoteModalOpen, setPromoteModalOpen] = useState(false);
-  const [winningPlayer, setWinningPlayer] = useState("");
+  const [matchCompletedText, setMatchCompletedText] = useState("");
   const [promoteData, setPromoteData] = useState([]);
   const whitePromotionalSpaces = ["a5", "a6", "a7", "a8", "b8", "c8", "d8"];
   const blackPromotionalSpaces = ["h4", "h3", "h2", "h1", "g1", "f1", "e1"];
@@ -71,12 +71,12 @@ const MatchBoard = (props) => {
   const selectPiece = (selectedPieceData) => {
     if (
       activeMatch.status === "INPROGRESS" &&
-      (activeColor === "white"
+      (isWhiteTurn
         ? playerId === activeMatch.whitePlayerId
         : playerId === activeMatch.blackPlayerId)
     ) {
       if (
-        (activeColor === "white" ? whitePieces : blackPieces).includes(
+        (isWhiteTurn ? whitePieces : blackPieces).includes(
           selectedPieceData.pieceName
         )
       ) {
@@ -262,7 +262,7 @@ const MatchBoard = (props) => {
     return (
       <Modal open={endGameModalOpen} onClose={() => setEndgameModalOpen(false)}>
         <div className={classes.modalStyles}>
-          <h3>Congratulations {winningPlayer}!</h3>
+          <h3>{matchCompletedText}</h3>
           <Button
             onClick={() => setEndgameModalOpen(false)}
             variant={"contained"}
@@ -279,7 +279,7 @@ const MatchBoard = (props) => {
     let buttons = [];
     buttons.push(
       createBoardPiece(
-        activeColor === "white" ? "\u265D" : "\u2657",
+        isWhiteTurn ? "\u265D" : "\u2657",
         "black",
         "BishopModal",
         () => {
@@ -292,7 +292,7 @@ const MatchBoard = (props) => {
     );
     buttons.push(
       createBoardPiece(
-        activeColor === "white" ? "\u265E" : "\u2658",
+        isWhiteTurn ? "\u265E" : "\u2658",
         "black",
         "KnightModal",
         () => {
@@ -305,7 +305,7 @@ const MatchBoard = (props) => {
     );
     buttons.push(
       createBoardPiece(
-        activeColor === "white" ? "\u265C" : "\u2656",
+        isWhiteTurn ? "\u265C" : "\u2656",
         "black",
         "RookModal",
         () => {
@@ -318,7 +318,7 @@ const MatchBoard = (props) => {
     );
     buttons.push(
       createBoardPiece(
-        activeColor === "white" ? "\u265B" : "\u2655",
+        isWhiteTurn ? "\u265B" : "\u2655",
         "black",
         "QueenModal",
         () => {
@@ -371,7 +371,11 @@ const MatchBoard = (props) => {
 
   useEffect(() => {
     if (activeMatch.status === "COMPLETED") {
-      setWinningPlayer(activeMatch.winningPlayerNickname);
+      setMatchCompletedText(
+        activeMatch.winningPlayerNickname
+          ? `${activeMatch.winningPlayerNickname} wins!`
+          : `Match ended in a draw`
+      );
       setEndgameModalOpen(true);
     }
   }, [activeMatch.status]);
@@ -406,7 +410,7 @@ const MatchBoard = (props) => {
 
 MatchBoard.propTypes = {
   boardState: PropTypes.array,
-  activeColor: PropTypes.string,
+  isWhiteTurn: PropTypes.bool,
   activeMatch: PropTypes.shape({
     id: PropTypes.number,
     whitePlayerId: PropTypes.number,

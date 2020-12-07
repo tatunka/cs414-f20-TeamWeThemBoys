@@ -5,28 +5,21 @@ import "./MatchStyle.css";
 import {
   getPieceList,
   showTable,
-  createBoardPiece,
+  createBoardPiece
 } from "./HelpfulMatchTools.js";
 
 const MatchPlayerStats = (props) => {
   const playerName = props.playerName;
-  const activeColor = props.activeColor;
+  const playerColor = props.playerColor;
   const turnCounter = props.turnCounter;
   const boardState = props.boardState;
-  const opponent = props.opponent;
+  const isOpponent = props.isOpponent;
   const [takenPieces, setTakenPieces] = useState([]);
-  const [changed, setChanged] = useState(true);
-  const [pieceDisplay, setPieceDisplay] = useState([]);
 
   const determineTaken = () => {
     let totalPieces = "";
-    if (opponent) {
-      totalPieces =
-        activeColor === "white" ? getPieceList("white") : getPieceList("black");
-    } else {
-      totalPieces =
-        activeColor === "white" ? getPieceList("black") : getPieceList("white");
-    }
+    totalPieces =
+      playerColor === "white" ? getPieceList("black") : getPieceList("white");
     for (let piece = 0; piece < boardState.length; piece++) {
       let indexFound = -1;
       for (let i = 0; i < totalPieces.length; i++) {
@@ -49,7 +42,7 @@ const MatchPlayerStats = (props) => {
         createBoardPiece(
           takenPieces[i],
           "hidden",
-          activeColor + "Captured" + i,
+          playerColor + "Captured" + i,
           null
         )
       );
@@ -61,13 +54,19 @@ const MatchPlayerStats = (props) => {
     return tempDisplay;
   };
 
-  const displayTurnCounter = () => {
-    if (!opponent) {
-      return <p>Turn Number {turnCounter}</p>;
-    } else {
-      return <p></p>;
-    }
-  };
+  const isPlayersTurn =
+    (playerColor === "black" && turnCounter % 2 === 0) ||
+    (playerColor === "white" && turnCounter % 2 === 1)
+      ? true
+      : false;
+
+  // const displayTurnCounter = () => {
+  //   if (!isOpponent) {
+  //     return <p>Turn Number {turnCounter}</p>;
+  //   } else {
+  //     return <p></p>;
+  //   }
+  // };
 
   useEffect(() => {
     determineTaken();
@@ -75,8 +74,14 @@ const MatchPlayerStats = (props) => {
 
   return (
     <div className={"sidebar"}>
-      <p>{playerName} pieces captured</p>
-      {displayTurnCounter()}
+      <h2>{isOpponent ? playerName : "You"}</h2>
+      {!isOpponent && (
+        <h5>
+          You are <span className="font-weight-bold">{playerColor}</span>, it is
+          your {!isPlayersTurn ? "opponent's " : ""} turn.
+        </h5>
+      )}
+      <p>Pieces captured:</p>
       <Grid container className={"gameBoard"} spacing={0}>
         {showTable(generateDisplay())}
       </Grid>
@@ -86,8 +91,8 @@ const MatchPlayerStats = (props) => {
 
 MatchPlayerStats.propTypes = {
   playerName: PropTypes.string,
-  activeColor: PropTypes.string,
+  playerColor: PropTypes.string,
   turnCounter: PropTypes.number,
-  boardState: PropTypes.array,
+  boardState: PropTypes.array
 };
 export default MatchPlayerStats;

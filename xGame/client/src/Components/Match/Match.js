@@ -74,6 +74,8 @@ const Match = (props) => {
 
   const activeColor = activeMatch?.turnCount % 2 === 0 ? "black" : "white";
 
+  const isWhiteTurn = activeMatch?.turnCount % 2 === 0 ? false : true;
+
   const handleForfeitClick = () => {
     matchService.forfeitMatch(activeMatch?.id, activeUser?.id);
   };
@@ -83,14 +85,30 @@ const Match = (props) => {
     refreshActiveMatch();
   };
 
-  console.log("ACTIVE USER:", activeUser);
-
   const showDrawDialog =
     activeMatch?.drawSuggestedByWhite !== activeMatch?.drawSuggestedByBlack &&
     ((activeMatch?.blackPlayerId === activeUser?.id &&
       activeMatch?.drawSuggestedByWhite) ||
       (activeMatch?.whitePlayerId === activeUser?.id &&
         activeMatch?.drawSuggestedByBlack));
+
+  const activeUserName =
+    activeMatch?.whitePlayerNickname === activeUser?.nickname
+      ? activeMatch?.whitePlayerNickname
+      : activeMatch?.blackPlayerNickname;
+  const opponentName =
+    activeMatch?.whitePlayerNickname === activeUser?.nickname
+      ? activeMatch?.blackPlayerNickname
+      : activeMatch?.whitePlayerNickname;
+
+  const activeUserColor =
+    activeMatch?.whitePlayerNickname === activeUser?.nickname
+      ? "white"
+      : "black";
+  const opponentColor =
+    activeMatch?.whitePlayerNickname === activeUser?.nickname
+      ? "black"
+      : "white";
 
   return (
     <div>
@@ -106,24 +124,24 @@ const Match = (props) => {
             <>
               <Row className="fullSize">
                 <MatchPlayerStats
-                  playerName={activeMatch?.whitePlayerNickname}
-                  activeColor={activeColor}
+                  playerName={activeUserName}
+                  playerColor={activeUserColor}
                   turnCounter={activeMatch?.turnCount}
                   boardState={boardState}
                 />
                 <MatchBoard
                   boardState={boardState}
                   activeMatch={activeMatch}
-                  activeColor={activeColor}
+                  isWhiteTurn={isWhiteTurn}
                   setActiveMatch={setActiveMatch}
                   playerId={activeUser?.id}
                 />
                 <MatchPlayerStats
-                  playerName={activeMatch?.blackPlayerNickname}
-                  activeColor={activeColor}
+                  playerName={opponentName}
+                  playerColor={opponentColor}
                   turnCounter={activeMatch?.turnCount}
                   boardState={boardState}
-                  opponent={true}
+                  isOpponent={true}
                 />
               </Row>
               <Row className="fullSize">
