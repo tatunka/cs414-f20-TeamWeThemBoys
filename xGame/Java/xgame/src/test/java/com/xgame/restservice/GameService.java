@@ -247,6 +247,7 @@ public class GameService {
 			var victory = gameService.move(match.getId(), "a6", "a8");
 			assertEquals(victory.getStatus(), MatchStatus.COMPLETED);
 			assertTrue(victory.getWinningPlayerId() == user1.getId());
+			assertTrue(victory.getWinningPlayerId() == victory.getWhitePlayerId());
 		}
 		catch(Exception e) {
 			fail(e);
