@@ -288,7 +288,7 @@ public class ChessMatchService implements IChessMatchService {
 	
 	@Override
 	public List<MatchViewModel> getAllOngoing(int playerId){
-		var matches = matchRepo.findByWhitePlayerIdOrBlackPlayerIdAndMatchStatus(playerId, playerId, MatchStatus.INPROGRESS);
+		var matches = matchRepo.findByWhitePlayerIdAndMatchStatusOrBlackPlayerIdAndMatchStatus(playerId, MatchStatus.INPROGRESS, playerId, MatchStatus.INPROGRESS);
 		return matches.stream()
 				.map(m -> new MatchViewModel(m))
 				.collect(Collectors.toList());
