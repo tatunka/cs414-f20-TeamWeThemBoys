@@ -26,7 +26,7 @@ public class MatchHistoryViewModel {
 		this.color = matchView.getBlackPlayerId() == user.getId() ? Color.BLACK : Color.WHITE;
 		this.opponentNickname = this.color == Color.BLACK ? matchView.getWhitePlayerNickname() : matchView.getBlackPlayerNickname();
 		this.outcome = match.getMatchOutcome();
-		if(this.winningPlayer != null) {
+		if(match.getWinningPlayer() != null) {
 			this.winningPlayer = match.getWinningPlayer().getNickname();
 		}
 		this.moveCount = match.getTurnCount();

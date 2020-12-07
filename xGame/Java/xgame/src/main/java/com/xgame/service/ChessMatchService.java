@@ -175,7 +175,7 @@ public class ChessMatchService implements IChessMatchService {
 		match.setMatchOutcome(MatchOutcome.VICTORY);
 		//set winner if match ended in a victory
 		if(winnerId.isPresent()) {
-			var winner = match.getBlackPlayer().getId() == winnerId.get() ? match.getBlackPlayer() : match.getWhitePlayer();
+			var winner = match.getBlackPlayer().getId().equals(winnerId.get()) ? match.getBlackPlayer() : match.getWhitePlayer();
 			match.setWinningPlayer(winner);
 		}
 	
@@ -288,7 +288,7 @@ public class ChessMatchService implements IChessMatchService {
 	
 	@Override
 	public List<MatchViewModel> getAllOngoing(int playerId){
-		var matches = matchRepo.findByWhitePlayerIdOrBlackPlayerIdAndMatchStatus(playerId, playerId, MatchStatus.INPROGRESS);
+		var matches = matchRepo.findByWhitePlayerIdAndMatchStatusOrBlackPlayerIdAndMatchStatus(playerId, MatchStatus.INPROGRESS, playerId, MatchStatus.INPROGRESS);
 		return matches.stream()
 				.map(m -> new MatchViewModel(m))
 				.collect(Collectors.toList());
@@ -302,10 +302,10 @@ public class ChessMatchService implements IChessMatchService {
 		if(match.getBlackPlayer().getId() != playerId && match.getWhitePlayer().getId() != playerId) {
 			m.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't forfeit match. Player is not associated with match!"));
 		}
-		var winningPlayer = match.getWhitePlayer().getId() == playerId ? 
+		var winningPlayer = match.getWhitePlayer().getId().equals(playerId) ? 
 				match.getBlackPlayer() : 
 				match.getWhitePlayer();
-		var losingPlayer = match.getWhitePlayer().getId() == playerId ? 
+		var losingPlayer = match.getWhitePlayer().getId().equals(playerId) ? 
 				match.getWhitePlayer() : 
 				match.getBlackPlayer();
 				
@@ -314,6 +314,6 @@ public class ChessMatchService implements IChessMatchService {
 		match.setWinningPlayer(winningPlayer);
 		matchRepo.save(match);
 		
-		messageRepo.save(new Message(winningPlayer, losingPlayer + " has forfeited! You win!"));
+		messageRepo.save(new Message(winningPlayer, losingPlayer.getNickname() + " has forfeited! You win!"));
 	}
 }
