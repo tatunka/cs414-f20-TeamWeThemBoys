@@ -379,11 +379,11 @@ public class ChessBoard {
 	 */
 	public void setGameStatus() {
 		if(isInCheckMate(Color.BLACK)) {
-			winningColor = Color.WHITE;
+			winningColor = Color.BLACK;
 			status = MatchOutcome.VICTORY;
 		}
 		if(isInCheckMate(Color.WHITE)) {
-			winningColor = Color.BLACK;
+			winningColor = Color.WHITE;
 			status = MatchOutcome.VICTORY;
 		}
 	}

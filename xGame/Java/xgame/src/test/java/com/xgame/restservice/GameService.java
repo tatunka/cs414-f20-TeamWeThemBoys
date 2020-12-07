@@ -248,6 +248,65 @@ public class GameService {
 			assertEquals(victory.getStatus(), MatchStatus.COMPLETED);
 			assertTrue(victory.getWinningPlayerId() == user1.getId());
 			assertTrue(victory.getWinningPlayerId() == victory.getWhitePlayerId());
+			assertTrue(match.getWhitePlayerId() == user1.getId());
+			assertTrue(match.getBlackPlayerId() == user2.getId());
+			System.out.println(match.getWhitePlayerId());
+			System.out.println(victory.getWinningPlayerId());
+			System.out.println(match.getBlackPlayerId());
+		}
+		catch(Exception e) {
+			fail(e);
+		}
+		finally {
+			var messages1 = messageRepo.findByUserIdAndReadTimestampIsNull(user1.getId());
+			var messages2 = messageRepo.findByUserIdAndReadTimestampIsNull(user2.getId());
+			messageRepo.deleteAll(messages1);
+			messageRepo.deleteAll(messages2);
+
+			matchRepo.deleteById(match.getId());
+
+			userRepo.deleteById(user1.getId());
+			userRepo.deleteById(user2.getId());
+		}
+	}
+	
+	@Test
+	void moreMoves() {
+		var credentials1 = new UserCredentials("user1", "user1@email.com", "user1Password");
+		var credentials2 = new UserCredentials("user2", "user2@email.com", "user2Password");
+		var user1 = userService.registerNewUser(credentials1);
+		var user2 = userService.registerNewUser(credentials2);
+
+		var pendingMatch = matchService.createMatch(user1.getId(), user2.getId());
+		var match = matchService.acceptInvite(pendingMatch.getId());
+		try {
+			var m1 = gameService.move(match.getId(), "g3", "f4");
+			gameService.move(match.getId(), "c7", "d6");
+			gameService.move(match.getId(), "h2", "g3");
+			gameService.move(match.getId(), "d7", "e6");
+			gameService.move(match.getId(), "h5", "g6");
+			gameService.move(match.getId(), "b7", "f7");
+			gameService.move(match.getId(), "h3", "g5");
+			gameService.move(match.getId(), "f7", "b7");
+			gameService.move(match.getId(), "h4", "h7");
+			gameService.move(match.getId(), "b7", "f7");
+			gameService.move(match.getId(), "h1", "h2");
+			gameService.move(match.getId(), "f7", "b7");
+			gameService.move(match.getId(), "h2", "h3");
+			gameService.move(match.getId(), "b7", "f7");
+			gameService.move(match.getId(), "h3", "h4");
+			gameService.move(match.getId(), "f7", "b7");
+			gameService.move(match.getId(), "h4", "h5");
+			gameService.move(match.getId(), "e6", "f5");
+			gameService.move(match.getId(), "g5", "h3");
+			var victory = gameService.move(match.getId(), "b7", "h7");
+			
+			assertEquals(victory.getStatus(), MatchStatus.COMPLETED);
+			assertTrue(victory.getWinningPlayerId() == user2.getId());
+			assertTrue(victory.getWinningPlayerId() == victory.getBlackPlayerId());
+			System.out.println(match.getWhitePlayerId());
+			System.out.println(victory.getWinningPlayerId());
+			System.out.println(match.getBlackPlayerId());
 		}
 		catch(Exception e) {
 			fail(e);
