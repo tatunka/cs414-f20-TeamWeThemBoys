@@ -250,9 +250,6 @@ public class GameService {
 			assertTrue(victory.getWinningPlayerId() == victory.getWhitePlayerId());
 			assertTrue(match.getWhitePlayerId() == user1.getId());
 			assertTrue(match.getBlackPlayerId() == user2.getId());
-			System.out.println(match.getWhitePlayerId());
-			System.out.println(victory.getWinningPlayerId());
-			System.out.println(match.getBlackPlayerId());
 		}
 		catch(Exception e) {
 			fail(e);
@@ -302,11 +299,14 @@ public class GameService {
 			var victory = gameService.move(match.getId(), "b7", "h7");
 			
 			assertEquals(victory.getStatus(), MatchStatus.COMPLETED);
+			assertEquals(victory.getWinningPlayerId(), user2.getId());
+			assertEquals(victory.getWinningPlayerId(), match.getBlackPlayerId());
 			assertTrue(victory.getWinningPlayerId() == user2.getId());
-			assertTrue(victory.getWinningPlayerId() == victory.getBlackPlayerId());
+			assertTrue(victory.getWinningPlayerId() == match.getBlackPlayerId());
 			System.out.println(match.getWhitePlayerId());
 			System.out.println(victory.getWinningPlayerId());
 			System.out.println(match.getBlackPlayerId());
+			System.out.println(user2.getId());
 		}
 		catch(Exception e) {
 			fail(e);
